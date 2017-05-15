@@ -1,0 +1,2 @@
+# scripts
+QOwnNotes scripts repository
