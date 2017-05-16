@@ -39,8 +39,11 @@ class TestHelper {
             $errors[] = "No name was entered!";
         }
         
-        if ($data["identifier"] == "") {
+        $identifier = $data["identifier"];
+        if ($identifier == "") {
             $errors[] = "No identifier was entered!";
+        } elseif (preg_match('/[^a-z0-9]/', $str)) {
+            $errors[] = "Invalid charactes were found in identifier '$identifier'!";
         }
         
         if ($data["description"] == "") {

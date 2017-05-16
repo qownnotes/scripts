@@ -1,6 +1,6 @@
 {
   "name": "Example script",
-  "identifier": "example-script",
+  "identifier": "example-scriptX",
   "script": "example-script.qml",
   "version": "0.0.1",
   "description" : "Use this script to start a new script you want to submit to the script repository.\\n\\nJust copy the whole 'example-script' folder and rename it and also the 'example-script.qml'"
