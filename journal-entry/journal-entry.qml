@@ -39,7 +39,7 @@ QtObject {
             // create a new journal entry note if it wasn't found
             // keep in mind that the note will not be created instantly on the disk
             script.log("creating new journal entry: " + headline);
-            script.createNote(headline + "\n========\n\n");
+            script.createNote(headline + "\n================\n\n");
         }
     }
 }
