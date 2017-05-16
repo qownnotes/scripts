@@ -1,4 +1,4 @@
-#!/bin/env php
+#!/usr/bin/env php
 <?php
 
 $dirs = array_filter(glob('*'), 'is_dir');
@@ -21,8 +21,8 @@ if (count($errors) > 0) {
     exit(1);
 }
 
-print "No errors were found";
-
+print "No errors were found\n";
+exit(0);
 
 class TestHelper {
     public $errors = array();
@@ -42,7 +42,7 @@ class TestHelper {
         $identifier = $data["identifier"];
         if ($identifier == "") {
             $errors[] = "No identifier was entered!";
-        } elseif (preg_match('/[^a-z0-9]/', $str)) {
+        } elseif (preg_match('/[^a-z0-9\-_]/', $identifier)) {
             $errors[] = "Invalid charactes were found in identifier '$identifier'!";
         }
         
