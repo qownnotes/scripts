@@ -1,0 +1,7 @@
+{
+  "name": "Favorite note",
+  "identifier": "favorite-note",
+  "script": "favorite-note.qml",
+  "version": "0.1",
+  "description" : "This script creates a menu item and a button that adds a \"favorite\" tag to the current note."
+}
