@@ -1,0 +1,12 @@
+sudo: false
+dist: trusty
+language: php
+php:
+  - 7
+
+script:
+  - php run-tests.php
+
+notifications:
+  email:
+    - $NOTIFICATION_EMAIL
