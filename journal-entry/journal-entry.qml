@@ -25,7 +25,7 @@ QtObject {
 
         // get the date headline
         var m = new Date();
-        var headline = m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
+        var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
 
         var fileName = headline + ".md";
         var note = script.fetchNoteByFileName(fileName);
