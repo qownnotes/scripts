@@ -3,5 +3,5 @@
   "identifier": "paste-latex-image",
   "script": "paste-latex-image.qml",
   "version": "0.0.1",
-  "description" : "This script creates a menu item and a button that generates and pastes an image from Latex code in the clipboard."
+  "description" : "This script creates a menu item and a button that generates and pastes an image from Latex code in the clipboard.\n\nIt uses the webservice <a href='http://latex.codecogs.com'>Codecogs Equation Editor</a>."
 }
