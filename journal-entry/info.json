@@ -3,5 +3,6 @@
   "identifier": "journal-entry",
   "script": "journal-entry.qml",
   "version": "0.0.2",
+  "authors": ["@pbek"],
   "description" : "This script creates a menu item and a button to create or jump to the current date's journal entry."
 }
