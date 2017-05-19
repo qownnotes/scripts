@@ -22,7 +22,7 @@ QtObject {
         {
             "identifier": "publicKey",
             "name": "Public PGP Key",
-            "description": "Please enter your public pgp key",
+            "description": "Please enter your public pgp key:",
             "type": "string",
             "default": "F5161BD3",
         },
