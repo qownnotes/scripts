@@ -1,0 +1,9 @@
+{
+  "name": "PGP Encryption",
+  "identifier": "encryption-pgp",
+  "script": "encryption-pgp.qml",
+  "authors": ["@pbek"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.7",
+  "description" : "This script will encrypt and decrypt notes with PGP.\n\nDecryption will only work if you don't have to enter a password."
+}
