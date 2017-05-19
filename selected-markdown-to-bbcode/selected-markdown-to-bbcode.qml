@@ -53,8 +53,8 @@ QtObject {
         
         // you need pandoc and the BBCode writer from https://github.com/2ion/pandoc-bbcode
         // to convert Markdown to BBCode
-        var params = ["-t", "/opt/scripts/panbbcode.lua", "-f", "markdown"];
-        var result = script.startSynchronousProcess("pandoc", params, text);
+        var params = ["-t", panbbcodePath, "-f", "markdown"];
+        var result = script.startSynchronousProcess(pandocPath, params, text);
 
         // do some code list cleanup
         result = replaceAll(result, "[list=*]", "[list]");
