@@ -1,0 +1,9 @@
+{
+  "name": "Note from Jira issue",
+  "identifier": "note-from-jira-issue",
+  "script": "note-from-jira-issue.qml",
+  "authors": ["@pbek"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.6",
+  "description" : "This script creates a menu item and a button that parses the text that was copied from an issue webpage of <a href='https://www.atlassian.com/software/jira'>Jira</a> and creates a new note with a headline, the link to the issue and the description."
+}
