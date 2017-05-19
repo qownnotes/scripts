@@ -3,6 +3,7 @@
   "identifier": "note-stats",
   "script": "note-stats.qml",
   "version": "0.0.1",
+  "minAppVersion": "17.05.6",
   "authors": ["@Maboroshy"],
   "description" : "This script shows current note statistics in the <i>scripting widget</i>."
 }

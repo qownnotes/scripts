@@ -3,6 +3,7 @@
   "identifier": "favorite-note",
   "script": "favorite-note.qml",
   "version": "0.0.1",
+  "minAppVersion": "17.05.6",
   "authors": ["@pbek"],
   "description" : "This script creates a menu item and a button that adds a <i>favorite</i> tag to the current note."
 }
