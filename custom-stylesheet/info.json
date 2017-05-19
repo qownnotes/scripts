@@ -1,0 +1,9 @@
+{
+  "name": "Custom user interface styles",
+  "identifier": "custom-stylesheet",
+  "script": "custom-stylesheet.qml",
+  "authors": ["@pbek"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.7",
+  "description" : "With this script you can add custom styles to the application. Please take a look at <a href='http://docs.qownnotes.org/en/develop/scripting/README.html#add-a-custom-stylesheet'>Add a custom stylesheet</a> to find out how to style QOwnNotes."
+}
