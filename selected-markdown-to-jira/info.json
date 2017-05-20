@@ -5,5 +5,5 @@
   "authors": ["@pbek"],
   "version": "0.0.1",
   "minAppVersion": "17.05.7",
-  "description" : "With this script you can right click the selected text and convert it to Jira Code.\n\n<b>Dependencies</b>\n<a href=\"https://nodejs.org/en/download/\">Node.js</a>\n<a href=\"https://github.com/kylefarris/J2M\">jira2md</a>\n\n<b>Installation</b>\nAfter you have installed <i>Node.js</i> you can install <i>jira2md</i> by typing:\n<code>npm install jira2md</code>"
+  "description" : "With this script you can right click the selected text and convert it to <a href='https://www.atlassian.com/software/jira'>Jira</a> Code.\n\n<b>Dependencies</b>\n<a href=\"https://nodejs.org/en/download/\">Node.js</a>\n<a href=\"https://github.com/kylefarris/J2M\">jira2md</a (installed via <code>npm</code>)\n\n<b>Installation</b>\nAfter you have installed <i>Node.js</i> you can install <i>jira2md</i> by typing:\n<code>npm install jira2md</code>"
 }
