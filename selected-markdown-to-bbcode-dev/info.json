@@ -2,7 +2,7 @@
   "name": "Selected Markdown to BBCode Dev Version",
   "identifier": "selected-markdown-to-bbcode-dev",
   "script": "selected-markdown-to-bbcode.qml",
-  "resources": ["panbbcode.lua"]
+  "resources": ["panbbcode.lua"],
   "authors": ["@pbek"],
   "version": "0.0.1",
   "minAppVersion": "17.05.8",
