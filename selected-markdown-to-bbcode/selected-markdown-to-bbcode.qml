@@ -9,7 +9,6 @@ import QtQml 2.0
  * https://github.com/2ion/pandoc-bbcode
  */
 QtObject {
-    property string panbbcodePath;
     property string pandocPath;
 
     // register your settings variables so the user can set them in the script settings
@@ -21,14 +20,11 @@ QtObject {
             "type": "file",
             "default": "pandoc",
         },
-        {
-            "identifier": "panbbcodePath",
-            "name": "panbbcode path",
-            "description": "Please select the path to your <code>panbbcode.lua</code> executable:",
-            "type": "file",
-            "default": "/opt/scripts/panbbcode.lua",
-        },
     ];
+
+    // the path to the script's directory will be set here
+    property string scriptDirPath;
+
 
     /**
      * Initializes the custom action
@@ -50,6 +46,9 @@ QtObject {
 
         // get the selected text from the note text edit
         var text = script.noteTextEditSelectedText();
+        
+        // get the path of the lua script
+        var panbbcodePath = scriptDirPath + script.dirSeparator() + "panbbcode.lua";
         
         // you need pandoc and the BBCode writer from https://github.com/2ion/pandoc-bbcode
         // to convert Markdown to BBCode
