@@ -47,7 +47,8 @@ QtObject {
         // get the selected text from the note text edit
         var text = script.noteTextEditSelectedText();
         
-        var panbbcodePath = scriptDirPath + "/panbbcode.lua";
+        // get the path of the lua script
+        var panbbcodePath = scriptDirPath + script.dirSeparator() + "panbbcode.lua";
         
         // you need pandoc and the BBCode writer from https://github.com/2ion/pandoc-bbcode
         // to convert Markdown to BBCode
