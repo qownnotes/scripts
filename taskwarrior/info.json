@@ -1,0 +1,9 @@
+{
+  "name": "Taskwarrior import/export",
+  "identifier": "taskwarrior",
+  "script": "taskwarrior.qml",
+  "version": "0.0.1",
+  "minAppVersion": "17.06.1",
+  "authors": ["@fmakowski"],
+  "description" : "This script creates menu items and buttons to import and export Taskwarrior tasks."
+}
