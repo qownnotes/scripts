@@ -3,7 +3,8 @@
   "identifier": "example-script",
   "script": "example-script.qml",
   "authors": ["@pbek"],
-  "version": "0.0.1",
-  "minAppVersion": "17.05.6",
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.2",
+  "minAppVersion": "17.06.2",
   "description" : "Use this script to start a new script you want to submit to the script repository.\n\nJust copy the whole <i>example-script</i> folder from the git-repository on GitHub and rename both the folder and <i>example-script.qml</i>."
 }
