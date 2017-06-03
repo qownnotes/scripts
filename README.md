@@ -20,6 +20,7 @@ Please visit the [Scripting documentation](http://docs.qownnotes.org/en/develop/
 To bring your script into the **script repository** you just have to do the following:
 
 - **[fork](https://help.github.com/articles/fork-a-repo/)** this repository
+- checkout your forked repository with `git clone https://github.com/YOUR_GITHUB_NAME/scripts.git qownnotes-scripts`
 - **duplicate** the **`example-script` folder** and give it an other name
 - **add your script** to the folder and remove the `example-script.qml`
 - **edit** the **`info.json`** to add your meta data
