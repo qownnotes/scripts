@@ -45,10 +45,11 @@ QtObject {
     function getProjectNameAndRun(str, func) {
         // We are trying to get the name of the project. 
         // To do so, we are getting the substring of a line by using regexp group.
-        var projectRegExp = /project:[\s*]?(.+)?[\s*]?/i;
+        var projectRegExp = /(project:[\s*]?(.+)?[\s*]?)|(#+[\s*]?(.+)?[\s*]?)/i;
         var isProjectName = projectRegExp.exec(str);
         if (isProjectName) {
-            func(isProjectName[1]);
+            var projectName = isProjectName[2] ? isProjectName[2] : isProjectName[4];
+            func(projectName);
             return true;
         }
     }
