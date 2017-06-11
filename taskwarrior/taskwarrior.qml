@@ -115,6 +115,10 @@ QtObject {
                             var i;
                             for (i = projectName.length + referenceHeaderLevel - headerLevel + 1; i > 0; i--) {
                                 projectName.pop();
+                                if (projectName.length === 0) {
+                                    referenceHeaderLevel = headerLevel - 1;
+                                    break;
+                                }
                             }
                         }
                         projectName.push(proName);
@@ -151,10 +155,35 @@ QtObject {
                 // Get selected text to determine the project we want to import from.
 
                 var projectNames = [];
+                var referenceHeaderLevel = 0;
 
                 getSelectedTextAndSeparateByNewline().forEach(function (line){
                     if (getProjectNameAndRun(line, function (proName, headerLevel) {
-                        projectNames.push(proName);
+                        if (projectNames.length === 0) {
+                            logIfVerbose("No project detected yet. Inserting " + proName)
+                            projectNames.push([proName]);
+                            logIfVerbose("Reference header level set to " + headerLevel)
+                            referenceHeaderLevel = headerLevel - 1;
+                            return;
+                        }
+
+                        var newProjectName = projectNames[projectNames.length - 1].slice();
+                        logIfVerbose("Last project name inserted was " + newProjectName.join('.'));
+                        if (newProjectName.length + referenceHeaderLevel >= headerLevel) {
+                            logIfVerbose("Same header level detected.");
+                            var i;
+                            for (i = newProjectName.length + referenceHeaderLevel - headerLevel + 1; i > 0; i--) {
+                                newProjectName.pop();
+                                if (newProjectName.length === 0) {
+                                    referenceHeaderLevel = headerLevel - 1;
+                                    break;
+                                }
+                            }
+                        }
+                        newProjectName.push(proName);
+                        projectNames.push(newProjectName);
+                        logIfVerbose("Project name detected. Inserted value is " + newProjectName.join('.'))
+                        
                     })) return;
                 });
 
@@ -162,14 +191,25 @@ QtObject {
                 script.noteTextEditWrite(script.noteTextEditSelectedText());
 
                 projectNames.forEach( function(projectName) {
+                    var concatenatedProjectName = projectName.join('.');
                     var result = script.startSynchronousProcess(taskPath, 
                                                                 [
-                                                                    "pro.is:" + projectName,
+                                                                    "pro.is:" + concatenatedProjectName,
                                                                     "rc.report.next.columns=description.desc",
                                                                     "rc.report.next.labels=Desc"
                                                                 ],
                                                                 "");
                     if (result) {
+                        // via https://stackoverflow.com/a/35635260
+                        var repeat = function(str, count) {
+                            var array = [];
+                            for(var i = 0; i < count;)
+                                array[i++] = str;
+                            return array.join('');
+                        }
+
+                        script.noteTextEditWrite("\n");
+                        script.noteTextEditWrite(repeat('#', projectName.length) + ' ' + projectName[projectName.length - 1] + "\n\n");
                         var tasksSeparated;
                         // The result does not contain any \n, so we are splitting by whitespace.
                         tasksSeparated = result.toString().split('\n');
@@ -186,9 +226,6 @@ QtObject {
                         tasksSeparated.splice(tasksSeparated.length - 1, 1); // removing "X tasks"
                         tasksSeparated.splice(tasksSeparated.length - 1, 1); // removing ""
 
-                        script.noteTextEditWrite("\n");
-
-                        script.noteTextEditWrite("# " + projectName + "\n\n");
                         tasksSeparated.forEach( function(taskDesc){
                             script.noteTextEditWrite("* " + taskDesc + "\n");
                         });
