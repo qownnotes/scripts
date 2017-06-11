@@ -65,11 +65,12 @@ QtObject {
     function getProjectNameAndRun(str, func) {
         // We are trying to get the name of the project. 
         // To do so, we are getting the substring of a line by using regexp group.
-        var projectRegExp = /(project:[\s*]?(.+)?[\s*]?)|(#+[\s*]?(.+)?[\s*]?)/i;
+        var projectRegExp = /(#+)[\s*]?(.+)?[\s*]?/i;
         var isProjectName = projectRegExp.exec(str);
         if (isProjectName) {
-            var projectName = isProjectName[2] ? isProjectName[2] : isProjectName[4];
-            func(projectName);
+            var projectName = isProjectName[2];
+            var headerLevel = isProjectName[1].length;
+            func(projectName, headerLevel);
             return true;
         }
     }
@@ -95,13 +96,29 @@ QtObject {
                 logIfVerbose("Exporting tasks from a note.");
 
                 // Starting with an empty default project name.
-                var projectName = "";
-                
+                // We are keeping the project name as a array of strings. We will concatenate them to
+                // get the final projectName with nesting.
+                var projectName = [];
+                var referenceHeaderLevel = 0;
+
                 // For each line, we are gathering data to properly create tasks.
                 getSelectedTextAndSeparateByNewline().forEach(function (line){
-                    if (getProjectNameAndRun(line, function (proName) {
+                    if (getProjectNameAndRun(line, function (proName, headerLevel) {
                         logIfVerbose("Detected project name: " + proName);
-                        projectName = proName;
+                        logIfVerbose("Detected header level: " + headerLevel);
+
+                        if (projectName.length === 0) {
+                            referenceHeaderLevel = headerLevel - 1;
+                        }
+
+                        if (projectName.length + referenceHeaderLevel >= headerLevel) {
+                            var i;
+                            for (i = projectName.length + referenceHeaderLevel - headerLevel + 1; i > 0; i--) {
+                                projectName.pop();
+                            }
+                        }
+                        projectName.push(proName);
+
                         // We expect, that the project name would be the only thing in line, hence `return`.
                         return;
                     })) return;
@@ -116,11 +133,12 @@ QtObject {
                         
                         taskDescription = isTask[1];
                         logIfVerbose("Detected task: " + taskDescription);
-                        logIfVerbose("Executing \"" + taskPath + " add pro:" + projectName + " " + taskDescription + "\"");
+                        var concatenatedProjectName = projectName.join('.');
+                        logIfVerbose("Executing \"" + taskPath + " add pro:" + concatenatedProjectName + " " + taskDescription + "\"");
                         script.startDetachedProcess(taskPath,
                                                     [
                                                         "add",
-                                                        "pro:" + projectName,
+                                                        "pro:" + concatenatedProjectName,
                                                         taskDescription
                                                     ]);
                         // We expect, that the task description would be the only thing in the line, hence `return`.
@@ -135,7 +153,7 @@ QtObject {
                 var projectNames = [];
 
                 getSelectedTextAndSeparateByNewline().forEach(function (line){
-                    if (getProjectNameAndRun(line, function (proName) {
+                    if (getProjectNameAndRun(line, function (proName, headerLevel) {
                         projectNames.push(proName);
                     })) return;
                 });
