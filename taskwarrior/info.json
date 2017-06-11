@@ -2,9 +2,9 @@
   "name": "Taskwarrior",
   "identifier": "taskwarrior",
   "script": "taskwarrior.qml",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "minAppVersion": "17.06.4",
   "authors": ["@fmakowski"],
   "platforms": ["linux", "macos"],
-  "description" : "This script creates menu items and buttons to import and export Taskwarrior tasks.\n\n<b>Dependencies</b>\n\nUnix-like OSes only!\n<a href=\"http://taskwarrior.org\">Taskwarrior</a>\n\n<b>Usage</b>\n\n<i>Export:</i>\nThe script takes selected text from your note and parse it to create task entries based on it. The following rules currently apply for the test to be parsed correctly:\n * the project is defined as the header. Subheaders are appended to hierarchically upper header name (giving the possibility of nesting) * the task is defined by making a list item, using either - (minus) or * (asterisk) at the beginning; the task description taken will be used with the most recently detected project name to create a new task\n\n<i>Import:</i>\nThe script takes selected text from your note, parsing it into the project names you want to fetch from Taskwarrior into the note. The tasks will be written as a list right below the selection. The project names will be created as headers to separate tasks, with appropriate nesting.<b>To Do</b>\n\n * foolproof regexps\n * Windows support\n * Taskwarrior parameter parsing (like tags, dates, priority, etc.)"
+  "description" : "This script creates menu items and buttons to import and export Taskwarrior tasks.\n\n<b>Dependencies</b>\n\nUnix-like OSes only!\n<a href=\"http://taskwarrior.org\">Taskwarrior</a>\n\n<b>Usage</b>\n\nFor usage description, please head to <a href=\"https://github.com/qownnotes/scripts/tree/master/taskwarrior\">script guide</a>."
 }
