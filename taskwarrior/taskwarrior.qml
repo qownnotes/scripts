@@ -41,7 +41,7 @@ QtObject {
         // export selected data to Taskwarrior 
         script.registerCustomAction("exportToTaskwarrior", "Export selected list as Taskwarrior tasks", "Export to Taskwarrior");
 
-        // create a menu entry "Create meeting note" with a button and a freedesktop theme icon
+        // import selected projects from Taskwarrior 
         script.registerCustomAction("importFromTaskwarrior", "Import tasks from Taskwarrior as a list", "Import from Taskwarrior");
     }
     
@@ -77,6 +77,7 @@ QtObject {
         var isProjectName = projectRegExp.exec(str);
         if (isProjectName) {
             var projectName = isProjectName[2];
+            // Header level is simply the number of "#" characters
             var headerLevel = isProjectName[1].length;
             func(projectName, headerLevel);
             return true;
@@ -84,6 +85,7 @@ QtObject {
     }
 
     function logIfVerbose(str) {
+        // Logs only, if `verbose` setting is enabled.
         if (verbose) {
             script.log(str);
         }
@@ -107,6 +109,7 @@ QtObject {
                 // We are keeping the project name as a array of strings. We will concatenate them to
                 // get the final projectName with nesting.
                 var projectName = [];
+                // The reference header level is useful in case selection does not start with single "#". 
                 var referenceHeaderLevel = 0;
 
                 // For each line, we are gathering data to properly create tasks.
@@ -115,11 +118,15 @@ QtObject {
                         logIfVerbose("Detected project name: " + proName);
                         logIfVerbose("Detected header level: " + headerLevel);
 
+                        // No project detected yet - define initial reference header level.
                         if (projectName.length === 0) {
                             referenceHeaderLevel = headerLevel - 1;
                         }
 
+                        // Project name on the same or lower hierarchy level means, that we need
+                        // to pop last or multiple project name segments.
                         if (projectName.length + referenceHeaderLevel >= headerLevel) {
+                            logIfVerbose("Detected similar or lower header level");
                             var i;
                             for (i = projectName.length + referenceHeaderLevel - headerLevel + 1; i > 0; i--) {
                                 projectName.pop();
@@ -162,6 +169,9 @@ QtObject {
             case "importFromTaskwarrior":
                 // Get selected text to determine the project we want to import from.
 
+                logIfVerbose("Importing tasks from Taskwarrior.");
+
+                // Saving selected text - we will modify it later.
                 var plainText = getSelectedTextAndSeparateByNewline();
 
                 var projectNames = [];
@@ -183,7 +193,7 @@ QtObject {
                         var newProjectName = projectNames[projectNames.length - 1].slice();
                         logIfVerbose("Last project name inserted was " + newProjectName.join('.'));
                         if (newProjectName.length + referenceHeaderLevel >= headerLevel) {
-                            logIfVerbose("Same header level detected.");
+                            logIfVerbose("Detected similar or lower header level");
                             var i;
                             for (i = newProjectName.length + referenceHeaderLevel - headerLevel + 1; i > 0; i--) {
                                 newProjectName.pop();
@@ -198,6 +208,9 @@ QtObject {
                         logIfVerbose("Project name detected. Inserted value is " + newProjectName.join('.'))
                         
                     })) return;
+
+                    // We remember lines, that have project names in them. Those will be our anchors after 
+                    // which we will insert fetched tasks.
                     projectNameLines.push(currentLineNo);
                 });
 
@@ -240,19 +253,25 @@ QtObject {
 
                         var taskIds = [];
                         tasksSeparated.forEach( function(task){
+                            // Splitting output to be used later
                             var taskParamsRegexp = /(\d+)[\s*]?(.+)?[\s*]?/i;
                             var fetchTaskParams = taskParamsRegexp.exec(task);
                             logIfVerbose("Extracted data from task: ID " + fetchTaskParams[1] + " Desc: " + fetchTaskParams[2]);
                             var taskEntry = "* " + fetchTaskParams[2];
+                            logIfVerbose("Inserting \"" + taskEntry + "\" after line " + projectNameLines[currentProjectNumber - 1]);
                             plainText.splice(projectNameLines[currentProjectNumber - 1], 0, taskEntry);
+                            
+                            // We are updating line number assigned to detected project names.
                             var i;
                             for (i = currentProjectNumber; i < projectNameLines.length; i++) {
                                 projectNameLines[i] += 1;
                             }
+                            // We gather task IDs in case deleteOnImport is enabled.
                             taskIds.push(fetchTaskParams[1]);
                         });
 
                         if (deleteOnImport) {
+                            logIfVerbose("Deleting tasks " + taskIds.join(','));
                             script.startDetachedProcess(taskPath,
                             [
                                 taskIds.join(' '),
@@ -264,6 +283,7 @@ QtObject {
 
                 });
 
+                // Finally, selected text is replaced by the text with insertions.
                 script.noteTextEditWrite(plainText.join('\n'));
 
                 break;
