@@ -6,7 +6,8 @@ import QOwnNotesTypes 1.0
  * importing tasks from a certain project, or exporting them from a note.
  */
 QtObject {
-    property string myString;
+    property string taskPath;
+    property bool verbose;
 
     property variant settingsVariables: [
         {
@@ -15,6 +16,13 @@ QtObject {
             "description": "A path to your Taskwarrior instance",
             "type": "string",
             "default": "/usr/bin/task",
+        },
+        {
+            "identifier": "verbose",
+            "name": "Verbose logging",
+            "description": "Should the script log every action?",
+            "type": "boolean",
+            "default": false
         }
     ];
 
@@ -66,6 +74,12 @@ QtObject {
         }
     }
 
+    function logIfVerbose(str) {
+        if (verbose) {
+            script.log(str);
+        }
+    }
+
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
@@ -78,12 +92,15 @@ QtObject {
             // The project name will be taken from "Project:" keyword detected in first lines.
             case "exportToTaskwarrior":
                 
+                logIfVerbose("Exporting tasks from a note.");
+
                 // Starting with an empty default project name.
                 var projectName = "";
                 
                 // For each line, we are gathering data to properly create tasks.
                 getSelectedTextAndSeparateByNewline().forEach(function (line){
                     if (getProjectNameAndRun(line, function (proName) {
+                        logIfVerbose("Detected project name: " + proName);
                         projectName = proName;
                         // We expect, that the project name would be the only thing in line, hence `return`.
                         return;
@@ -96,7 +113,10 @@ QtObject {
                     
                     var isTask = taskRegExp.exec(line);
                     if (isTask) {
+                        
                         taskDescription = isTask[1];
+                        logIfVerbose("Detected task: " + taskDescription);
+                        logIfVerbose("Executing \"" + taskPath + " add pro:" + projectName + " " + taskDescription + "\"");
                         script.startDetachedProcess(taskPath,
                                                     [
                                                         "add",
@@ -138,7 +158,7 @@ QtObject {
                         
                         tasksSeparated.splice(0, 1); // removing ""
                         if (tasksSeparated.length === 0) {
-                            script.log("No entries");
+                            logIfVerbose("No entries");
                             return;
                         }
                         tasksSeparated.splice(0, 1); // removing "Desc"
