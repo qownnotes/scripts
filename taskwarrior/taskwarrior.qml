@@ -6,6 +6,18 @@ import QOwnNotesTypes 1.0
  * importing tasks from a certain project, or exporting them from a note.
  */
 QtObject {
+    property string myString;
+
+    property variant settingsVariables: [
+        {
+            "identifier": "taskPath",
+            "name": "Taskwarrior path",
+            "description": "A path to your Taskwarrior instance",
+            "type": "string",
+            "default": "/usr/bin/task",
+        }
+    ];
+
     /**
      * Initializes the custom actions
      */
@@ -61,9 +73,6 @@ QtObject {
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
-
-        var pathToTaskwarrior = "/usr/bin/task";
-
         switch (identifier) {
             // export selected lines to Taskwarriors as tasks.
             // The project name will be taken from "Project:" keyword detected in first lines.
@@ -88,7 +97,7 @@ QtObject {
                     var isTask = taskRegExp.exec(line);
                     if (isTask) {
                         taskDescription = isTask[1];
-                        script.startDetachedProcess(pathToTaskwarrior,
+                        script.startDetachedProcess(taskPath,
                                                     [
                                                         "add",
                                                         "pro:" + projectName,
@@ -115,10 +124,10 @@ QtObject {
                 script.noteTextEditWrite(script.noteTextEditSelectedText());
 
                 projectNames.forEach( function(projectName) {
-                    var result = script.startSynchronousProcess(pathToTaskwarrior, 
+                    var result = script.startSynchronousProcess(taskPath, 
                                                                 [
-                                                                    "pro:" + projectName,
-                                                                    "rc.report.next.columns=description",
+                                                                    "pro.is:" + projectName,
+                                                                    "rc.report.next.columns=description.desc",
                                                                     "rc.report.next.labels=Desc"
                                                                 ],
                                                                 "");
@@ -141,7 +150,7 @@ QtObject {
 
                         script.noteTextEditWrite("\n");
 
-                        script.noteTextEditWrite("Project: " + projectName + "\n\n");
+                        script.noteTextEditWrite("# " + projectName + "\n\n");
                         tasksSeparated.forEach( function(taskDesc){
                             script.noteTextEditWrite("* " + taskDesc + "\n");
                         });
