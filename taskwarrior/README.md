@@ -82,3 +82,21 @@ will be replaced by:
         * older task not in Taskwarrior
 
 As you can see, tasks are inserted just after the corresponding header. Other lines are not changed, which may result in duplicates (in case the task was already imported some other time, like in `Subproject2`).
+
+# Settings
+
+Script settings are available in `Script settings` under `Scripts` menu.
+
+## Taskwarrior path
+
+In case your Taskwarrior instance is not in default directory, you may change it to reflect the actual executable path.
+
+## Delete on import
+
+Although not enabled by default, a script may delete task entries from Taskwarrior when they are imported. 
+
+Please, be aware of the risk, that this feature might be bugged in some cases. If you encounter any issues, the recommended way of reverting the changes is using `task undo`. At some point, the Undo feature will be implemented to the script itself as well.
+
+## Verbosity
+
+If you want to monitor logger output in the Event log, it would be advisable to enable this option. Useful for debugging purposes.
