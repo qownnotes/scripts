@@ -8,6 +8,7 @@ import QOwnNotesTypes 1.0
 QtObject {
     property string taskPath;
     property bool verbose;
+    property bool deleteOnImport;
 
     property variant settingsVariables: [
         {
@@ -21,6 +22,13 @@ QtObject {
             "identifier": "verbose",
             "name": "Verbose logging",
             "description": "Should the script log every action?",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "identifier": "deleteOnImport",
+            "name": "Delete on import",
+            "description": "Delete tasks on import?",
             "type": "boolean",
             "default": false
         }
@@ -195,8 +203,8 @@ QtObject {
                     var result = script.startSynchronousProcess(taskPath, 
                                                                 [
                                                                     "pro.is:" + concatenatedProjectName,
-                                                                    "rc.report.next.columns=description.desc",
-                                                                    "rc.report.next.labels=Desc"
+                                                                    "rc.report.next.columns=id,description.desc",
+                                                                    "rc.report.next.labels=ID,Desc"
                                                                 ],
                                                                 "");
                     if (result) {
@@ -226,9 +234,22 @@ QtObject {
                         tasksSeparated.splice(tasksSeparated.length - 1, 1); // removing "X tasks"
                         tasksSeparated.splice(tasksSeparated.length - 1, 1); // removing ""
 
-                        tasksSeparated.forEach( function(taskDesc){
-                            script.noteTextEditWrite("* " + taskDesc + "\n");
+                        var taskIds = [];
+                        tasksSeparated.forEach( function(task){
+                            var taskParamsRegexp = /(\d+)[\s*]?(.+)?[\s*]?/i;
+                            var fetchTaskParams = taskParamsRegexp.exec(task);
+                            logIfVerbose("Extracted data from task: ID " + fetchTaskParams[1] + " Desc: " + fetchTaskParams[2]);
+                            script.noteTextEditWrite("* " + fetchTaskParams[2] + "\n");
+                            taskIds.push(fetchTaskParams[1]);
                         });
+
+                        if (deleteOnImport) {
+                            script.startDetachedProcess(taskPath,
+                            [
+                                taskIds.join(' '),
+                                "delete"
+                            ]);
+                        }
                         
                     }
 
