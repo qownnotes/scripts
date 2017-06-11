@@ -1,0 +1,9 @@
+{
+  "name": "Weather stats",
+  "identifier": "weather-stats",
+  "script": "weather-stats.qml",
+  "version": "0.0.3",
+  "minAppVersion": "17.06.4",
+  "authors": ["@pbek"],
+  "description" : "This script shows the current weather in the <i>Scripting widget</i>. You can configure the city in the <i>Scripting Settings</i>. The Yahoo weather service is used to fetch the weather. The information is updated every 10min."
+}
