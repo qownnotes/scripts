@@ -73,7 +73,7 @@ QtObject {
     function getProjectNameAndRun(str, func) {
         // We are trying to get the name of the project. 
         // To do so, we are getting the substring of a line by using regexp group.
-        var projectRegExp = /(#+)[\s*]?(.+)?[\s*]?/i;
+        var projectRegExp = /^(#+)[\s*]?(.+)?[\s*]?$/i;
         var isProjectName = projectRegExp.exec(str);
         if (isProjectName) {
             var projectName = isProjectName[2];
@@ -137,7 +137,7 @@ QtObject {
                     
                     // We are trying to get the task description.
                     // It should be started with either - (minus) or * (asterisk) to indicate list item.
-                    var taskRegExp = /[\*\-][\s*]?(.+)[\s*]?/; 
+                    var taskRegExp = /^[\*\-][\s*]?(.+)[\s*]?$/; 
                     var taskDescription;
                     
                     var isTask = taskRegExp.exec(line);
@@ -162,11 +162,16 @@ QtObject {
             case "importFromTaskwarrior":
                 // Get selected text to determine the project we want to import from.
 
+                var plainText = getSelectedTextAndSeparateByNewline();
+
                 var projectNames = [];
+                var projectNameLines = [];
+                var currentLineNo = 0;
                 var referenceHeaderLevel = 0;
 
-                getSelectedTextAndSeparateByNewline().forEach(function (line){
-                    if (getProjectNameAndRun(line, function (proName, headerLevel) {
+                plainText.forEach(function (line){
+                    currentLineNo++;
+                    if (!getProjectNameAndRun(line, function (proName, headerLevel) {
                         if (projectNames.length === 0) {
                             logIfVerbose("No project detected yet. Inserting " + proName)
                             projectNames.push([proName]);
@@ -193,12 +198,13 @@ QtObject {
                         logIfVerbose("Project name detected. Inserted value is " + newProjectName.join('.'))
                         
                     })) return;
+                    projectNameLines.push(currentLineNo);
                 });
 
-                // To avoid overwriting what we have selected, we are simply writing it
-                script.noteTextEditWrite(script.noteTextEditSelectedText());
+                var currentProjectNumber = 0;
 
                 projectNames.forEach( function(projectName) {
+                    currentProjectNumber++;
                     var concatenatedProjectName = projectName.join('.');
                     var result = script.startSynchronousProcess(taskPath, 
                                                                 [
@@ -215,9 +221,7 @@ QtObject {
                                 array[i++] = str;
                             return array.join('');
                         }
-
-                        script.noteTextEditWrite("\n");
-                        script.noteTextEditWrite(repeat('#', projectName.length) + ' ' + projectName[projectName.length - 1] + "\n\n");
+                        
                         var tasksSeparated;
                         // The result does not contain any \n, so we are splitting by whitespace.
                         tasksSeparated = result.toString().split('\n');
@@ -239,7 +243,12 @@ QtObject {
                             var taskParamsRegexp = /(\d+)[\s*]?(.+)?[\s*]?/i;
                             var fetchTaskParams = taskParamsRegexp.exec(task);
                             logIfVerbose("Extracted data from task: ID " + fetchTaskParams[1] + " Desc: " + fetchTaskParams[2]);
-                            script.noteTextEditWrite("* " + fetchTaskParams[2] + "\n");
+                            var taskEntry = "* " + fetchTaskParams[2];
+                            plainText.splice(projectNameLines[currentProjectNumber - 1], 0, taskEntry);
+                            var i;
+                            for (i = currentProjectNumber; i < projectNameLines.length; i++) {
+                                projectNameLines[i] += 1;
+                            }
                             taskIds.push(fetchTaskParams[1]);
                         });
 
@@ -254,6 +263,9 @@ QtObject {
                     }
 
                 });
+
+                script.noteTextEditWrite(plainText.join('\n'));
+
                 break;
 
         }
