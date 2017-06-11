@@ -27,7 +27,7 @@ The following Markdown text:
         * task one
         ### Subproject1
         * task two
-        Some additional portion of text, describing how awesome project 1 is and what to do exactly in task two
+        Some additional portion of text, describing how awesome project 1 is
         * task three
         ### Subproject2
         * task four
