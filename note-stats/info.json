@@ -5,5 +5,5 @@
   "version": "0.0.2",
   "minAppVersion": "17.06.3",
   "authors": ["@Maboroshy"],
-  "description" : "This script shows current note statistics in the <i>scripting widget</i>. Check the script settings for enhanced functionality, like settings counters names and target numbers for characters, words or paragraphs in you note."
+  "description" : "This script shows current note statistics in the <i>scripting widget</i>. Check the script settings for enhanced functionality, like setting counter names and target numbers for characters, words or paragraphs for your note."
 }
