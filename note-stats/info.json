@@ -2,8 +2,8 @@
   "name": "Note stats",
   "identifier": "note-stats",
   "script": "note-stats.qml",
-  "version": "0.0.1",
-  "minAppVersion": "17.05.6",
+  "version": "0.0.2",
+  "minAppVersion": "17.06.3",
   "authors": ["@Maboroshy"],
-  "description" : "This script shows current note statistics in the <i>scripting widget</i>."
+  "description" : "This script shows current note statistics in the <i>scripting widget</i>. Check the script settings for enhanced functionality, like settings counters names and target numbers for characters, words or paragraphs in you note."
 }
