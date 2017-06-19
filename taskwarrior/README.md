@@ -17,6 +17,7 @@ To export a set of tasks, you need to select text, and then click `Export to Tas
 
 * project names should be formatted as headers, and may be nested
 * the tasks are taken only from the unordered list items - lines that are starting with asterisk (*) or minus sign (-)
+* tags for the tasks may be added by specifying `+taskname` at the end of the note. You may do that multiple times.
 * any other content will be skipped - any additional comments or empty lines do not matter during the parsing process.
 
 ### Example
@@ -26,20 +27,20 @@ The following Markdown text:
         ## Project1
         * task one
         ### Subproject1
-        * task two
+        * task two +test
         Some additional portion of text, describing how awesome project 1 is
         * task three
         ### Subproject2
-        * task four
+        * task four +tagged +few +times
         # Project2
         * task five
 
 should generate following calls to Taskwarrior:
 
         task add pro:Project1 task one
-        task add pro:Project1.Subproject1 task two
+        task add pro:Project1.Subproject1 task two tags:"test"
         task add pro:Project1.Subroject1 task three
-        task add pro:Project1.Subproject2 task four
+        task add pro:Project1.Subproject2 task four tags:"tagged few times"
         task add pro:Project2 task five
 
 ## Import (TW -> note)
@@ -71,10 +72,10 @@ will be replaced by:
         # Project1
         * task one
         ## Subproject2
-        * task four
+        * task four +tagged +few +times
         * task four
         ## Subproject1
-        * task two
+        * task two +test
         Something written here.
         # Project3
         # Project2
