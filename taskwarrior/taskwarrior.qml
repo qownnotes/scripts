@@ -302,22 +302,21 @@ QtObject {
                                 tagsSeparated.splice(0, 1); // removing ""
                                 if (tagsSeparated.length === 0) {
                                     logIfVerbose("No tags");
-                                    return;
+                                } else {
+                                    tagsSeparated.splice(0, 1); // removing headline
+                                    tagsSeparated.splice(0, 1); // removing "----"
+
+                                    tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
+                                    tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
+                                    tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
+
+                                    tagsSeparated.forEach( function(tag){
+
+                                        var tagsRegexp = /[\s*]?(.+)[\s*]?1[\s*]?/i;
+                                        var fetchTag = tagsRegexp.exec(tag);
+                                        tagsPlainText += " +" + fetchTag[1].replace(/ /g,'');
+                                    });
                                 }
-
-                                tagsSeparated.splice(0, 1); // removing headline
-                                tagsSeparated.splice(0, 1); // removing "----"
-
-                                tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
-                                tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
-                                tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
-
-                                tagsSeparated.forEach( function(tag){
-
-                                    var tagsRegexp = /[\s*]?(.+)[\s*]?1[\s*]?/i;
-                                    var fetchTag = tagsRegexp.exec(tag);
-                                    tagsPlainText += " +" + fetchTag[1].replace(/ /g,'');
-                                });
                             }
 
                             var taskEntry = "* " + fetchTaskParams[2] + tagsPlainText;
