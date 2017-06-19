@@ -299,7 +299,6 @@ QtObject {
                                 var tagsSeparated;
                                 // The result does not contain any \n, so we are splitting by whitespace.
                                 tagsSeparated = tagResult.toString().split('\n');
-                                logIfVerbose(tagsSeparated);
                                 tagsSeparated.splice(0, 1); // removing ""
                                 if (tagsSeparated.length === 0) {
                                     logIfVerbose("No tags");
@@ -313,14 +312,12 @@ QtObject {
                                 tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
                                 tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
 
-                                logIfVerbose(tagsSeparated);
                                 tagsSeparated.forEach( function(tag){
 
                                     var tagsRegexp = /[\s*]?(.+)[\s*]?1[\s*]?/i;
                                     var fetchTag = tagsRegexp.exec(tag);
                                     tagsPlainText += " +" + fetchTag[1].replace(/ /g,'');
                                 });
-
                             }
 
                             var taskEntry = "* " + fetchTaskParams[2] + tagsPlainText;
@@ -334,8 +331,6 @@ QtObject {
                             }
                             // We gather task IDs in case deleteOnImport is enabled.
                             taskIds.push(fetchTaskParams[1]);
-
-                            
                         });
 
                         if (deleteOnImport) {
@@ -346,9 +341,7 @@ QtObject {
                                 "delete"
                             ]);
                         }
-                        
                     }
-
                 });
 
                 // Finally, selected text is replaced by the text with insertions.
