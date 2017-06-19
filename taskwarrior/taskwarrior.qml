@@ -149,10 +149,27 @@ QtObject {
                     
                     var isTask = taskRegExp.exec(line);
                     if (isTask) {
-                        
+                        var tags = [];
                         taskDescription = isTask[1];
                         logIfVerbose("Detected task: " + taskDescription);
+                        var fetchTag;
+                        var tagExp = /^(.+)?[\s*]?\+(.+)$/; 
+                        var currentTaskDescription = taskDescription;
+                        do {
+                            logIfVerbose("Fetching tags...");
+                            fetchTag = tagExp.exec(currentTaskDescription);
+                            if (fetchTag) {
+                                logIfVerbose("Tag " + fetchTag[2] + " found!");
+                                tags.push(fetchTag[2]);
+                                currentTaskDescription = fetchTag[1];
+                                var re = new RegExp("\\+" + fetchTag[2].replace(/ /g, ''), "i");
+                                taskDescription = taskDescription.replace(re,'');
+                            } else
+                                break;
+                        } while(currentTaskDescription);
+                        
                         var concatenatedProjectName = projectName.join('.');
+                        if (tags.length == 0) {
                         logIfVerbose("Executing \"" + taskPath + " add pro:" + concatenatedProjectName + " " + taskDescription + "\"");
                         script.startDetachedProcess(taskPath,
                                                     [
@@ -160,6 +177,16 @@ QtObject {
                                                         "pro:" + concatenatedProjectName,
                                                         taskDescription
                                                     ]);
+                        } else {
+                            logIfVerbose("Executing \"" + taskPath + " add pro:" + concatenatedProjectName + " " + taskDescription + " tags:\"" + tags.join(' ') + "\"\"");
+                        script.startDetachedProcess(taskPath,
+                                                    [
+                                                        "add",
+                                                        "pro:" + concatenatedProjectName,
+                                                        taskDescription,
+                                                        "tags:\"" + tags.join(' ') + "\""
+                                                    ]);
+                        }
                         // We expect, that the task description would be the only thing in the line, hence `return`.
                         return;
                     }
@@ -257,7 +284,42 @@ QtObject {
                             var taskParamsRegexp = /(\d+)[\s*]?(.+)?[\s*]?/i;
                             var fetchTaskParams = taskParamsRegexp.exec(task);
                             logIfVerbose("Extracted data from task: ID " + fetchTaskParams[1] + " Desc: " + fetchTaskParams[2]);
-                            var taskEntry = "* " + fetchTaskParams[2];
+                            
+                            // We are fetching tags to append them to description line
+                            var tagResult = script.startSynchronousProcess(taskPath, 
+                                                                [
+                                                                    fetchTaskParams[1],
+                                                                    "tag"
+                                                                ],
+                                                                "");
+                            
+                            var tagsPlainText = "";
+
+                            if (tagResult) {
+                                var tagsSeparated;
+                                // The result does not contain any \n, so we are splitting by whitespace.
+                                tagsSeparated = tagResult.toString().split('\n');
+                                tagsSeparated.splice(0, 1); // removing ""
+                                if (tagsSeparated.length === 0) {
+                                    logIfVerbose("No tags");
+                                } else {
+                                    tagsSeparated.splice(0, 1); // removing headline
+                                    tagsSeparated.splice(0, 1); // removing "----"
+
+                                    tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
+                                    tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
+                                    tagsSeparated.splice(tagsSeparated.length - 1, 1); // removing ""
+
+                                    tagsSeparated.forEach( function(tag){
+
+                                        var tagsRegexp = /[\s*]?(.+)[\s*]?1[\s*]?/i;
+                                        var fetchTag = tagsRegexp.exec(tag);
+                                        tagsPlainText += " +" + fetchTag[1].replace(/ /g,'');
+                                    });
+                                }
+                            }
+
+                            var taskEntry = "* " + fetchTaskParams[2] + tagsPlainText;
                             logIfVerbose("Inserting \"" + taskEntry + "\" after line " + projectNameLines[currentProjectNumber - 1]);
                             plainText.splice(projectNameLines[currentProjectNumber - 1], 0, taskEntry);
                             
@@ -278,9 +340,7 @@ QtObject {
                                 "delete"
                             ]);
                         }
-                        
                     }
-
                 });
 
                 // Finally, selected text is replaced by the text with insertions.

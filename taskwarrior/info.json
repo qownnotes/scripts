@@ -2,7 +2,7 @@
   "name": "Taskwarrior",
   "identifier": "taskwarrior",
   "script": "taskwarrior.qml",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "minAppVersion": "17.06.4",
   "authors": ["@fmakowski"],
   "platforms": ["linux", "macos"],
