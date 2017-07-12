@@ -5,5 +5,5 @@
   "authors": ["@pbek"],
   "version": "0.0.1",
   "minAppVersion": "17.05.7",
-  "description" : "This script will encrypt and decrypt notes with <a href='https://gnupg.org/'>PGP</a>.\nDecryption may only work if you don't have to enter a password."
+  "description" : "This script will encrypt and decrypt notes with <a href='https://gnupg.org/'>PGP</a> instead of the internal AES-256 encryption.\nDecryption may only work if you don't have to enter a password."
 }
