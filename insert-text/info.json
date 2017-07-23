@@ -1,0 +1,10 @@
+{
+  "name": "Insert text button",
+  "identifier": "insert-text",
+  "script": "insert-text.qml",
+  "authors": ["@Maboroshy"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.8",
+  "description" : "Simple script, that creates a button and a context menu item that insert text, defined in the script settings."
+} 
