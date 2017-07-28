@@ -38,7 +38,7 @@ Script {
         }
         
         // start the diff programm with the selected note paths as parameters
-        var params = script.selectedNotePaths();
+        var params = script.selectedNotesPaths();
         script.startDetachedProcess(executablePath, params);
     }
 }
