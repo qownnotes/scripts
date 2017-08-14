@@ -2,6 +2,7 @@
   "name": "Inbox [beta]",
   "identifier": "inbox",
   "script": "inbox.qml",
+  "resources": ["inbox.py", "md_link.py", "safe_path.py"],
   "authors": ["@Maboroshy"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
