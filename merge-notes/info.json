@@ -6,6 +6,6 @@
   "authors": ["@Maboroshy"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
-  "minAppVersion": "18.08.5",
+  "minAppVersion": "17.08.5",
   "description" : "This script adds a toolbar button and a note list context menu item to merge multiple selected notes. Notes are merged to the first selected note or to a new note, depending on setting. Notes are merged in the order they were selected.\n\n<b>Dependencies:</b>\n<a href=\"https://www.python.org/downloads/\">Python 3.3+ Interpreter</a>.\n\nThis script should be used with \"Allow note file name to be different from headline\" and \"Accept all external modification of current note\" options on."
 } 
