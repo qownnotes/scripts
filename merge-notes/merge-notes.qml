@@ -9,9 +9,9 @@ import QOwnNotesTypes 1.0
 Script {
     /// functions to find correct Python 3 interpreter command and set it as default
     function getPyCommand() {
+        if (script.startSynchronousProcess('pythonw', '-V', '').toString().indexOf('Python 3') != '-1') {return 'pythonw'}
         if (script.startSynchronousProcess('python3', '-V', '').toString().indexOf('Python 3') != '-1') {return 'python3'}
         if (script.startSynchronousProcess('python',  '-V', '').toString().indexOf('Python 3') != '-1') {return 'python'}
-        if (script.startSynchronousProcess('py',      '-V', '').toString().indexOf('Python 3') != '-1') {return 'py'}
         return ''
     }
 
