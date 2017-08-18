@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 
 merge_to_first = sys.argv[1]
 delete_merged = sys.argv[2]
@@ -19,6 +20,9 @@ else:
                                                            len(note_list),
                                                            os.path.splitext(os.path.basename(note_list[0]))[0],
                                                            os.path.splitext(note_list[0])[1])
+    if os.path.isfile(output_path):
+        output_path = os.path.splitext(output_path)[0] + '_' + str(int(time.time())) + os.path.splitext(note_list[0])[1]
+
 try:
     with open(output_path, 'w') as output:
         output.write('\n\n'.join(note_content_list))
