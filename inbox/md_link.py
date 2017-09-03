@@ -5,6 +5,7 @@ import shutil
 import hashlib
 import platform
 import subprocess
+import urllib.error
 import urllib.request
 
 
@@ -118,15 +119,15 @@ class File:
         if platform.system() == 'Linux':
             try:
                 file = Gio.File.new_for_path(self.path)
-            except NameError:
+
+                file_info = file.query_info('standard::icon', 0, Gio.Cancellable())
+                file_icon = file_info.get_icon().get_names()[0]
+
+                icon_theme = Gtk.IconTheme.get_default()
+                icon_info = icon_theme.lookup_icon(file_icon, icon_size, 0)
+                icon_path = icon_info.get_filename()
+            except (NameError, AttributeError):
                 return ''
-
-            file_info = file.query_info('standard::icon', 0, Gio.Cancellable())
-            file_icon = file_info.get_icon().get_names()[0]
-
-            icon_theme = Gtk.IconTheme.get_default()
-            icon_info = icon_theme.lookup_icon(file_icon, icon_size, 0)
-            icon_path = icon_info.get_filename()
 
             if os.path.isfile(icon_path):
                 if save:
