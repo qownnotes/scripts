@@ -22,8 +22,11 @@ def text_to_md(file_attrs):
     filename = os.path.splitext(os.path.basename(file_attrs.file_path))[0]
     mtime = time.localtime(os.path.getmtime(file_attrs.file_path))
 
-    with open(file_attrs.file_path, 'r') as text_file:
-        text = text_file.read()
+    try:
+        with open(file_attrs.file_path, 'r') as text_file:
+            text = text_file.read()
+    except(UnicodeDecodeError):
+        return
 
     topics = re.findall(file_attrs.topic_marker + '(\w*)', text)
     text = re.sub(file_attrs.topic_marker + '\w*[ ]?', '', text).strip()
@@ -146,7 +149,7 @@ if __name__ == '__main__':
         :param file_attrs: File_attrs named tuple
         :return: Note_attrs named tuple
         """
-
+        # print(file_attrs.file_path)
         if file_attrs.file_path.endswith('.txt') or not os.path.splitext(file_attrs.file_path)[1]:
             return text_to_md(file_attrs)
         elif args.pandoc_bin and args.pandoc_ver and file_attrs.file_path.endswith(('.htm', '.html')):
@@ -183,20 +186,29 @@ if __name__ == '__main__':
     # Prepare a list of File_attrs tuples for process_by_ext function, based on file location, older files first
     file_list = []
     if args.scan_folder:
-        for file_path in sorted([folder_dir + os.sep + path for path in os.listdir(folder_dir)], key=os.path.getmtime):
-            if os.path.isfile(file_path) and not file_path.endswith(('.md', 'notes.sqlite')) \
-            and not os.path.basename(file_path).startswith(('.', inbox_dir, folder_dir + os.sep + 'media', folder_dir + os.sep + 'attachments')):
-                file_list.append([File_attrs(file_path=file_path, folder_dir_path=folder_dir, output_dir_path=os.path.dirname(file_path),
-                                             topic_marker=topic_marker, output_file='*no mtime*')])
+        for subfolder, dirs, files in os.walk(folder_dir):
+            for file_path in sorted([subfolder + os.sep + file for file in files], key=os.path.getmtime):
+                if os.path.isfile(file_path) \
+                and not file_path.endswith(('.md', 'notes.sqlite')) \
+                and not file_path.startswith((inbox_dir, folder_dir + os.sep + 'media', folder_dir + os.sep + 'attachments')) \
+                and os.sep + '.' not in file_path.replace(folder_dir, '') \
+                and '_files' + os.sep not in file_path.replace(folder_dir, ''):
+                    file_list.append([File_attrs(file_path=file_path, folder_dir_path=folder_dir, output_dir_path=os.path.dirname(file_path),
+                                                 topic_marker=topic_marker, output_file='*no mtime*')])
 
     for file_path in sorted([inbox_dir + os.sep + path for path in os.listdir(inbox_dir)], key=os.path.getmtime):
-        if os.path.isdir(file_path) and not os.path.basename(file_path).startswith('.') and not file_path.endswith('_files'):
+        if os.path.isdir(file_path) \
+        and not os.path.basename(file_path).startswith('.') \
+        and not file_path.endswith('_files'):
             for sub_file in sorted([file_path + os.sep + path for path in os.listdir(file_path)], key=os.path.getmtime):
-                if not sub_file.endswith('.md') and not os.path.basename(sub_file).startswith('.'):
+                if not sub_file.endswith('.md') \
+                and not os.path.basename(sub_file).startswith('.'):
                     file_list.append([File_attrs(file_path=sub_file, folder_dir_path=folder_dir, output_dir_path=inbox_dir,
                                                  topic_marker=topic_marker, output_file=os.path.basename(file_path) + '.md')])
         else:
-            if os.path.isfile(file_path) and not file_path.endswith('.md') and not os.path.basename(file_path).startswith('.'):
+            if os.path.isfile(file_path) \
+            and not file_path.endswith('.md') \
+            and not os.path.basename(file_path).startswith('.'):
                 file_list.append([File_attrs(file_path=file_path, folder_dir_path=folder_dir, output_dir_path=inbox_dir,
                                              topic_marker=topic_marker, output_file='')])
 
