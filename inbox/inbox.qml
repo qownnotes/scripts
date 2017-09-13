@@ -9,6 +9,7 @@ Script {
         return ''
     }
 
+    /// TODO Change to platform dependant defaults without checking
     function setDefaultPyCommand() {
         if (script.getPersistentVariable('MdNT/pyCommand', '') == '') {
             script.setPersistentVariable('MdNT/pyCommand', checkPyCommand())
@@ -19,10 +20,10 @@ Script {
     property string scriptDirPath
     property string inboxFolder
     property bool   scanFolder
+    property bool   watchFS
     property string tagMarker
     property string pyCommand
     property string pandocCommand
-
     property string pandocVersion
 
     property variant settingsVariables: [
@@ -37,16 +38,25 @@ Script {
         {
             'identifier': 'scanFolder',
             'name': 'Scan whole folder rather than only Inbox folder',
-            'description': 'If true the script will convert any non-".md" file in folder to note. \n' +
+            'description': 'If true the script will convert any non-".md" file in folder to note.\n' +
                            '"Sub-folder to single note" and modification times in note titles will still be only for Inbox.',
+            'type': 'boolean',
+            'default': 'false',
+        },
+        {
+            'identifier': 'watchFS',
+            'name': 'Continuously watch for new files and process them as they appear',
+            'description': 'If true the script will continuously watch inbox/folder (depending on above setting)\n' +
+                           'for new files and process them as soon as they appear.\n' +
+                           'The script will start working on load, no toolbar button will appear.',
             'type': 'boolean',
             'default': 'false',
         },
         {
             'identifier': 'tagMarker',
             'name': 'Tag word marker',
-            'description': 'A symbol or group of symbols which start a "topic" word for ".txt" notes. \n' +
-                           'For example a txt note with "@tag" word will go to "tag.md" note',
+            'description': 'A symbol or string of symbols which start a "topic" word for ".txt" notes. \n' +
+                           'For example, if set to "@", a ".txt" file with "@tag" word will go to "tag.md" note',
             'type': 'string',
             'default': '@',
         },
@@ -66,10 +76,33 @@ Script {
         },
     ]
 
+    function runInbox() {
+        var pyScriptPath = scriptDirPath + script.dirSeparator() + 'inbox.py'
+        var inboxPath = script.currentNoteFolderPath() + script.dirSeparator() + inboxFolder
+
+        var args = [pyScriptPath,
+                    '--inbox', inboxPath,
+                    '--folder', script.currentNoteFolderPath(),
+                    '--marker', tagMarker]
+
+        if (scanFolder == true) {
+            args.push('--scan-folder')
+        }
+
+        if (watchFS == true) {
+            args.push('--watch')
+        }
+
+        if (pandocVersion != '') {
+            args.push('--pandoc-bin', pandocCommand,
+                      '--pandoc-ver', pandocVersion)
+        }
+
+        script.startDetachedProcess(pyCommand, args)
+        script.log('Processing inbox...')
+    }
 
     function init() {
-        pandocVersion = script.getPersistentVariable('MdNT/pandocVersion', '')
-
         /// Check if set pyCommand can run Python 3
         if (script.getPersistentVariable('MdNT/pyCommand', '') != pyCommand) {
 
@@ -84,30 +117,36 @@ Script {
         /// Get the version of pandoc
         if (script.getPersistentVariable('MdNT/pandocCommand', '') != pandocCommand) {
             var pandocCheck = script.startSynchronousProcess(pandocCommand, '-v', '').toString().split('\n')[0]
+
             if (pandocCheck.indexOf('pandoc') != '-1') {
                 script.setPersistentVariable('MdNT/pandocCommand', pandocCommand)
                 script.setPersistentVariable('MdNT/pandocVersion', pandocCheck.slice(7))
-                pandocVersion = pandocCheck.slice(7)
             }
             else {
-            script.setPersistentVariable('MdNT/pandocCommand', '')
+                script.setPersistentVariable('MdNT/pandocCommand', '')
             }
         }
 
         /// Issues alerts
         if (script.getPersistentVariable('MdNT/pandocCommand', '') == '') {
-            script.informationMessageBox('The command/path for pandoc in the script settings is not valid\n' +
-                                         'Converting web pages will be disabled.',
-                                         'Script')
+            script.informationMessageBox('The command/path for pandoc in the script settings is not valid.\n' +
+                                         'Converting web pages to notes will be disabled.',
+                                         'Inbox script')
             script.setPersistentVariable('MdNT/pandocCommand', pandocCommand)
             script.setPersistentVariable('MdNT/pandocVersion', '')
             pandocVersion = ''
         }
+        else {
+            pandocVersion = script.getPersistentVariable('MdNT/pandocVersion', '')
+        }
 
         if (script.getPersistentVariable('MdNT/pyCommand', '') == '') {
-            script.informationMessageBox('The command/path for Python 3 interpreter in the script settings is not valid\n' +
+            script.informationMessageBox('The command/path for Python 3 interpreter in the script settings is not valid.\n' +
                                          'Please set the correct command/path.',
-                                         'Script')
+                                         'Inbox script')
+        }
+        else if (watchFS == true) {
+            runInbox()
         }
         else {
             script.registerCustomAction('inbox', 'Process inbox folder', 'Inbox', 'mail-receive.svg')
@@ -116,25 +155,7 @@ Script {
 
     function customActionInvoked(action) {
         if (action == 'inbox') {
-            var pyScriptPath = scriptDirPath + script.dirSeparator() + 'inbox.py'
-            var inboxPath = script.currentNoteFolderPath() + script.dirSeparator() + inboxFolder
-
-            var args = [pyScriptPath,
-                        '--inbox', inboxPath,
-                        '--folder', script.currentNoteFolderPath(),
-                        '--marker', tagMarker]
-
-            if (scanFolder == true) {
-                args.push('--scan-folder')
-            }
-
-            if (pandocVersion != '') {
-                args.push('--pandoc-bin', pandocCommand,
-                          '--pandoc-ver', pandocVersion)
-            }
-
-            script.startDetachedProcess(pyCommand, args)
-            script.log('Processing inbox...')
+            runInbox()
         }
     }
 }

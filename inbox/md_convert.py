@@ -23,7 +23,7 @@ def html_text(html_text, pandoc_bin='pandoc', pandoc_ver='1.19.1'):
                        '--atx-headers']
 
     # Remove firefox reader mode panel if there's one
-    html_text = re.sub('<ul id="reader-toolbar" class="toolbar">.*</li></ul></ul>', '', html_text, flags=re.DOTALL)
+    html_text = re.sub('<ul id="reader-toolbar" class="toolbar">.*</li></ul></ul>', '', html_text, flags=re.DOTALL)  ## TODO Maybe use html.parser 
 
     try:
         pandoc_pipe = subprocess.Popen(pandoc_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)

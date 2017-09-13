@@ -61,9 +61,14 @@ class URL:
         try:
             html_text = urllib.request.urlopen(self.url).read().decode('utf-8')  # TODO encodings other that utf-8, https fails on early Python 3 versions
         except (urllib.error.HTTPError, urllib.error.URLError, UnicodeDecodeError):
-            return ''
+            title = ''
         else:
-            return re.search('<title.*?>(.+?)</title>', html_text, re.IGNORECASE | re.DOTALL).group(1)
+            title = re.search('<title.*?>(.+?)</title>', html_text, re.IGNORECASE | re.DOTALL).group(1)
+
+        if title:
+            return title
+        else:
+            return self.url.split('//')[-1].split('/')[0]
 
     @property
     def md(self):
