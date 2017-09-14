@@ -9,7 +9,6 @@ Script {
         return ''
     }
 
-    /// TODO Change to platform dependant defaults without checking
     function setDefaultPyCommand() {
         if (script.getPersistentVariable('MdNT/pyCommand', '') == '') {
             script.setPersistentVariable('MdNT/pyCommand', checkPyCommand())
@@ -18,6 +17,7 @@ Script {
     }
 
     property string scriptDirPath
+    property string noteFolder
     property string inboxFolder
     property bool   scanFolder
     property bool   watchFS
@@ -28,10 +28,18 @@ Script {
 
     property variant settingsVariables: [
         {
+            'identifier': 'noteFolder',
+            'name': 'Note folder path',
+            'description': 'Full absolute path to note folder to process. You can select "notes.sqlite" file or type the path in.\n' +
+                           "Leave empty for current note folder. Continuous watch mode won't work if empty.",
+            'type': 'file',
+            'default': '',
+        },
+        {
             'identifier': 'inboxFolder',
             'name': 'Inbox folder name',
-            'description': 'Name of inbox folder located in the root of note folder. It is single for all note folders\n' +
-                           'An empty inbox folder will be created if no exists.',
+            'description': 'Name of inbox folder located in the root of note folder. It is single for all note folders.\n' +
+                           'An new inbox folder will be created if no exists.',
             'type': 'string',
             'default': 'Inbox',
         },
@@ -77,8 +85,9 @@ Script {
     ]
 
     function runInbox() {
+
         var pyScriptPath = scriptDirPath + script.dirSeparator() + 'inbox.py'
-        var inboxPath = script.currentNoteFolderPath() + script.dirSeparator() + inboxFolder
+        var inboxPath = noteFolder + script.dirSeparator() + inboxFolder
 
         var args = [pyScriptPath,
                     '--inbox', inboxPath,
@@ -103,6 +112,15 @@ Script {
     }
 
     function init() {
+
+        if (noteFolder == '') {
+            noteFolder = script.currentNoteFolderPath()
+            watchFS = false
+        }
+        else {
+            noteFolder = noteFolder.replace(script.dirSeparator() + 'notes.sqlite', '')
+        }
+
         /// Check if set pyCommand can run Python 3
         if (script.getPersistentVariable('MdNT/pyCommand', '') != pyCommand) {
 
