@@ -2,9 +2,9 @@
 
 import os
 import re
+import sys
 import time
 import argparse
-import platform
 import collections
 import multiprocessing.dummy
 
@@ -53,7 +53,7 @@ def text_to_md(file_attrs, topic_marker):
     try:
         with open(file_attrs.file_path, 'r') as text_file:
             text = text_file.read()
-    except(UnicodeDecodeError):
+    except UnicodeDecodeError:
         return
 
     topics = re.findall(topic_marker + '(\w*)', text)
@@ -159,13 +159,13 @@ def make_flat_list(mixed_list, target_item_type=tuple):
     :return: flat list of 'target_item_type'
     """
     flat_list = []
-    for object in mixed_list:
-        if type(object) == list:
-            for item in object:
+    for obj in mixed_list:
+        if type(obj) == list:
+            for item in obj:
                 if type(item) == target_item_type:
                     flat_list.append(item)
-        elif type(object) == target_item_type:
-            flat_list.append(object)
+        elif type(obj) == target_item_type:
+            flat_list.append(obj)
     return flat_list
 
 
@@ -210,7 +210,7 @@ def process_by_ext(file_attrs):
         return file_to_md(file_attrs, 'attachments')
 
 
-def write_note_and_delete(note_attrs):  # TODO Test
+def write_note_and_delete(note_attrs):
     """
     Create or append existing note files based on Note_attrs tuples data, then delete the source file
     :param note_attrs: Note_attrs named tuple
@@ -245,13 +245,22 @@ def write_note_and_delete(note_attrs):  # TODO Test
 
 if __name__ == '__main__':
 
+    script_path = os.path.dirname(sys.argv[0])
+
+    for file in os.listdir(script_path):
+        if file[-5:] == '.lock':
+            os.remove(script_path + os.sep + file)
+
+    lockfile_path = script_path + os.sep + str(int(time.time())) + '.lock'
+    open(lockfile_path, 'w').close()
+
     arg_parser = argparse.ArgumentParser(description='A script to turn everything in the inbox directory to markdown notes.')
     arg_parser.add_argument('-i', '--inbox', action='store', dest='inbox_dir', required=True,
-                        help="Full absolute path to the inbox directory to organize")
+                            help="Full absolute path to the inbox directory to organize")
     arg_parser.add_argument('-f', '--folder', action='store', dest='folder_dir', required=True,
-                        help="Full absolute path to directory where 'media' and 'attachment' directories are")
+                            help="Full absolute path to directory where 'media' and 'attachment' directories are")
     arg_parser.add_argument('-m', '--marker', action='store', dest='topic_marker', required=False, default='@',
-                        help="Symbol(s) which start the 'topic' word (for text files)")
+                            help="Symbol(s) which start the 'topic' word (for text files)")
     arg_parser.add_argument('-s', '--scan-folder', action='store_true', dest='scan_folder', required=False,
                             help="Process whole folder rather than only inbox")
     arg_parser.add_argument('-p', '--pandoc-bin', action='store', dest='pandoc_bin', required=False,
@@ -275,8 +284,8 @@ if __name__ == '__main__':
         scan_path = inbox_dir
 
     file_list = []
-    for dir, subdirs, files in os.walk(scan_path):
-        for file_path in sorted([dir + os.sep + file for file in files], key=os.path.getmtime):
+    for root, subdirs, files in os.walk(scan_path):
+        for file_path in sorted([root + os.sep + file for file in files], key=os.path.getmtime):
             file_attrs = process_by_path(file_path)
             if file_attrs:
                 file_list.append([file_attrs])
@@ -313,7 +322,8 @@ if __name__ == '__main__':
 
                 if file_attrs:
                     # Wait for all the web page resources saved/synced
-                    if file_path.endswith(('.htm', '.html')): time.sleep(2)
+                    if file_path.endswith(('.htm', '.html')):
+                        time.sleep(2)
                     obj_to_write = process_by_ext(file_attrs)
                 else:
                     return
@@ -332,14 +342,11 @@ if __name__ == '__main__':
 
         try:
             while True:
-                time.sleep(5)
+                if os.path.isfile(lockfile_path):
+                    time.sleep(5)
+                else:
+                    raise Exception
         except:
             observer.stop()
 
         observer.join()
-
-
-
-
- #   if platform.system() == 'Linux':
-  #      os.system('notify-send "-a" "Inbox script" "Your inbox is organized"')  # TODO maybe change to gi.repository: Notify
