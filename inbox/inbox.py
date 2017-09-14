@@ -251,9 +251,6 @@ if __name__ == '__main__':
         if file[-5:] == '.lock':
             os.remove(script_path + os.sep + file)
 
-    lockfile_path = script_path + os.sep + str(int(time.time())) + '.lock'
-    open(lockfile_path, 'w').close()
-
     arg_parser = argparse.ArgumentParser(description='A script to turn everything in the inbox directory to markdown notes.')
     arg_parser.add_argument('-i', '--inbox', action='store', dest='inbox_dir', required=True,
                             help="Full absolute path to the inbox directory to organize")
@@ -334,6 +331,9 @@ if __name__ == '__main__':
                 else:
                     write_note_and_delete(obj_to_write)
 
+
+        lockfile_path = script_path + os.sep + str(int(time.time())) + '.lock'
+        open(lockfile_path, 'w').close()
 
         event_handler = FsEventHandler()
         observer = watchdog.observers.Observer()
