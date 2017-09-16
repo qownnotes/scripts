@@ -2,17 +2,22 @@ import QtQml 2.2
 import QOwnNotesTypes 1.0
 
 Script {
-    function checkPyCommand() {
-        if (script.startSynchronousProcess('pythonw', '-V', '').toString().indexOf('Python 3') != '-1') {return 'pythonw'}
-        if (script.startSynchronousProcess('python3', '-V', '').toString().indexOf('Python 3') != '-1') {return 'python3'}
-        if (script.startSynchronousProcess('python',  '-V', '').toString().indexOf('Python 3') != '-1') {return 'python'}
-        return ''
-    }
-
     function setDefaultPyCommand() {
+        
         if (script.getPersistentVariable('MdNT/pyCommand', '') == '') {
-            script.setPersistentVariable('MdNT/pyCommand', checkPyCommand())
+            
+            if (script.platformIsWindows()) { 
+                var defaultPyCommand = 'pythonw'
+            }
+            else { 
+                var defaultPyCommand = 'python3'
+            }
+            
+            if (script.startSynchronousProcess(defaultPyCommand, '-V', '').toString().indexOf('Python 3') != '-1') {
+                script.setPersistentVariable('MdNT/pyCommand', checkPyCommand())
+            }
         }
+        
         return script.getPersistentVariable('MdNT/pyCommand', '')
     }
 
@@ -38,8 +43,7 @@ Script {
         {
             'identifier': 'inboxFolder',
             'name': 'Inbox folder name',
-            'description': 'Name of inbox folder located in the root of note folder. It is single for all note folders.\n' +
-                           'An new inbox folder will be created if no exists.',
+            'description': 'Name of inbox folder located in the root of note folder. An new inbox folder will be created if no exists.',
             'type': 'string',
             'default': 'Inbox',
         },
@@ -47,7 +51,7 @@ Script {
             'identifier': 'scanFolder',
             'name': 'Scan whole folder rather than only Inbox folder',
             'description': 'If true the script will convert any non-".md" file in folder to note.\n' +
-                           '"Sub-folder to single note" and modification times in note titles will still be only for Inbox.',
+                           '"Sub-folder to single note" and modification times in note titles features will still work only for Inbox.',
             'type': 'boolean',
             'default': 'false',
         },
