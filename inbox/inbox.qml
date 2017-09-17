@@ -95,7 +95,7 @@ Script {
 
         var args = [pyScriptPath,
                     '--inbox', inboxPath,
-                    '--folder', script.currentNoteFolderPath(),
+                    '--folder', noteFolder,
                     '--marker', tagMarker]
 
         if (scanFolder == true) {
@@ -112,6 +112,7 @@ Script {
         }
 
         script.startDetachedProcess(pyCommand, args)
+        script.log(pyCommand + ' ' + args)
         script.log('Processing inbox...')
     }
 
