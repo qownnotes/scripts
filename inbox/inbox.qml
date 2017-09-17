@@ -112,7 +112,6 @@ Script {
         }
 
         script.startDetachedProcess(pyCommand, args)
-        script.log(pyCommand + ' ' + args)
         script.log('Processing inbox...')
     }
 
