@@ -6,5 +6,5 @@
   "authors": ["@pbek"],
   "version": "0.0.2",
   "minAppVersion": "17.05.8",
-  "description" : "With this script you can right click the selected text and convert it to BBCode Code.\n\n<b>Dependencies</b>\n<a href=\"http://pandoc.org\">Pandoc</a>\n<a href=\"https://github.com/2ion/pandoc-bbcode\">panbbcode.lua</a> (bundled with the script)\n\n<b>Installation</b>\nAfter you have installed <i>Pandoc</i> you have to configure its path in the script settings."
+  "description" : "With this script you can right click the selected text and convert it to BBCode Code in the clipboard.\n\n<b>Dependencies</b>\n<a href=\"http://pandoc.org\">Pandoc</a>\n<a href=\"https://github.com/2ion/pandoc-bbcode\">panbbcode.lua</a> (bundled with the script)\n\n<b>Installation</b>\nAfter you have installed <i>Pandoc</i> you have to configure its path in the script settings."
 }
