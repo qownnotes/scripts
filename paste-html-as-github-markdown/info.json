@@ -1,0 +1,9 @@
+{
+  "name": "Paste HTML as GitHub Markdown",
+  "identifier": "paste-html-as-github-markdown",
+  "script": "paste-html-as-github-markdown.qml",
+  "authors": ["@pbek"],
+  "version": "0.0.1",
+  "minAppVersion": "17.08.2",
+  "description" : "With this script you can right click in the note edit and paste previously copied HTML from a website as GitHub Markdown with the help of Pandoc.\n\n<b>Dependencies</b>\n<a href=\"http://pandoc.org\">Pandoc</a>\n\n<b>Installation</b>\nAfter you have installed <i>Pandoc</i> you have to configure its path in the script settings."
+}
