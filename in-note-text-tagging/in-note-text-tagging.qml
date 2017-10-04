@@ -13,7 +13,7 @@ Script {
         {
             "identifier": "tagMarker",
             "name": "Tag word marker",
-            "description": "A word that starts with this characters is recognized as tag\n",
+            "description": "A word that starts with this characters is recognized as tag",
             "type": "string",
             "default": "@",
         }
