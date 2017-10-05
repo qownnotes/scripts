@@ -4,8 +4,21 @@ import QOwnNotesTypes 1.0
 /**
  * This script handles tagging in a note for tags in the note text like:
  * @tag1 @tag2 @tag3
+ * @tag_one would tag the note with "tag one" tag.
  */
 Script {
+    property string tagMarker
+
+    property variant settingsVariables: [
+        {
+            "identifier": "tagMarker",
+            "name": "Tag word marker",
+            "description": "A word that starts with this characters is recognized as tag",
+            "type": "string",
+            "default": "@",
+        }
+    ]
+    
     /**
      * Handles note tagging for a note
      *
@@ -20,7 +33,7 @@ Script {
      */
     function noteTaggingHook(note, action, tagName, newTagName) {
         var noteText = note.noteText;
-        var tagRegExp = RegExp("\\B@" + escapeRegExp(tagName) + "\\b");
+        var tagRegExp = RegExp("\\B%1($|\\s|\\b)".arg(escapeRegExp(tagMarker + tagName).replace(" ", "_")));
 
         switch (action) {
             // adds the tag "tagName" to the note
@@ -33,7 +46,7 @@ Script {
                 }
 
                 // add the tag at the end of the note
-                noteText += "\n@" + tagName;
+                noteText += "\n" + tagMarker + tagName.replace(" ", "_");
                 return noteText;
                 break;
 
@@ -49,17 +62,17 @@ Script {
             // the new note text has to be returned so that the note can be updated
             // returning an empty string indicates that nothing has to be changed
             case "rename":
-                noteText = noteText.replace(tagRegExp, "@" + newTagName);
+                noteText.replace(tagRegExp, tagMarker + newTagName.replace(" ", "_"));
                 return noteText;
                 break;
 
             // returns a list of all tag names of the note
             case "list":
-                var re = new RegExp("\\B@([^\\s,]+)", "gi"),
+                var re = new RegExp("\\B%1([^\\s,;]+)".arg(escapeRegExp(tagMarker)), "gi"),
                     result, tagNameList = [];
 
                 while ((result = re.exec(noteText)) !== null) {
-                    var tagName = result[1];
+                    var tagName = result[1].replace("_", " ");
                     
                     // add the tag if it wasn't in the list
                     if (tagNameList.indexOf(tagName) ==  -1) {
