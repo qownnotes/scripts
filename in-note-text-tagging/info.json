@@ -2,7 +2,7 @@
   "name": "@tag tagging in note text (experimental)",
   "identifier": "in-note-text-tagging",
   "script": "in-note-text-tagging.qml",
-  "authors": ["@pbek"],
+  "authors": ["@pbek", "@Maboroshy"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.2",
   "minAppVersion": "17.09.9",
