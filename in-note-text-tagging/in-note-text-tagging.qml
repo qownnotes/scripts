@@ -33,7 +33,7 @@ Script {
      */
     function noteTaggingHook(note, action, tagName, newTagName) {
         var noteText = note.noteText;
-        var tagRegExp = RegExp("\\B%1($|\\s|\\b)".arg(escapeRegExp(tagMarker + tagName).replace(" ", "_")));
+        var tagRegExp = RegExp("\\B%1($|\\s|\\b)".arg(escapeRegExp(tagMarker + tagName).replace(/ /g, "_")));
 
         switch (action) {
             // adds the tag "tagName" to the note
@@ -46,7 +46,7 @@ Script {
                 }
 
                 // add the tag at the end of the note
-                noteText += "\n" + tagMarker + tagName.replace(" ", "_");
+                noteText += "\n" + tagMarker + tagName.replace(/ /g, "_");
                 return noteText;
                 break;
 
@@ -62,7 +62,7 @@ Script {
             // the new note text has to be returned so that the note can be updated
             // returning an empty string indicates that nothing has to be changed
             case "rename":
-                noteText.replace(tagRegExp, tagMarker + newTagName.replace(" ", "_"));
+                noteText = noteText.replace(tagRegExp, tagMarker + newTagName.replace(/ /g, "_"));
                 return noteText;
                 break;
 
@@ -72,7 +72,7 @@ Script {
                     result, tagNameList = [];
 
                 while ((result = re.exec(noteText)) !== null) {
-                    var tagName = result[1].replace("_", " ");
+                    var tagName = result[1].replace(/_/g, " ");
                     
                     // add the tag if it wasn't in the list
                     if (tagNameList.indexOf(tagName) ==  -1) {
