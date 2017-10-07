@@ -33,7 +33,7 @@ Script {
      */
     function noteTaggingHook(note, action, tagName, newTagName) {
         var noteText = note.noteText;
-        var tagRegExp = RegExp("\\B%1($|\\s|\\b)".arg(escapeRegExp(tagMarker + tagName).replace(/ /g, "_")));
+        var tagRegExp = RegExp("\\B%1(?=($|\\s|\\b))".arg(escapeRegExp(tagMarker + tagName).replace(/ /g, "_")));
 
         switch (action) {
             // adds the tag "tagName" to the note
