@@ -1,0 +1,10 @@
+{
+  "name": "Headline depth buttons",
+  "identifier": "headline-depth",
+  "script": "headline-depth.qml",
+  "authors": ["@Maboroshy"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.07.8",
+  "description" : "This script adds toolbar buttons to increase and decrease the depth of all the headlines in selected text"
+} 
