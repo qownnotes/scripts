@@ -1,0 +1,10 @@
+{
+  "name": "Note link to clipboard",
+  "identifier": "note-link-to-clipboard",
+  "script": "note-link-to-clipboard.qml",
+  "authors": ["@Maboroshy"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.02.4",
+  "description" : "This script adds a toolbar button and a context menu item to copy the link of selected note to clipboard"
+} 
