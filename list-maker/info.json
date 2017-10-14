@@ -1,7 +1,7 @@
 {
-  "name": "Make list",
-  "identifier": "make-list",
-  "script": "make-list.qml",
+  "name": "List maker",
+  "identifier": "list-maker",
+  "script": "list-maker.qml",
   "authors": ["@Maboroshy"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.2",
