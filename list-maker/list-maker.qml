@@ -10,7 +10,6 @@ import QOwnNotesTypes 1.0
 Script {
     property string setLetters
     property string setMarkers
-    property bool useNestingLetters
     
     property variant settingsVariables: [
         {
@@ -26,14 +25,7 @@ Script {
             "description": "Put the symbols you want to use as marked list item markers. Spaces and commas are ignored",
             "type": "string",
             "default": "- • ‣",
-        },
-        {
-            "identifier": "useNestingLetters",
-            "name": "Use letters instead of numbers for second level of nested numbered list instead",
-            "description": "Enable for letters, disable for numbers",
-            "type": "boolean",
-            "default": "false",
-        },
+        }
     ]
     
     property string letters
