@@ -2,8 +2,8 @@
   "name": "Journal entry",
   "identifier": "journal-entry",
   "script": "journal-entry.qml",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "minAppVersion": "17.05.6",
-  "authors": ["@pbek"],
+  "authors": ["@pbek", "@sanderboom"],
   "description" : "This script creates a menu item and a button to create or jump to the current date's journal entry."
 }
