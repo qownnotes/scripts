@@ -48,6 +48,17 @@ QtObject {
         var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
 
         var fileName = headline + ".md";
+
+        // Check if we already have a Journal note for today.
+
+        // When a default folder is set, make sure to search in that folder.
+        // This has the highest chance of finding an existing journal note.
+        // Right now we can not search the whole database for a note with this
+        // name / filename.
+        if (defaultFolder && defaultFolder !== '') {
+            script.jumpToNoteSubFolder(defaultFolder);
+        }
+
         var note = script.fetchNoteByFileName(fileName);
 
         // check if note was found
