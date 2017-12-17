@@ -7,6 +7,7 @@ import com.qownnotes.noteapi 1.0
 QtObject {
      property string defaultFolder;
      property string defaultTags;
+     property bool singleJournalPerDay;
 
      property variant settingsVariables: [
         {
@@ -23,13 +24,23 @@ QtObject {
             "type": "string",
             "default": "journal",
         },
+         {
+            "identifier": "singleJournalPerDay",
+            "name": "Single journal per day",
+            "description": "Creates a single journal per day instead of always adding a new journal.",
+            "type": "boolean",
+            "default": "true",
+        },
     ];
 
     /**
      * Initializes the custom action
      */
     function init() {
-        script.registerCustomAction("journalEntry", "Create or open a journal entry", "Journal", "document-new");
+		if (singleJournalPerDay)
+			script.registerCustomAction("journalEntry", "Create or open a journal entry", "Journal", "document-new");
+        else
+			script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");        
     }
 
     /**
@@ -46,6 +57,11 @@ QtObject {
         // get the date headline
         var m = new Date();
         var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
+        
+        // when the configuration option "singleJournalPerDay" is selected create journal entries including time
+        if (!singleJournalPerDay) {
+			headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2)
+		}
 
         var fileName = headline + ".md";
 
