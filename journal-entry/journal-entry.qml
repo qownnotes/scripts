@@ -24,7 +24,7 @@ QtObject {
             "type": "string",
             "default": "journal",
         },
-         {
+        {
             "identifier": "singleJournalPerDay",
             "name": "Single journal per day",
             "description": "Creates a single journal per day instead of always adding a new journal.",
@@ -37,10 +37,10 @@ QtObject {
      * Initializes the custom action
      */
     function init() {
-		if (singleJournalPerDay)
-			script.registerCustomAction("journalEntry", "Create or open a journal entry", "Journal", "document-new");
+        if (singleJournalPerDay)
+            script.registerCustomAction("journalEntry", "Create or open a journal entry", "Journal", "document-new");
         else
-			script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");        
+	    script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");        
     }
 
     /**
@@ -58,10 +58,10 @@ QtObject {
         var m = new Date();
         var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
         
-        // when the configuration option "singleJournalPerDay" is selected create journal entries including time
+        // when the configuration option "singleJournalPerDay" is not selected create journal entries including time
         if (!singleJournalPerDay) {
-			headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2)
-		}
+            headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2)
+        }
 
         var fileName = headline + ".md";
 
