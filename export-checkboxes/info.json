@@ -5,5 +5,5 @@
   "version": "0.0.1",
   "minAppVersion": "17.12.0",
   "authors": ["@m-wim"],
-  "description" : "This script changes the html output. If list items start with a check box mark the list bullet and mark is replaced with a single UTF-8 character for checked/unchecked state."
+  "description" : "This script changes the html output. If list items start with a check box mark like <pre>- [ ]</pre> and <pre>- [x]</pre> the list bullet and mark is replaced with a single UTF-8 character for checked/unchecked state."
 }
