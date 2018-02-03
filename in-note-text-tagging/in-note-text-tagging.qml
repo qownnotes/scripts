@@ -155,4 +155,20 @@ Script {
     function escapeRegExp(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     }
+
+    /**
+     * Hook to feed the autocompletion with tags if the current word starts with the tag marker
+     */
+    function autocompletionHook() {
+        // get the current word plus non-word-characters before the word to also get the tag marker
+        var word = script.noteTextEditCurrentWord(true);
+
+        if (!word.startsWith(tagMarker)) {
+            return [];
+        }
+
+        // cut the tag marker off of the string and do a substring search for tags
+        var tags = script.searchTagsByName(word.substr(tagMarker.length));
+        return tags;
+    }
 }
