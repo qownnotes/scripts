@@ -166,9 +166,15 @@ Script {
         if (!word.startsWith(tagMarker)) {
             return [];
         }
-
+        
         // cut the tag marker off of the string and do a substring search for tags
         var tags = script.searchTagsByName(word.substr(tagMarker.length));
+        
+        // convert tag names with spaces to in-text tags with "_", "tag one" to @tag_one 
+        for (var i = 0; i < tags.length; i++) {
+            tags[i] = tags[i].replace(" ", "_");
+        }
+        
         return tags;
     }
 }
