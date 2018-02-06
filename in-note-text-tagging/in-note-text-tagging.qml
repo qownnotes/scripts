@@ -172,7 +172,7 @@ Script {
         
         // convert tag names with spaces to in-text tags with "_", "tag one" to @tag_one 
         for (var i = 0; i < tags.length; i++) {
-            tags[i] = tags[i].replace(" ", "_");
+            tags[i] = tags[i].replace(/ /g, "_");
         }
         
         return tags;
