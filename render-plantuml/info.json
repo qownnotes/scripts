@@ -1,0 +1,9 @@
+{
+  "name": "Support for PlantUML in notes",
+  "identifier": "render-plantuml",
+  "script": "render-plantuml.qml",
+  "authors": ["@nikhilw"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.7",
+  "description" : "This script renders any plantuml text embedded in a note with the language hint, into a uml diagram. It needs node.js (<a href=\"https://nodejs.org/en/download/\">https://nodejs.org/en/download/</a>), java (<a href=\"https://java.com/en/download/\">https://java.com/en/download/</a>) and plantuml (<a href=\"http://plantuml.com/download\">http://plantuml.com/download</a>) to be installed. Install node and java. download the plantuml jar and provide the full path in script settings."
+}
