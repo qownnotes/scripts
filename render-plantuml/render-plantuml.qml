@@ -57,6 +57,46 @@ QtObject {
         }
     ];
 
+    function extractPlantUmlText(html, plantumlSectionRegex, note) {
+        var plantumlFiles = [];
+        var index = 0;
+
+        var match = plantumlSectionRegex.exec(html);
+        while (match != null) {
+            var matchedUml = match[1].replace(/\n/gi, "\\n");
+            var filePath = workDir + "/" + note.id + "_" + (++index);
+            
+            var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
+            var result = script.startSynchronousProcess("node", params, html);
+
+            plantumlFiles.push(filePath);
+            
+            match = plantumlSectionRegex.exec(html);
+        }
+
+        return plantumlFiles;
+    }
+
+    function generateUmlDiagrams(html, plantumlFiles) {
+        var params = ["-jar", plantumlJarPath, "-o", workDir, additionalParams].concat(plantumlFiles);
+        var result = script.startSynchronousProcess(javaExePath, params, html);
+    }
+
+    function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
+        var index = 0;
+        var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
+            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + ".png?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
+
+            if (hideMarkup == "true") {
+                return imgElement;
+            } else {
+                return imgElement + matchedStr;
+            }
+        });
+        
+        return updatedHtml;
+    }
+
     /**
      * This function is called when the markdown html of a note is generated
      * 
@@ -68,32 +108,15 @@ QtObject {
      * @return {string} the modfied html or an empty string if nothing should be modified
      */
     function noteToMarkdownHtmlHook(note, html) {
-        //var matches = html.match(/language-plantuml\"\>([\s\S]*?)<\/pre/gmi);
-
-        var index = 0;
-        html = html.replace(/<pre><code class=\"language-plantuml\"\>([\s\S]*?)<\/pre>/gmi, function(matchedStr, g1) {
-            var matchedUml = g1.replace(/\n/gi, "\\n");
-            var filePath = workDir + "/" + note.id + "_" + (++index);
-            var plantumlFilePath = filePath + ".plantuml";
-
-            var params = ["-e", "require('fs').writeFileSync('" + plantumlFilePath + "', \"" + matchedUml + "\", 'utf8');"];
-            var result = script.startSynchronousProcess("node", params, html);
-
-            params = ["-jar", plantumlJarPath, "-o", workDir, additionalParams, plantumlFilePath];
-            result = script.startSynchronousProcess(javaExePath, params, html);
-
-            var imgElement = "<div><img src=\"file://" + filePath + ".png?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
-
-            if (hideMarkup == "true") {
-                return imgElement;
-            } else {
-                return imgElement + matchedStr;
-            }
-        });
+        var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)<\/pre>/gmi;
         
+        var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
+
+        if (plantumlFiles.length) {
+            generateUmlDiagrams(html, plantumlFiles);
+            return injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
+        }
+
         return html;
     }
 }
-
-// Future plans:
-// TODO: Optimize image creation by combining img generation in a single java command instead of in a loop.
