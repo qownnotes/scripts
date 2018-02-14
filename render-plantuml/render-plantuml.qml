@@ -15,6 +15,8 @@ QtObject {
     property string javaExePath;
     property string plantumlJarPath;
     property string workDir;
+    property string hideMarkup;
+    property string additionalParams;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -30,7 +32,7 @@ QtObject {
             "name": "Path to plantuml jar",
             "description": "Please enter absolute path to plantuml jar file:",
             "type": "file",
-            "default": "/home/nikhil/softs/plantuml/plantuml.jar"
+            "default": "/opt/softs/plantuml/plantuml.jar"
         },
         {
             "identifier": "workDir",
@@ -38,8 +40,62 @@ QtObject {
             "description": "Please enter a path to be used as working directory i.e. temporary directory for file creation:",
             "type": "file",
             "default": "/tmp"
+        },
+        {
+            "identifier": "hideMarkup",
+            "name": "Hide plantuml markup",
+            "description": "Enable if you wish to hide plantuml markup in preview.",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "identifier": "additionalParams",
+            "name": "Additional Params (Advanced)",
+            "description": "Enter any additional parameters you wish to pass to plantuml. This can potentially cause unexpected behaviour:",
+            "type": "string",
+            "default": ""
         }
     ];
+
+    function extractPlantUmlText(html, plantumlSectionRegex, note) {
+        var plantumlFiles = [];
+        var index = 0;
+
+        var match = plantumlSectionRegex.exec(html);
+        while (match != null) {
+            var matchedUml = match[1].replace(/\n/gi, "\\n");
+            var filePath = workDir + "/" + note.id + "_" + (++index);
+            
+            var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
+            var result = script.startSynchronousProcess("node", params, html);
+
+            plantumlFiles.push(filePath);
+            
+            match = plantumlSectionRegex.exec(html);
+        }
+
+        return plantumlFiles;
+    }
+
+    function generateUmlDiagrams(html, plantumlFiles) {
+        var params = ["-jar", plantumlJarPath, "-o", workDir, additionalParams].concat(plantumlFiles);
+        var result = script.startSynchronousProcess(javaExePath, params, html);
+    }
+
+    function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
+        var index = 0;
+        var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
+            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + ".png?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
+
+            if (hideMarkup == "true") {
+                return imgElement;
+            } else {
+                return imgElement + matchedStr;
+            }
+        });
+        
+        return updatedHtml;
+    }
 
     /**
      * This function is called when the markdown html of a note is generated
@@ -52,31 +108,15 @@ QtObject {
      * @return {string} the modfied html or an empty string if nothing should be modified
      */
     function noteToMarkdownHtmlHook(note, html) {
-        var matches = html.match(/language-plantuml\"\>([\s\S]*?)<\/pre/gmi);
-
-        var index = 0;
-        html = html.replace(/<pre><code class=\"language-plantuml\"\>([\s\S]*?)<\/pre>/gmi, function(matchedStr, g1) {
-        	var matchedUml = g1.replace(/\n/gi, "\\n");
-			var filePath = workDir + "/" + note.id + "_" + (++index);
-			var plantumlFilePath = filePath + ".plantuml";
-
-			var params = ["-e", "require('fs').writeFileSync('" + plantumlFilePath + "', \"" + matchedUml + "\", 'utf8');"];
-        	var result = script.startSynchronousProcess("node", params, html);
-        	
-//			script.log(additionalPumlParams);
-        	params = ["-jar", plantumlJarPath, "-o", workDir, " ", plantumlFilePath];
-        	result = script.startSynchronousProcess(javaExePath, params, html); //["-jar", plantumlJarPath, "-o", workDir, filePath]
-        	
-        	return "<div><img src=\"file://" + filePath + ".png\" alt=\"Wait for it..\"/></div>" + matchedStr;
-        });
+        var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)<\/pre>/gmi;
         
+        var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
+
+        if (plantumlFiles.length) {
+            generateUmlDiagrams(html, plantumlFiles);
+            return injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
+        }
+
         return html;
     }
 }
-
-// Future plans:
-// TODO: Allow for passingin addtional parameters to plantuml.
-// TODO: Allow for replacing the markup in the rendered preview with image instead of keeping both.
-// TODO: Optimize image creation by combining img generation in a single java command instead of in a loop.
-
-
