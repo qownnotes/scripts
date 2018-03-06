@@ -1,0 +1,10 @@
+{
+  "name": "Scribble",
+  "identifier": "scribble",
+  "script": "scribble.qml",
+  "resources": ["scribble.png"],
+  "version": "0.1",
+  "minAppVersion": "18.03.2",
+  "authors": ["@pbek"],
+  "description" : "This script adds a menu entry to the context menu of the note edit to insert a scribble image to the media-folder, that will be edited by an external image manipulation application. The paths of the image manipulation application and the template image can be selected in the script settings of the script."
+}
