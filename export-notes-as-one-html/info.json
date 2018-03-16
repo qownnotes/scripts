@@ -1,0 +1,10 @@
+{
+  "name": "Export notes as one HTML file",
+  "identifier": "export-notes-as-one-html",
+  "script": "export-notes-as-one-html.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "1.0.0",
+  "minAppVersion": "18.03.7",
+  "description" : "This script exports multiple notes as one HTML file. You can right click on the selected notes in note list and click <i>Export notes as HTML file</i>."
+}
