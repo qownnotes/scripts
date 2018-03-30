@@ -13,7 +13,7 @@ QtObject {
 		{
 			"identifier": "options",
 			"name": "Markdown-it options",
-			"description": "For available options and default values see https://github.com/markdown-it/markdown-it/blob/master/lib/presets",
+			"description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/master/lib/presets'>markdown-it presets</a>",
 			"type": "text",
 			"default":
 "{"+"\n"+
