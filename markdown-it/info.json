@@ -4,7 +4,7 @@
   "script": "markdown-it.qml",
   "resources": ["markdown-it.js"],
   "authors": ["@milan-rusev"],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minAppVersion": "17.08.2",
   "description" : "This script replaces the default markdown renderer with markdown-it.\n\n<b>Dependencies</b>\n<a href=\"https://github.com/markdown-it/markdown-it\">markdown-it.js</a> (v8.3.2 bundled with the script)\n\n<b>Usage</b>\nFor the possible configuration options check <a href=\"https://github.com/markdown-it/markdown-it/tree/master/lib/presets\">here</a>."
 }
