@@ -50,6 +50,9 @@ QtObject {
         text = text.replace(/^-/gm, "*");
         text = text.replace(/\t-/gm, "\t*");
 
+        // some character escaping
+        text = text.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}");
+
         // you need NodeJs and jira2md (https://github.com/kylefarris/J2M) to convert Markdown to Jira
         var params = ["-e", "console.log(require('jira2md').to_jira(require('fs').readFileSync('/dev/stdin').toString()))"];
         var result = script.startSynchronousProcess(nodejsExecutablePath, params, text);
