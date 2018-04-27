@@ -1,0 +1,10 @@
+{
+  "name": "Add Multiple tags",
+  "identifier": "multiple-tags",
+  "script": "multiple-tags.qml",
+  "authors": ["@Flashwalker"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.06.2",
+  "description" : "This script creates a menu item and a button with which you can add space separated tags to the current note."
+}
