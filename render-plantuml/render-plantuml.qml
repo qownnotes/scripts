@@ -65,6 +65,8 @@ QtObject {
         while (match != null) {
             var matchedUml = match[1].replace(/\n/gi, "\\n");
             var filePath = workDir + "/" + note.id + "_" + (++index);
+
+            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&");
             
             var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
             var result = script.startSynchronousProcess("node", params, html);
@@ -108,7 +110,7 @@ QtObject {
      * @return {string} the modfied html or an empty string if nothing should be modified
      */
     function noteToMarkdownHtmlHook(note, html) {
-        var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)<\/pre>/gmi;
+        var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
         
         var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
 
