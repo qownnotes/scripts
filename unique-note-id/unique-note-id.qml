@@ -35,10 +35,12 @@ Script {
                 }
 
                 var noteText = script.currentNote().noteText;
-                noteText += "\nid:[" + uniqueId + "]";
-                
+                noteText += "\nid:[" + uniqueId + "]\n";
+
                 script.noteTextEditSelectAll();
                 script.noteTextEditWrite(noteText);
+
+                script.informationMessageBox("The unique id of your note:<br /><strong>" + uniqueId + "</strong>", "Unique note id");
                 break;
             case "jumpById":
                 var uniqueId = script.inputDialogGetText("Unique id", "Please enter the id of the note");
