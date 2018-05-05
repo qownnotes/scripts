@@ -1,0 +1,10 @@
+{
+  "name": "Unique note id",
+  "identifier": "unique-note-id",
+  "script": "unique-note-id.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "1.0.0",
+  "minAppVersion": "18.05.1",
+  "description" : "This script generates a 10 character alphanumeric id for the current note and also allows to jump to the note by it."
+}
