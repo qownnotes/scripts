@@ -1,0 +1,10 @@
+{
+  "name": "Sort lines",
+  "identifier": "sort-lines-script",
+  "script": "sort-lines.qml",
+  "authors": ["@wiktor2200"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.06.2",
+  "description" : "This script sort selected lines in note text edit. \n\nIt creates an array from selected lines,  sorts array and joins it again to output string."
+}
