@@ -1,0 +1,10 @@
+{
+  "name": "Epsilon Notes compatible tags (YAML tags)",
+  "identifier": "epsilon-notes-tags",
+  "script": "epsilon-notes-tags.qml",
+  "authors": ["@Maboroshy"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "18.03.7",
+  "description" : "After enabling this script internal QOwnNotes tag data will be lost!!!\n\nThis script makes QOwnNotes read and save note tags to YAML section before note text.\nThis makes tags compatible with Epsilon Notes app for Android.\n\nThe YAML section must start at the first line of the note.\nYAML format for tags is:\n---\ntags: tag1 tag2 multi_word_tag\n...\n"
+} 
