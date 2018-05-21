@@ -137,7 +137,6 @@ Script {
     function noteToMarkdownHtmlHook(note, html) {
 
         if (note.noteText.substring(0, 4) == '---\n') {
-                 script.log(html)
                  
             // For ---/nYAML/n.../nNote text
             var yamlEndIndex = html.indexOf('\n...\n')
