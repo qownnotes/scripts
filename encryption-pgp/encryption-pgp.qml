@@ -21,8 +21,8 @@ QtObject {
         },
         {
             "identifier": "publicKey",
-            "name": "Public PGP Key",
-            "description": "Please enter your public pgp key:",
+            "name": "Public PGP Keys",
+            "description": "Please enter your ';'-separated public pgp keys or their emails:",
             "type": "string",
             "default": "F5161BD3",
         },
@@ -45,9 +45,17 @@ QtObject {
      * @return the exncrypted or decrypted text
      */
     function encryptionHook(text, password, decrypt) {
+	var encryptCommand = ["--encrypt", "--armor"];
+	// split public keys for gpg call
+	var pubKeys = publicKey.split(';');
+	for (var i = 0; i < pubKeys.length; i++) {
+		encryptCommand.append("-r");
+		encryptCommand.append(pubKeys[i]);
+	}
+
         // encrypt the text for public key or decrypt with gpg
         // decryption will only work if you don't have to enter a password
-        var param = decrypt ? ["--decrypt"] : ["--encrypt", "--armor", "-r", publicKey];
+        var param = decrypt ? ["--decrypt"] : encryptCommand;
         var result = script.startSynchronousProcess(gpgPath, param, text);
         return result;
     }
