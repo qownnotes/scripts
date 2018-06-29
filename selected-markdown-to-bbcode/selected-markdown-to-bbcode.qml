@@ -85,7 +85,7 @@ QtObject {
     }
     
     function replaceAll(str, find, replace) {
-        return String(str).replace(new RegExp(escapeRegExp(find), 'g'), replace);
+        return String(str).replace(new RegExp(escapeRegExp(find), 'gi'), replace);
     }
     
     function escapeRegExp(str) {
