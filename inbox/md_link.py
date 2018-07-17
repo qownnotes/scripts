@@ -103,7 +103,7 @@ class File:
 
         if self.ext == '.pdf':
             self.type = 'pdf'
-        elif self.ext in ('.jpg', '.png', '.gif'):
+        elif self.ext in ('.jpg', '.jpeg', '.png', '.gif'):
             self.type = 'image'
         else:
             self.type = 'other'
