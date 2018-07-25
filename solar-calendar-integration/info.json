@@ -1,0 +1,10 @@
+{
+  "name": "Solar (Jalaali) calendar integration",
+  "identifier": "solar-calendar-integration",
+  "script": "solar-calendar-integration.qml",
+  "resources": ["jalaali.js"],
+  "authors": ["@pbek"],
+  "version": "1.0.0",
+  "minAppVersion": "18.07.0",
+  "description" : "This script attempts to integrate the solar (Jalaali) calendar into QOwnNotes. It currently supports creating a headline for new notes with the current Jalaali date and time."
+}
