@@ -49,6 +49,13 @@ QtObject {
                 var taskIdMatch = taskIdRegExp.exec(html);
                 if (taskIdMatch !== null) {
                     headline += " (#" + taskIdMatch[1] + ")";
+                } else {
+                    // do an other attempt to add the task id to the headline
+                    taskIdRegExp = />(Task|Aufgabe) #(\d+) -</im;
+                    taskIdMatch = taskIdRegExp.exec(html);
+                    if (taskIdMatch !== null) {
+                        headline += " (#" + taskIdMatch[2] + ")";
+                    }
                 }
 
                 var descriptionRegExp = /<div.*? id="task-detail-description".*?>(.+?)<\/div>/im;
