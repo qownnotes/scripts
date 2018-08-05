@@ -1,5 +1,5 @@
 {
-  "name": "Disable read-only mode",
+  "name": "Disable read-only mode on note double-click",
   "identifier": "disable-readonly-mode",
   "script": "disable-readonly-mode.qml",
   "authors": ["@pbek"],
