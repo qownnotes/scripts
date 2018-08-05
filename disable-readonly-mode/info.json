@@ -1,0 +1,9 @@
+{
+  "name": "Disable read-only mode",
+  "identifier": "disable-readonly-mode",
+  "script": "disable-readonly-mode.qml",
+  "authors": ["@pbek"],
+  "version": "1.0.0",
+  "minAppVersion": "18.08.1",
+  "description" : "This script will disable the read-only mode if a note is double clicked. The note text edit will also be focused afterwards."
+}
