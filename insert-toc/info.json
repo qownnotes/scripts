@@ -2,9 +2,9 @@
   "name": "Insert Table of Contents (TOC)",
   "identifier": "insert-toc",
   "script": "insert-toc.qml",
-  "authors": ["@flopp"],
+  "authors": ["@flopp", "@toindev"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minAppVersion": "17.06.2",
   "description" : "This script scans the current note for headlines, generates a table of contents, and inserts a the TOC into the note."
 }
