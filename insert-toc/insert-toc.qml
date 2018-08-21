@@ -47,7 +47,7 @@ Script {
     function extractLink(title) {
         var lowercase = title.toLowerCase()
         var spaceReplaced = lowercase.replace(/ /g, "-")
-        var invalidCharsRemoved = spaceReplaced.replace(/[^A-Za-zÀ-ÿ-_]/g, "")
+        var invalidCharsRemoved = spaceReplaced.replace(/[^0-9A-Za-zÀ-ÿ-_]/g, "")
         return invalidCharsRemoved;
     }
 
