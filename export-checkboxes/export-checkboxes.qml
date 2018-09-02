@@ -18,6 +18,7 @@ QtObject {
         // see http://doc.qt.io/qt-5/richtext-html-subset.html for a list of
         // supported css styles
         html = html.replace(/<li>(\s*)(<p>)*(\s*)\[x\]/g, "<li style=\"list-style-type: none; margin-left: -16px;\">$1$2$3&#x2611;");
+        html = html.replace(/<li>(\s*)(<p>)*(\s*)\[X\]/g, "<li style=\"list-style-type: none; margin-left: -16px;\">$1$2$3&#x2611;");
         html = html.replace(/<li>(\s*)(<p>)*(\s*)\[ \]/g, "<li style=\"list-style-type: none; margin-left: -16px;\">$1$2$3&#x2610;");
         return html;
     }
