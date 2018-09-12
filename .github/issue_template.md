@@ -1,10 +1,25 @@
-<!-- Please mention the authors of the script, so they are able to respond -->
+<!--
+If you are able to open the application the best way gather all needed
+information and post questions, feature requests or issues is to use
+the issue assistant in the "Help menu"!
 
-#### Expected behaviour                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+The menu entry is named "Post questions, feature requests or issues".
 
-#### Actual behaviour                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+Please mention the authors of the script, so they are able to respond.
+You will find the authors in the *Script repository*.
+-->
 
-#### Steps to reproduce                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+
+
+
+
+
+#### Expected behaviour
+
+#### Actual behaviour
+
+#### Steps to reproduce
 
 #### Output from the debug section in the settings dialog
 
