@@ -2,29 +2,29 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 QtObject {
-	property string highlightColor;
-	
+	property string backgroundColor;
+
 	property variant settingsVariables: [
 		{
-			"identifier": "highlightColor",
+			"identifier": "backgroundColor",
 			"name": "Highlight Color",
-			"description": "Color to highlight text as",
+			"description": "Color to highlight text with (name or #hex):",
 			"type": "string",
-			"default": "FFFF00",
+			"default": "#FFFF00",
 		}
 	];
 
 	function noteToMarkdownHtmlHook(note, html) {
-		var stylesheet = ".highlighted {background-color: #" + highlightColor + ";}";
-		html = html.replace(/==(.+?)==/g, "<span class='highlighted'>$1</span>");
+		var stylesheet = "mark {background-color:" + backgroundColor + ";}";
+		html = html.replace(/==(.+?)==/g, "<mark>$1</mark>");
 		html = html.replace("</style>", stylesheet + "</style>");
 		return html;
 	}
-	
+
 	function init() {
 		script.registerCustomAction("addHighlights", "Add Highlight Marks", "Add Highlights", "text-wrap");
 	}
-	
+
 	function customActionInvoked(identifier) {
 		switch (identifier) {
 			case "addHighlights":
