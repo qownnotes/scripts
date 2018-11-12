@@ -4053,7 +4053,7 @@ module.exports = function table(state, startLine, endLine, silent) {
 
   if (silent) { return true; }
 
-  token     = state.push('table_open', 'table', 1);
+  token     = state.push('table_open', 'table cellspacing="0"', 1);
   token.map = tableLines = [ startLine, 0 ];
 
   token     = state.push('thead_open', 'thead', 1);
