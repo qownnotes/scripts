@@ -1,0 +1,25 @@
+From bf476454ec3e7b6432f88c20f43c1f33ba76acf0 Mon Sep 17 00:00:00 2001
+From: Patrizio Bekerle <patrizio@bekerle.com>
+Date: Mon, 12 Nov 2018 17:02:17 +0100
+Subject: [PATCH] modified markdown-it to use no cellspacing for tables
+
+---
+ markdown-it/markdown-it.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/markdown-it/markdown-it.js b/markdown-it/markdown-it.js
+index cedb788..54c4940 100644
+--- a/markdown-it/markdown-it.js
++++ b/markdown-it/markdown-it.js
+@@ -4053,7 +4053,7 @@ module.exports = function table(state, startLine, endLine, silent) {
+ 
+   if (silent) { return true; }
+ 
+-  token     = state.push('table_open', 'table', 1);
++  token     = state.push('table_open', 'table cellspacing="0"', 1);
+   token.map = tableLines = [ startLine, 0 ];
+ 
+   token     = state.push('thead_open', 'thead', 1);
+-- 
+2.19.1
+

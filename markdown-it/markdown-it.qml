@@ -83,7 +83,7 @@ QtObject {
 		//Get original styles
 		var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
 		//Add custom styles
-		head = head.replace("</style>", customStylesheet + "</style>");
+		head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse;}" + customStylesheet + "</style>");
 		
 		mdHtml = "<html>"+head+"<body>"+mdHtml+"</body></html>";
 		
