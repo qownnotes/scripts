@@ -5,5 +5,5 @@
   "authors": ["@pbek", "@ClawOfLight"],
   "version": "0.0.2",
   "minAppVersion": "17.05.7",
-  "description" : "This script will encrypt and decrypt notes with <a href='https://gnupg.org/'>PGP</a> instead of the internal AES-256 encryption.\nDecryption may only work if you don't have to enter a password. Find out how to set up gpg-agent on your system."
+  "description" : "This script will encrypt and decrypt notes with <a href='https://gnupg.org/'>PGP</a> instead of the internal AES-256 encryption.\nDecryption may only work if your private key is not protected with a passphrase. Find out how to set up gpg-agent on your system."
 }
