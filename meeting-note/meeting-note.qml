@@ -8,6 +8,7 @@ QtObject {
     property string headlinePrefix;
     property string defaultFolder;
     property string defaultTags;
+    property bool timeInNoteName;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -32,6 +33,13 @@ QtObject {
             "type": "string",
             "default": "meeting",
         },
+        {
+            "identifier": "timeInNoteName",
+            "name": "Time in note name",
+            "description": "Add time (HH:mm) in 'Meeting' note name.",
+            "type": "boolean",
+            "default": false,
+        },
     ];
 
     /**
@@ -55,6 +63,10 @@ QtObject {
         // get the date headline
         var m = new Date();
         var headline = headlinePrefix + " " + m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+
+        if (timeInNoteName) {
+          headline = headline + "T" + ("0" + m.getHours()).slice(-2) + "." + ("0" + m.getMinutes()).slice(-2);
+        }
 
         var fileName = headline + ".md";
 
