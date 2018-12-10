@@ -38,7 +38,7 @@ QtObject {
             "name": "Time in note name",
             "description": "Add time (HH:mm) in 'Meeting' note name.",
             "type": "boolean",
-            "default": true,
+            "default": false,
         },
     ];
 
@@ -62,11 +62,10 @@ QtObject {
 
         // get the date headline
         var m = new Date();
+        var headline = headlinePrefix + " " + m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
 
         if (timeInNoteName) {
-          var headline = headlinePrefix + " " + m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2) + "T" + ("0" + m.getHours()).slice(-2) + "." + ("0" + m.getMinutes()).slice(-2);
-        } else {
-          var headline = headlinePrefix + " " + m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+          headline = headline + "T" + ("0" + m.getHours()).slice(-2) + "." + ("0" + m.getMinutes()).slice(-2);
         }
 
         var fileName = headline + ".md";
