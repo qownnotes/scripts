@@ -2,20 +2,22 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 import "markdown-it.js" as MarkdownIt
+import "markdown-it-deflist.js" as MarkdownItDeflist
 
 QtObject {
-	property variant md;
-	
-	property string options;
-	property string customStylesheet;
+    property variant md;
+    
+    property string options;
+    property string customStylesheet;
+    property bool useDeflistPlugin;
 
-	property variant settingsVariables: [
-		{
-			"identifier": "options",
-			"name": "Markdown-it options",
-			"description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/master/lib/presets'>markdown-it presets</a>.",
-			"type": "text",
-			"default":
+    property variant settingsVariables: [
+        {
+            "identifier": "options",
+            "name": "Markdown-it options",
+            "description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/master/lib/presets'>markdown-it presets</a>.",
+            "type": "text",
+            "default":
 "{"+"\n"+
 "    //html:         false,        // Enable HTML tags in source"+"\n"+
 "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)"+"\n"+
@@ -43,50 +45,61 @@ QtObject {
 ""+"\n"+
 "    //maxNesting:   100            // Internal protection, recursion limit"+"\n"+
 "}"
-		},
-		{
+        },
+        {
+            "identifier": "useDeflistPlugin",
+            "name": "Definition lists",
+            "text": "Enable the Mardown-it definition list (<dl>) plugin",
+            "type": "boolean",
+            "default": false,
+        },
+        {
             "identifier": "customStylesheet",
             "name": "Custom stylesheet",
             "description": "Please enter your custom stylesheet:",
             "type": "text",
             "default": null,
         },
-	];
-	
+    ];
+    
     function init() {
-		
-		var optionsObj = eval("("+options+")");
-		md = new MarkdownIt.markdownit(optionsObj);
-		
-		//Allow file:// url scheme
-		var validateLinkOrig = md.validateLink;
-		var GOOD_PROTO_RE = /^(file):/;
-		md.validateLink = function(url)
-		{
-			var str = url.trim().toLowerCase();
-			return GOOD_PROTO_RE.test(str) ? true : validateLinkOrig(url);
-		}
-	}
-	
+        
+        var optionsObj = eval("("+options+")");
+        md = new MarkdownIt.markdownit(optionsObj);
+        
+        if (useDeflistPlugin) {
+            md.use(MarkdownItDeflist.markdownitDeflist);
+        }
+        
+        //Allow file:// url scheme
+        var validateLinkOrig = md.validateLink;
+        var GOOD_PROTO_RE = /^(file):/;
+        md.validateLink = function(url)
+        {
+            var str = url.trim().toLowerCase();
+            return GOOD_PROTO_RE.test(str) ? true : validateLinkOrig(url);
+        }
+    }
+    
     function noteToMarkdownHtmlHook(note, html) {
-		
-		var mdHtml = md.render(note.noteText);
-		
-		//Insert root folder in attachments and media relative urls
-		var path = script.currentNoteFolderPath();
-		if (script.platformIsWindows()) {
-			path = "/" + path;
-		}
-		mdHtml = mdHtml.replace(new RegExp("href=\"file://attachments/", "gi"), "href=\"file://" + path + "/attachments/");
-		mdHtml = mdHtml.replace(new RegExp("src=\"file://media/", "gi"), "src=\"file://" + path + "/media/");
-		
-		//Get original styles
-		var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
-		//Add custom styles
-		head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;}" + customStylesheet + "</style>");
-		
-		mdHtml = "<html>"+head+"<body>"+mdHtml+"</body></html>";
-		
-		return mdHtml;
+        
+        var mdHtml = md.render(note.noteText);
+        
+        //Insert root folder in attachments and media relative urls
+        var path = script.currentNoteFolderPath();
+        if (script.platformIsWindows()) {
+            path = "/" + path;
+        }
+        mdHtml = mdHtml.replace(new RegExp("href=\"file://attachments/", "gi"), "href=\"file://" + path + "/attachments/");
+        mdHtml = mdHtml.replace(new RegExp("src=\"file://media/", "gi"), "src=\"file://" + path + "/media/");
+        
+        //Get original styles
+        var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
+        //Add custom styles
+        head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;}" + customStylesheet + "</style>");
+        
+        mdHtml = "<html>"+head+"<body>"+mdHtml+"</body></html>";
+        
+        return mdHtml;
     }
 }
