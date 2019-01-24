@@ -3,7 +3,7 @@
   "identifier": "note-from-bitrix-task",
   "script": "note-from-bitrix-task.qml",
   "authors": ["@pbek"],
-  "version": "1.0.4",
+  "version": "1.0.5",
   "minAppVersion": "17.05.6",
   "description" : "This script creates a menu item and a button that parses the text that was copied from a task webpage of the webservice <a href='https://www.bitrix24.com/'>Bitrix24</a> and creates a new note with a headline, the link to the task and the description."
 }
