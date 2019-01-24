@@ -70,7 +70,7 @@ QtObject {
                 description = description.replace(/<br.*?>/gim, "\n").replace(/<.+?>/gim, "");
 
 //                 var urlRegExp = /<form name="COMMENTS_.+?".*? action="(.+?)" method/im;
-                var urlRegExp = /<a href="(.+?\d+\/tasks\/task\/view\/d+\/)[\?#].*?" class="main-buttons-item-link"/im;
+                var urlRegExp = /<a href="(.+?\d+\/tasks\/task\/view\/\d+\/)[\?#].*?" class="main-buttons-item-link"/im;
                 var urlMatch = urlRegExp.exec(html);
                 var url = urlMatch !== null ? urlMatch[1] : "";
 
