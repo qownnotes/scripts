@@ -1,5 +1,5 @@
 {
-  "name": "Crowdin Changelog Translation Text",
+  "name": "Crowdin changelog translation contributions text",
   "identifier": "crowdin-translation-contributions",
   "script": "crowdin-translation-contributions.qml",
   "authors": ["@pbek"],
