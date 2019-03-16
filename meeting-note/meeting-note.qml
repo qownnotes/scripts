@@ -9,6 +9,7 @@ QtObject {
     property string defaultFolder;
     property string defaultTags;
     property bool timeInNoteName;
+    property string noteBodyTemplate;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -39,6 +40,13 @@ QtObject {
             "description": "Add time (HH:mm) in 'Meeting' note name.",
             "type": "boolean",
             "default": false,
+        },
+        {
+            "identifier": "noteBodyTemplate",
+            "name": "Template",
+            "description": "Template for a new meeting entry.",
+            "type": "text",
+            "default": "",
         },
     ];
 
@@ -105,7 +113,7 @@ QtObject {
             }
 
             // Create the new meeting note.
-            script.createNote(headline + "\n====================\n\n");
+            script.createNote(headline + "\n====================\n\n" + noteBodyTemplate);
 
             // Default tags.
             if (defaultTags && defaultTags !== '') {
