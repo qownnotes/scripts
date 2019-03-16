@@ -50,6 +50,9 @@ QtObject {
         } else {
             script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");
         }
+
+        // Create custom action for 'Create or open journal entry for tomorrow'.
+        script.registerCustomAction("journalEntryTomorrow", "Create or open a journal entry for tomorrow", "Journal tomorrow", "document-multiple")
     }
 
     /**
@@ -59,22 +62,29 @@ QtObject {
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
-        if (identifier != "journalEntry") {
+        if (identifier != "journalEntry" && identifier != "journalEntryTomorrow") {
             return;
         }
 
-        // get the date headline
+        // Get the date for the headline.
         var m = new Date();
+
+        // Set date to tomorrow if action is 'journalEntryTomorrow'.
+        if (identifier == "journalEntryTomorrow") {
+            m.setDate(m.getDate() + 1);
+        }
+
         var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
 
-        // when the configuration option "singleJournalPerDay" is not selected create journal entries including time
-        if (!singleJournalPerDay) {
+        // When the configuration option "singleJournalPerDay" is not selected, and we are not creating a journal entry
+        // for tomorrow, create journal entry including time.
+        if (!singleJournalPerDay && identifier != "journalEntryTomorrow") {
             headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2);
         }
 
         var fileName = headline + ".md";
 
-        // Check if we already have a Journal note for today.
+        // Check if we already have the requested journal entry.
 
         // When a default folder is set, make sure to search in that folder.
         // This has the highest chance of finding an existing journal note.
