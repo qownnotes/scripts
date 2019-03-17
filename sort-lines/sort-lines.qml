@@ -16,6 +16,9 @@ Script {
   }
 
   function customActionInvoked(identifier) {
+    if (identifier != "sortLinesAsc" && identifier != "sortLinesDesc") {
+      return;
+    }
 
     // getting selected text from the note text edit
     var text = script.noteTextEditSelectedText();
