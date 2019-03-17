@@ -8,6 +8,7 @@ QtObject {
      property string defaultFolder;
      property string defaultTags;
      property bool singleJournalPerDay;
+     property string noteBodyTemplate;
 
      property variant settingsVariables: [
         {
@@ -27,9 +28,16 @@ QtObject {
         {
             "identifier": "singleJournalPerDay",
             "name": "Single journal per day",
-            "description": "Creates a single journal per day instead of always adding a new journal.",
+            "description": "Create a single journal per day instead of always adding a new journal.",
             "type": "boolean",
             "default": "true",
+        },
+        {
+            "identifier": "noteBodyTemplate",
+            "name": "Template",
+            "description": "Template for a new journal entry.",
+            "type": "text",
+            "default": "",
         },
     ];
 
@@ -37,10 +45,11 @@ QtObject {
      * Initializes the custom action
      */
     function init() {
-        if (singleJournalPerDay)
+        if (singleJournalPerDay) {
             script.registerCustomAction("journalEntry", "Create or open a journal entry", "Journal", "document-new");
-        else
-	    script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");        
+        } else {
+            script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");
+        }
     }
 
     /**
@@ -57,10 +66,10 @@ QtObject {
         // get the date headline
         var m = new Date();
         var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
-        
+
         // when the configuration option "singleJournalPerDay" is not selected create journal entries including time
         if (!singleJournalPerDay) {
-            headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2)
+            headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2);
         }
 
         var fileName = headline + ".md";
@@ -100,7 +109,7 @@ QtObject {
             }
 
             // Create the new journal note.
-            script.createNote(headline + "\n================\n\n");
+            script.createNote(headline + "\n================\n\n" + noteBodyTemplate);
 
             // Default tags.
             if (defaultTags && defaultTags !== '') {
