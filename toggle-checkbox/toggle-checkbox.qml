@@ -9,7 +9,7 @@ import com.qownnotes.noteapi 1.0
  */
 QtObject {
     property bool checkboxCharacterUppercase;
-    property bool synchronizeCheckboxesChecked;
+    property string multipleLinesMethod;
 
     property variant settingsVariables: [
         {
@@ -20,12 +20,17 @@ QtObject {
             'default': 'false',
         },
         {
-            'identifier': 'synchronizeCheckboxesChecked',
-            'name': 'Synchronize checkboxes by checked',
-            'description': 'When a checked checkbox in the selected lines is detected, set all checkboxes to checked, instead of toggling individual lines.',
-            'type': 'boolean',
-            'default': 'false',
-        },
+            'identifier': 'multipleLinesMethod',
+            'name': 'Toggle multiple lines',
+            'description': 'What should happen when toggling a selection of multiple lines?',
+            'type': 'selection',
+            'default': 'cycleIndividually',
+            'items': {
+                'cycleIndividually': 'Cycle all lines individually.',
+                'synchronizeChecked': 'Set all checkboxes to checked when the selection contains at least one checked checkbox. Otherwise cycle.',
+                // 'synchronizeFirst': 'Set all checkboxes to the value of the first checkox in the selection.',
+            },
+        }
     ]
 
     /**
@@ -60,11 +65,14 @@ QtObject {
 
         // Nothing selected.
         if (text.trim() === '') {
-            script.log('Nothing selected');
-            return;
+            script.log('Nothing selected, attempt to select the current line.');
+            script.noteTextEditSelectCurrentLine(); // TODO recurse.
+            text = script.noteTextEditSelectedText();
+            if (text.trim() === '') {
+                script.log('Nothing selected, nothing to do.');
+                return;
+            }
         }
-
-        var lines = text.split('\n');
 
         // TODO: support '* - [ ]', '+ - [ ]' as well?
         var checkboxCharacter = '';
@@ -73,8 +81,8 @@ QtObject {
             ? '- [X] '
             : '- [x] ';
 
-        // Set up synchronizeCheckboxesChecked.
-        if (synchronizeCheckboxesChecked) {
+        // Set up synchronizeChecked.
+        if (multipleLinesMethod === 'synchronizeChecked') {
             var mixedStatesPresent = false;
 
             // Contains at least 1 checked and at least 1 unchecked checkbox?
@@ -89,19 +97,20 @@ QtObject {
         }
 
         // Loop and convert all lines in selection.
+        var lines = text.split('\n');
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].trim() === '') {
                 continue;
             }
 
-            // synchronizeCheckboxesChecked in effect.
+            // synchronizeChecked in effect.
             // checkboxCharacter is already correctly set.
-            if (synchronizeCheckboxesChecked && mixedStatesPresent) {
+            if (multipleLinesMethod === 'synchronizeChecked' && mixedStatesPresent) {
                 lines[i] = lines[i].replace(/- \[( |x|X)\] /, checkboxCharacter);
             }
-            // Default: invert-all-lines-mode.
+            // Default: cylce-all-lines-mode.
             else {
-                script.log('Scenario: invert-all-lines');
+                script.log('Scenario: cycle-all-lines');
 
                 // Toggle unchecked to checked.
                 if (lines[i].match(/- \[ \] /)) {
@@ -129,6 +138,8 @@ QtObject {
 
         // Overwrite current selection with processed-content.
         script.noteTextEditWrite(lines.join('\n'));
-        // TODO: select the inserted content (for true 'cycling'): how?
+        // TODO: select the inserted content (for true 'cycling'):
+        //  - [x] single line
+        //  - [ ] multiple line: how?
     }
 }
