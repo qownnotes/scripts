@@ -50,7 +50,7 @@ QtObject {
                             allNames.push(name);
                         }
 
-                        var languages = match[2].split('in the file')[0].replace(' and', ', ').split(', ');
+                        var languages = match[2].split('in the file')[0].replace('Portuguese, Brazilian', 'Brazilian Portuguese').replace(' and', ', ').split(', ');
                         
                         for(var i = 0; i < languages.length; i++) {
                             var language = languages[i].trim();
