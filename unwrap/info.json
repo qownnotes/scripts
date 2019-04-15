@@ -1,0 +1,10 @@
+{
+  "name": "Un-wrap Text",
+  "identifier": "unwrap",
+  "script": "unwrap.qml",
+  "authors": ["@clintonthegeek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "1.0.0",
+  "minAppVersion": "18.04.3",
+  "description" : "This script unwraps a paragraph by removing new-line characters and adding appropriate spaces."
+}
