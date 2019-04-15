@@ -1,10 +1,10 @@
 {
-  "name": "Example script",
-  "identifier": "example-script",
-  "script": "example-script.qml",
-  "authors": ["@pbek"],
+  "name": "UnWrap Text",
+  "identifier": "unWrap",
+  "script": "unWrap.qml",
+  "authors": ["@clintonthegeek"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.2",
-  "minAppVersion": "17.06.2",
-  "description" : "Use this script to start a new script you want to submit to the script repository.\n\nJust copy the whole <i>example-script</i> folder from the git-repository on GitHub and rename both the folder and <i>example-script.qml</i>."
+  "version": "1.0.0",
+  "minAppVersion": "18.04.3",
+  "description" : "This script unwraps a paragraph by removing new-line characters and adding appropriate spaces."
 }
