@@ -10,7 +10,7 @@ Script {
    * Initializes the custom actions
    */
   function init() {
-    script.registerCustomAction("unWrap", "Unwrap Text", "unWrap", "text-field", true, true);
+    script.registerCustomAction("unWrap", "Unwrap Text", "unWrap", "text-field", false, true);
   }
 
   function customActionInvoked(identifier) {
