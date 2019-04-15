@@ -1,7 +1,7 @@
 {
-  "name": "UnWrap Text",
-  "identifier": "unWrap",
-  "script": "unWrap.qml",
+  "name": "Un-wrap Text",
+  "identifier": "unwrap",
+  "script": "unwrap.qml",
   "authors": ["@clintonthegeek"],
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.0",
