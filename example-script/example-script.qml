@@ -1,15 +1,10 @@
-import QtQml 2.0
-
-/**
- * This script is just an example of how to use scripts
- * Visit http://docs.qownnotes.org/ for more information about scripting
- */
-Script {
-    /**
-     * Just show some log entries when the script is initialized
-     */
-    function init() {
-        script.log("This is just an example script.");
-        script.log("Visit http://docs.qownnotes.org/ for more information about scripting.");
-    }
+{
+  "name": "UnWrap Text",
+  "identifier": "unWrap",
+  "script": "unWrap.qml",
+  "authors": ["@clintonthegeek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "1.0.0",
+  "minAppVersion": "18.04.3",
+  "description" : "This script unwraps a paragraph by removing new-line characters and adding appropriate spaces."
 }
