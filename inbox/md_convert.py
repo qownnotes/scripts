@@ -35,8 +35,8 @@ def html_text(html_text, pandoc_bin='pandoc', pandoc_ver='1.19.1'):
 
 def saved_html(html_path, folder_dir_path, pandoc_bin='pandoc', pandoc_ver='1.19.1'):
     """
-    This will convert html_text to markdown by running pandoc_bin and return markdown text
-    I will also move all in-line images to media directory at folder_dir_path and correct the links accordingly
+    This will convert html file to markdown by running pandoc_bin and return markdown text
+    It will also move all in-line images to media directory at folder_dir_path and correct the links accordingly
     :param html_path: full absolute path to saved html file to convert, with '_files' dir at the same directory
     :param folder_dir_path: full absolute path to directory where 'media' directory is
     :param pandoc_bin: command/path to run installed pandoc

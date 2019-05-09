@@ -13,9 +13,12 @@ Script {
                 var defaultPyCommand = 'python3'
             }
             
+            
             if (script.startSynchronousProcess(defaultPyCommand, '-V', '').toString().indexOf('Python 3') != '-1') {
-                script.setPersistentVariable('MdNT/pyCommand', checkPyCommand())
+                script.setPersistentVariable('MdNT/pyCommand', defaultPyCommand)
             }
+        
+            script.log(defaultPyCommand)
         }
         
         return script.getPersistentVariable('MdNT/pyCommand', '')
@@ -139,6 +142,7 @@ Script {
         /// Get the version of pandoc
         if (script.getPersistentVariable('MdNT/pandocCommand', '') != pandocCommand) {
             var pandocCheck = script.startSynchronousProcess(pandocCommand, '-v', '').toString().split('\n')[0]
+            script.log(pandocCheck)
 
             if (pandocCheck.indexOf('pandoc') != '-1') {
                 script.setPersistentVariable('MdNT/pandocCommand', pandocCommand)
@@ -171,7 +175,7 @@ Script {
             runInbox()
         }
         else {
-            script.registerCustomAction('inbox', 'Process inbox folder', 'Inbox', 'mail-receive.svg')
+            script.registerCustomAction('inbox', 'Process inbox folder', 'Inbox', 'mail-receive')
         }
     }
 
