@@ -16,6 +16,7 @@ QtObject {
     property string plantumlJarPath;
     property string workDir;
     property string hideMarkup;
+    property string noStartUml;
     property string additionalParams;
 
     // register your settings variables so the user can set them in the script settings
@@ -49,6 +50,13 @@ QtObject {
             "default": false
         },
         {
+            "identifier": "noStartUml",
+            "name": "No need for @startuml/@enduml",
+            "description": "Enable if you don't want to add @startuml/@enduml to your plantUml code (compat with tagging in note text)",
+            "type": "boolean",
+            "default": true
+        },
+        {
             "identifier": "additionalParams",
             "name": "Additional Params (Advanced)",
             "description": "Enter any additional parameters you wish to pass to plantuml. This can potentially cause unexpected behaviour:",
@@ -66,13 +74,21 @@ QtObject {
             var matchedUml = match[1].replace(/\n/gi, "\\n");
             var filePath = workDir + "/" + note.id + "_" + (++index);
 
+
+            if (noStartUml == "true") {
+                // Remove @startuml/@enduml if they were "tagged"
+                matchedUml = matchedUml.replace(/^<b><font color=\"\w+\">startuml<\/font><\/b>\\n/gi, "").replace(/<b><font color=\"\w+\">enduml<\/font><\/b>\\n$/gi, "");
+                // Add @startuml/@enduml
+                matchedUml = "@startuml\\n" + matchedUml + "@enduml\\n";
+            }
+
             matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&");
-            
+
             var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
             var result = script.startSynchronousProcess("node", params, html);
 
             plantumlFiles.push(filePath);
-            
+
             match = plantumlSectionRegex.exec(html);
         }
 
