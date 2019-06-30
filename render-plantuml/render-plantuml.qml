@@ -76,13 +76,15 @@ QtObject {
 
 
             if (noStartUml == "true") {
-                // Remove @startuml/@enduml if they were "tagged"
-                matchedUml = matchedUml.replace(/^<b><font color=\"\w+\">startuml<\/font><\/b>\\n/gi, "").replace(/<b><font color=\"\w+\">enduml<\/font><\/b>\\n$/gi, "");
-                // Add @startuml/@enduml
+				// Transforms back tagged start/end keywords to @startkeyword/@endkeyword
+                matchedUml = matchedUml.replace(/^<b><font color=\"\w+\">(start\w+)<\/font><\/b>\\n/gi, "@$1\\n").replace(/<b><font color=\"\w+\">(end\w+)<\/font><\/b>\\n$/gi, "@$1\\n");
+
+                // If needed adds @startuml/@enduml
+                if (!(matchedUml.match(/^@start\w+\\n/gi) && matchedUml.match(/\\n@end\w+\\n$/gi)))
                 matchedUml = "@startuml\\n" + matchedUml + "@enduml\\n";
             }
 
-            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&");
+            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'");
 
             var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
             var result = script.startSynchronousProcess("node", params, html);
