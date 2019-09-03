@@ -1,6 +1,6 @@
 {
   "name": "Fix list numbers",
-  "identifier": "fixListNumbers",
+  "identifier": "fix-list-numbers",
   "script": "fix-list-numbers.qml",
   "authors": ["@radmen"],
   "platforms": ["linux", "macos", "windows"],
