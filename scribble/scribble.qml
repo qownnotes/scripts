@@ -58,16 +58,18 @@ Script {
         if (identifier != "scribble") {
             return;
         }
-        
+
         // insert the scribble template image as media file
         var mediaFile = script.insertMediaFile(imagePath, true);
-        var mediaFilePath = mediaFile.replace("file://media", script.currentNoteFolderPath() + "/media");
+        var mediaFilePath = script.getApplicationSettingsVariable("legacyLinking") ?
+            mediaFile.replace("file://media", script.currentNoteFolderPath() + "/media") :
+            script.currentNote().fullNoteFileDirPath + "/" + mediaFile;
 
         // write the scribble image to the note
         script.noteTextEditWrite("![scribble](" + mediaFile + ")\n");
 
         var params = [mediaFilePath];
-        
+
         // edit the scribble image
         if (executeInBackground) {
             script.startDetachedProcess(executablePath, params);
