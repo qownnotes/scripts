@@ -61,9 +61,14 @@ Script {
 
         // insert the scribble template image as media file
         var mediaFile = script.insertMediaFile(imagePath, true);
-        var mediaFilePath = script.getApplicationSettingsVariable("legacyLinking") ?
-            mediaFile.replace("file://media", script.currentNoteFolderPath() + "/media") :
-            script.currentNote().fullNoteFileDirPath + "/" + mediaFile;
+        
+        var mediaFilePath;
+        if (script.getApplicationSettingsVariable("legacyLinking") != "false") {
+            mediaFilePath = mediaFile.replace("file://media", script.currentNoteFolderPath() + "/media");
+        } else {
+            mediaFilePath = script.currentNote().fullNoteFileDirPath + "/" + mediaFile;
+        }
+        mediaFilePath = script.toNativeDirSeparators(mediaFilePath);
 
         // write the scribble image to the note
         script.noteTextEditWrite("![scribble](" + mediaFile + ")\n");
