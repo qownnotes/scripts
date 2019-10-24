@@ -65,10 +65,12 @@ QtObject {
     function init() {
         
         var optionsObj = eval("("+options+")");
-        md = new MarkdownIt.markdownit(optionsObj);
+        // md = new MarkdownIt.markdownit(optionsObj);
+        md = new this.markdownit(optionsObj); // workaround because its a node module and qml-browserify didn't work
         
         if (useDeflistPlugin) {
-            md.use(MarkdownItDeflist.markdownitDeflist);
+            // md.use(MarkdownItDeflist.markdownitDeflist);
+            md.use(this.markdownitDeflist); // workaround because its a node module and qml-browserify didn't work
         }
         
         //Allow file:// url scheme
