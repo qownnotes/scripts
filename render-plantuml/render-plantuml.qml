@@ -71,20 +71,29 @@ QtObject {
 
         var match = plantumlSectionRegex.exec(html);
         while (match != null) {
-            var matchedUml = match[1].replace(/\n/gi, "\\n");
+			//escape the \n into \|n
+            var matchedUml = match[1].replace(/\\n/gm, "\\|n");
             var filePath = workDir + "/" + note.id + "_" + (++index);
+			// Tranform the real line breaks into \n
+			matchedUml = matchedUml.replace(/\n/gm, "\\n");
+			//Unescape HTML entities because some special char are used by PlantUML
+			matchedUml = unescape(matchedUml);
+			// unescape \|n to a real escaped line break \n (cf. https://stackoverflow.com/questions/27363399/how-to-escape-line-break-already-present-in-a-string/27363443#27363443)
+			matchedUml = matchedUml.replace(/(\\)\|n/gm, "\\$1n");
 
 
             if (noStartUml == "true") {
 				// Transforms back tagged start/end keywords to @startkeyword/@endkeyword
                 matchedUml = matchedUml.replace(/^<b><font color=\"\w+\">(start\w+)<\/font><\/b>\\n/gi, "@$1\\n").replace(/<b><font color=\"\w+\">(end\w+)<\/font><\/b>\\n$/gi, "@$1\\n");
 
-                // If needed adds @startuml/@enduml
-                if (!(matchedUml.match(/^@start\w+\\n/gi) && matchedUml.match(/\\n@end\w+\\n$/gi)))
-                matchedUml = "@startuml\\n" + matchedUml + "@enduml\\n";
+                //If needed adds @startuml/@enduml
+                if (!(matchedUml.match(/^\n?@start\w+\n/gi)))
+					matchedUml = "@startuml\\n" + matchedUml;
+                if (!(matchedUml.match(/\n@end\w+\n?$/gi)))
+					matchedUml = matchedUml + "\\n@enduml\\n";
             }
 
-            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'");
+            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/");
 
             var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
             var result = script.startSynchronousProcess("node", params, html);
