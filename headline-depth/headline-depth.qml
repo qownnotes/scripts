@@ -9,11 +9,18 @@ Script {
         script.registerCustomAction("#-", "Decrease headline depth", "#-")
     }
     
-    function customActionInvoked(action) {        
-        if (action == "#+")
-            script.noteTextEditWrite(script.noteTextEditSelectedText().replace(/^\#/gm, "##"))
+    function customActionInvoked(action) {
+	var currentSelectedText = script.noteTextEditSelectedText();
+    	if (script.noteTextEditSelectedText() == "") {
+	    script.noteTextEditSelectCurrentLine();
+	    currentSelectedText = script.noteTextEditSelectedText();
+    	}
+    	
+    	if (action == "#+")
+            script.noteTextEditWrite(currentSelectedText.replace(/^\#/gm, "##"))
+	    
         if (action == "#-")
-            script.noteTextEditWrite(script.noteTextEditSelectedText().replace(/^\#\#/gm, "#"))
+            script.noteTextEditWrite(currentSelectedText.replace(/^\#\#/gm, "#"))
     }
 }
  
