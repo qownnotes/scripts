@@ -14,7 +14,19 @@ import QOwnNotesTypes 1.0
  * ...
  */
 
-Script {   
+Script {
+    property bool useDashesForClosing
+
+    property variant settingsVariables: [
+        {
+            "identifier": "useDashesForClosing",
+            "name": "",
+            "description": "Use three dashes as YAML closer for front matter created by the script",
+            "type": "boolean",
+            "default": "false",
+        },
+    ]
+    
     /**
      * Handles note tagging for a note
      *
@@ -73,8 +85,13 @@ Script {
                 yamlTags.push(tagName)
                 yamlTags.sort()
                 
+                if (useDashesForClosing)
+                    var yamlCloser = '\n---\n\n'
+                else
+                    var yamlCloser = '\n...\n\n'
+                    
                 if (noteYaml == null)
-                    return '---\ntags: ' + tagName + '\n...\n\n' + noteText
+                    return '---\ntags: ' + tagName + yamlCloser + noteText
                 else if (tagLine == null)
                     return noteText.substring(0, 4) + 'tags: ' + tagName + '\n' + noteText.substring(4)
                 else
