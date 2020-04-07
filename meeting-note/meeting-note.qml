@@ -10,6 +10,8 @@ QtObject {
     property string defaultTags;
     property bool timeInNoteName;
     property string noteBodyTemplate;
+    property bool isCreateFolderWithDateString;
+    property bool isAskForDateString;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -28,6 +30,13 @@ QtObject {
             "default": "",
         },
         {
+            "identifier": "isCreateFolderWithDateString",
+            "name": "Create new folder",
+            "description": "Create a new folder with the date string in the default folder.",
+            "type": "boolean",
+            "default": false,
+        },
+        {
             "identifier": "defaultTags",
             "name": "Default tags",
             "description": "One or more default tags (separated by commas) to assign to a newly created meeting note. Leave blank to disable auto-tagging.",
@@ -38,6 +47,13 @@ QtObject {
             "identifier": "timeInNoteName",
             "name": "Time in note name",
             "description": "Add time (HH:mm) in 'Meeting' note name.",
+            "type": "boolean",
+            "default": false,
+        },
+        {
+            "identifier": "isAskForDateString",
+            "name": "Ask for the date string",
+            "description": "Ask for the date string instead of using the current date",
             "type": "boolean",
             "default": false,
         },
@@ -70,10 +86,17 @@ QtObject {
 
         // get the date headline
         var m = new Date();
-        var headline = headlinePrefix + " " + m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+        var dateString = m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2)
+
+        if (isAskForDateString) {
+            dateString = script.inputDialogGetText(
+                "Date string", "Please enter the date string", dateString);
+        }
+
+        var headline = headlinePrefix + " " + dateString;
 
         if (timeInNoteName) {
-          headline = headline + "T" + ("0" + m.getHours()).slice(-2) + "." + ("0" + m.getMinutes()).slice(-2);
+            headline = headline + "T" + ("0" + m.getHours()).slice(-2) + "." + ("0" + m.getMinutes()).slice(-2);
         }
 
         var fileName = headline + ".md";
@@ -84,8 +107,16 @@ QtObject {
         // This has the highest chance of finding an existing meeting note.
         // Right now we can not search the whole database for a note with this
         // name / filename.
-        if (defaultFolder && defaultFolder !== '') {
+        if (defaultFolder !== '') {
             script.jumpToNoteSubFolder(defaultFolder);
+        }
+
+        var subFolder = defaultFolder;
+
+        if (isCreateFolderWithDateString) {
+            subFolder += (subFolder !== '') ? '/' : '';
+            subFolder += dateString;
+            mainWindow.createNewNoteSubFolder(dateString)
         }
 
         var note = script.fetchNoteByFileName(fileName);
@@ -100,11 +131,11 @@ QtObject {
             // keep in mind that the note will not be created instantly on the disk
             script.log("creating new meeting note: " + headline);
 
-            // Default folder.
-            if (defaultFolder && defaultFolder !== '') {
-                var msg = 'Jump to default folder \'' + defaultFolder + '\' before creating a new meeting note.';
+            // Sub folder.
+            if (subFolder !== '') {
+                var msg = 'Jump to folder \'' + subFolder + '\' before creating a new meeting note.';
                 script.log('Attempt: ' + msg);
-                var jump = script.jumpToNoteSubFolder(defaultFolder);
+                var jump = script.jumpToNoteSubFolder(subFolder);
                 if (jump) {
                     script.log('Success: ' + msg);
                 } else {
