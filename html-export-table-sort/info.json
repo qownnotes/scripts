@@ -1,0 +1,10 @@
+{
+  "name": "Table sorting for html export",
+  "identifier": "html-export-table-sort",
+  "script": "html-export-table-sort.qml",
+  "authors": ["@Fratt"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.06.2",
+  "description" : "Sorts a table by any row, simply by clicking on its header. Only works in a web-browser with html-exported notes!"
+}
