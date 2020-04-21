@@ -5,7 +5,7 @@ the issue assistant in the "Help menu"!
 
 The menu entry is named "Post questions, feature requests or issues".
 
-Please mention the authors of the script, so they are able to respond.
+Please mention the name and author(s) of the script, so they are able to respond.
 You will find the authors in the *Script repository*.
 -->
 
