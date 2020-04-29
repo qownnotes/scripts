@@ -1,0 +1,10 @@
+{
+  "name": "combine-webpage-notes script",
+  "identifier": "combine webpage notes",
+  "script": "combine-webpage-notes.qml",
+  "authors": ["@ZiluTian"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.2",
+  "minAppVersion": "20.4.18",
+  "description" : "This script combines all notes from the same webpage obtained using the browser extension into a new note. Contents are reordered to reflect the original reading order and the overhead associated with each note, such as link and name, is stripped removed."
+}
