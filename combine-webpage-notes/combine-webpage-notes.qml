@@ -10,7 +10,7 @@ Script {
      * Initializes the custom actions
      */
     function init() {
-        script.registerCustomAction("combine web page notes", "Combine notes from the same page to a new note", "", "", false, true, true);
+        script.registerCustomAction("combine-webpage-notes", "Combine notes from the same page to a new note", "", "", false, true, true);
     }
 
     /**
@@ -20,7 +20,7 @@ Script {
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
-        if (identifier != "combine web page notes") {
+        if (identifier != "combine-webpage-notes") {
             return;
         }
 

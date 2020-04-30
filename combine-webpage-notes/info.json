@@ -1,6 +1,6 @@
 {
   "name": "combine-webpage-notes script",
-  "identifier": "combine webpage notes",
+  "identifier": "combine-webpage-notes",
   "script": "combine-webpage-notes.qml",
   "authors": ["@ZiluTian"],
   "platforms": ["linux", "macos", "windows"],
