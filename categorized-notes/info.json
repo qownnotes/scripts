@@ -1,0 +1,10 @@
+{
+  "name": "Categorized Notes",
+  "identifier": "categorized-notes",
+  "script": "categorized-notes.qml",
+  "version": "0.0.1",
+  "platforms": ["linux", "macos", "windows"],
+  "minAppVersion": "20.5.0",
+  "authors": ["@r00tr4v3n"],
+  "description" : "Based on (@pbek, @sanderboom, @wiktor2200)'s meeting-note script.\n This script creates a menu item and a button to create or jump to the current date's or datetime's categorized note.\nIt creates a small window to select the category e. g. sales and creates the corresponding note (in its separate subfolder) with a date."
+}

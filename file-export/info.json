@@ -1,0 +1,10 @@
+{
+  "name": "File Export",
+  "identifier": "file-export",
+  "script": "file-export.qml",
+  "version": "0.0.1",
+  "platforms": ["linux", "macos", "windows"],
+  "minAppVersion": "20.5.0",
+  "authors": ["@r00tr4v3n"],
+  "description" : "This script creates a menu item and a button to export attachments and media from the note.\nSelect the text with the markdown links you want to export or nothing for all files inside the note.\nIt will automatically used the correct file names of the note (not the scrambled number inside the attachments folder) and create a zipped file if more the one file is selected (Linux only for now).\nYou can also format selected attachments neatly with the format button or context menu."
+}
