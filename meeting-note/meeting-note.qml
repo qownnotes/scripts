@@ -145,6 +145,13 @@ QtObject {
 
             // Create the new meeting note.
             script.createNote(headline + "\n====================\n\n" + noteBodyTemplate);
+            const currentNote = script.currentNote();
+
+            // rename the note file if needed
+            if (currentNote.allowDifferentFileName()) {
+                currentNote.renameNoteFile(headline);
+                mainWindow.buildNotesIndexAndLoadNoteDirectoryList(false, true);
+            }
 
             // Default tags.
             if (defaultTags && defaultTags !== '') {
