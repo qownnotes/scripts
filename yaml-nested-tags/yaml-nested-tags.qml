@@ -54,7 +54,6 @@ Script {
   function getTagHierarchy(tag, ancestorsOnly = false) {
     var tagHierarchy = tag.name
     if (tag.parentId !== 0) { // better performance
-      //log("looking for parents")
       var tagList = tag.getParentTagNames().reverse();
       if (!ancestorsOnly)
         tagList.push(tag.name)
@@ -115,7 +114,6 @@ Script {
       // the new note text has to be returned so that the note can be updated
       // returning an empty string indicates that nothing has to be changed
       case 'add':
-        //log('+++ add: '+tagHierarchy)
         tagHierarchy = tagHierarchy.trim()
         tagHierarchy = tagHierarchy.replace(/ /g, '_')
         if (yamlTags.indexOf(tagHierarchy) !== -1)
@@ -140,12 +138,9 @@ Script {
         // the new note text has to be returned so that the note can be updated
         // returning an empty string indicates that nothing has to be changed
       case 'remove':
-      //log('--- remove: '+tagHierarchy)
         tagHierarchy = tagHierarchy.replace(/ /g, '_')
 
-        // For some reason newly created JS/QML arrays contain an empty item
-      //  if (yamlTags[0] === '')
-      //    yamlTags.shift()
+
         if (yamlTags.indexOf(tagHierarchy) === -1)
           return
 
@@ -203,7 +198,6 @@ Script {
         return tagIdList;
     }
 
-    log("### end noteTaggingHook")
     return ''
   }
 
@@ -227,49 +221,6 @@ Script {
     }
   }
 
-  /**
-   * This function is called when the note name is determined for a note
-   *
-   * It allows you to modify the name of the note that is viewed
-   *
-   * Return an empty string if the name of the note should not be modified
-   *
-   * @param {NoteApi} note - the note object of the stored note
-   * @return {string} the name of the note
-   */
-  function handleNoteNameHook(note){
-    log("handleNoteNameHook")
-      log("name: "+note.name)
-      return note.name
-  }
-  /**
-   * This function is called when a note gets stored to disk if
-   * "Allow note file name to be different from headline" is enabled
-   * in the settings
-   *
-   * It allows you to modify the name of the note file
-   * Keep in mind that you have to care about duplicate names yourself!
-   *
-   * Return an empty string if the file name of the note should
-   * not be modified
-   *
-   * @param {NoteApi} note - the note object of the stored note
-   * @return {string} the file name of the note
-   */
-  function handleNoteTextFileNameHook(note){
-
-      log("handleNoteTextFileNameHook")
-        log("name: "+note.name)
-        return note.name
-  }
-
-  /**
-   *
-   */
-  function renameTitle(){
-      // header with optional yaml header
-      const regex_title = "(?:^---[\s\S]+?(?:---|\.\.\.))?[\n\r\s]*([\s\S]+[\n\r]+)(?:=+)"
-  }
 
   function init() {
     log("init");
