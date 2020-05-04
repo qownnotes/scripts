@@ -1,0 +1,11 @@
+{
+  "name": "Latex Math",
+  "identifier": "latex-math",
+  "script": "latex-math.qml",
+  "version": "0.0.1",
+  "platforms": ["linux", "macos", "windows"],
+  "minAppVersion": "20.5.0",
+  "authors": ["@r00tr4v3n"],
+  "description" : "This script creates LaTex images on the fly with KLatexFormula. e. g. $x^2$ or $[22] x^2$ to create larger images. \nThe images are created once and reused as long as the formula does not change. If you changed the preamble you have to clean the tmp folder to regenerate the images. Hint: You might want to add the $-signs after writing the formula to prevent intermediate image generation.
+ "
+}
