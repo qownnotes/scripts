@@ -10,8 +10,9 @@ import QtQuick 2.0
  * Hint: You might want to add the $-signs after writing the formula to prevent intermediate image generation.
  */
 QtObject {
-    property string settingFontSize;
+    property string settingImageSize;
     property string settingDPI;
+    property string executable;
     property string workDir;
     property string usepackages;
     property string customPreamble;
@@ -19,11 +20,11 @@ QtObject {
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
         {
-            "identifier": "settingFontSize",
-            "name": "Default font size",
+            "identifier": "settingImageSize",
+            "name": "Default image height size",
             "description": "The default size of the LaTex image. Change it via parameter e. g. $[14] x^2$",
             "type": "integer",
-            "default": "12"
+            "default": "22"
         },
         {
             "identifier": "settingDPI",
@@ -31,6 +32,13 @@ QtObject {
             "description": "The default DPI used for the images.",
             "type": "integer",
             "default": "600"
+        },
+        {
+            "identifier": "executable",
+            "name": "Executable",
+            "description": "Please enter a path to KLatexFormula",
+            "type": "file",
+            "default": "/usr/bin/klatexformula"
         },
         {
             "identifier": "workDir",
@@ -86,16 +94,16 @@ QtObject {
       //const regex_latex = /\$(?:\[(\d+)\])?([\s\S]+?)\$(?!\d)/g   // don't allow $4 as closing character
       const regex_latex = /(?:<x-equation>)(?:\[(\d+)\])?([\s\S]+?)(?:<\/x-equation>)/g   // don't allow $4 as closing character
 
-      html = html.replace(regex_latex, function(match, matchFontSize, latex, offset) {
+      html = html.replace(regex_latex, function(match, matchImageSize, latex, offset) {
 
-        let fontSize = settingFontSize;
+        let imageSize = settingImageSize;
 
-        if(matchFontSize != null && matchFontSize.length > 0){
-          fontSize = matchFontSize
+        if(matchImageSize != null && matchImageSize.length > 0){
+          imageSize = matchImageSize
         }
 
         var path = generateLaTexImage(latex)
-        return `<img style='vertical-align: middle;' height='${fontSize}' src="${path}">`; //style='vertical-align: middle;'
+        return `<img style='vertical-align: middle;' height='${imageSize}' src="${path}">`; //style='vertical-align: middle;'
       });
       return html
     }
@@ -121,10 +129,10 @@ QtObject {
       }
 
       function getBash(isQuiet = true){
-        const exec = "/usr/bin/klatexformula"
+        const exec = executable
         const preamble = Qt.btoa(getPreamble())
         const quiet = isQuiet ? " --quiet 1" : ""; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `${exec} --base64arg --preamble ${preamble} --base64arg --latexinput ${base64Latex} --dpi ${settingDPI} ${quiet} --output ${path}`
+        const cmd = `${exec} --base64arg --preamble="${preamble}" --base64arg --latexinput="${base64Latex}" --dpi ${settingDPI} ${quiet} --output ${path}`
         //log("cmd: "+cmd)
         return cmd
       }
