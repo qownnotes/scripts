@@ -2,7 +2,7 @@
   "name": "File Export",
   "identifier": "file-export",
   "script": "file-export.qml",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "platforms": ["linux", "macos", "windows"],
   "minAppVersion": "20.5.0",
   "authors": ["@r00tr4v3n"],

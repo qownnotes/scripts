@@ -199,7 +199,7 @@ QtObject {
             script.noteTextEditSelectAll(); // format entire note if nothing is selected
         }
         var currentSelectedText = script.noteTextEditSelectedText();
-        script.noteTextEditWrite(currentSelectedText.replace(regex_media, "\n$2"))
+        script.noteTextEditWrite(currentSelectedText.replace(regex_media, "\n$2  ")) // "  " -> newline
 
     }
 
