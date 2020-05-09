@@ -7,13 +7,18 @@ import QtQuick 2.0
  * This script creates LaTex images on the fly with KLatexFormula. e. g. $x^2$ or $[22] x^2$ to create larger images.
  * The images are created once and reused as long as the formula does not change.
  * If you changed the preamble you have to clean the tmp folder to regenerate the images.
+ * Don't make it too complicated, this size works though: $[33] \\frac{1}{2\\pi}\\int{-\\infty}^{\\infty}e^{-\\frac{x^2}{a}}dx$
  * Hint: You might want to add the $-signs after writing the formula to prevent intermediate image generation.
+ * test cmd: klatexformula -b '#ff0000' --latexinput '\delta(x) = \frac{1}{2\pi} \int e^{ikx}\,dk' --dpi 300 --output dirac-delta.png
  */
 QtObject {
     property string settingImageSize;
     property string settingDPI;
     property string executable;
     property string workDir;
+    property string formulaPrefix;
+    property string formulaColor;
+    property string formulaBgColor;
     property string usepackages;
     property string customPreamble;
 
@@ -48,6 +53,27 @@ QtObject {
             "default": "/tmp/qon/latex"
         },
         {
+            "identifier": "formulaPrefix",
+            "name": "Formula Prefix",
+            "description": "Please enter a prefix for all formulas. Remember you might want to leave a space at the end.",
+            "type": "string",
+            "default": "\\bf "
+        },
+        {
+            "identifier": "formulaColor",
+            "name": "Formula Color",
+            "description": "Use a different color. Useful for dark mode and the like. Format: #RRGGBB or '-' for transparent",
+            "type": "string",
+            "default": "#000000"
+        },
+        {
+            "identifier": "formulaBgColor",
+            "name": "Formula Background Color",
+            "description": "Use a different color. Useful for dark mode and the like. Format: #RRGGBB or '-' for transparent",
+            "type": "string",
+            "default": "-"
+        },
+        {
             "identifier": "usepackages",
             "name": "Packages to include in the preamble",
             "description": "Enter the packages comma separated",
@@ -74,7 +100,7 @@ QtObject {
         log("init")
         var result = script.startSynchronousProcess("mkdir", ["-p", workDir]);
         // create a menu entry to paste Latex code as an image
-        script.registerCustomAction("latex-math", "update latex", "Latex", "insert-image", true);
+        script.registerCustomAction("latex-math-refresh", "Refresh LaTex Images", "Latex", "view-refresh");
     }
 
     /**
@@ -114,6 +140,7 @@ QtObject {
      * @return path
      */
     function generateLaTexImage(latex) {
+      latex = formulaPrefix + latex // add prefix from settings
       log(latex)
       latex = latex.trim()
       function getPreamble(){
@@ -132,7 +159,7 @@ QtObject {
         const exec = executable
         const preamble = Qt.btoa(getPreamble())
         const quiet = isQuiet ? " --quiet 1" : ""; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `${exec} --base64arg --preamble="${preamble}" --base64arg --latexinput="${base64Latex}" --dpi ${settingDPI} ${quiet} --output ${path}`
+        const cmd = `${exec} -f '${formulaColor}' -b '${formulaBgColor}' --base64arg --preamble="${preamble}" --base64arg --latexinput="${base64Latex}" --dpi ${settingDPI} ${quiet} --output ${path}`
         //log("cmd: "+cmd)
         return cmd
       }
@@ -146,9 +173,11 @@ QtObject {
         if(!execBash(getBash())){ // check for result
           log(`[ERR]: ${latex} (${base64Latex})`)
           var bash = getBash(false)
-          var result = execBash(bash, true) // check result with non quiet bash cmd
-          script.informationMessageBox("LaTex error, check the script log for more details.", "LaTex error")
-          log("[ERR]: "+result)
+          var result = execBashDetached(bash, true) // check result with non quiet bash cmd
+          // more anoying than helpful
+          //var result = execBash(bash, true) // check result with non quiet bash cmd
+          //script.informationMessageBox("LaTex error, check the script log for more details.", "LaTex error")
+          //log("[ERR]: "+result)
         }else{
           //log("[OK]: "+latex)
         }
@@ -187,6 +216,21 @@ QtObject {
       const param = ["-c", prefix+cmd+successSuffix]
       var result = script.startSynchronousProcess(exec, param);
       return getResult ? String(result) : result == 1
+    }
+
+    /**
+     * This function is invoked when a custom action is triggered
+     * in the menu or via button
+     *
+     * @param identifier string the identifier defined in registerCustomAction
+     */
+    function customActionInvoked(identifier) {
+        if (identifier !== "latex-math-refresh") {
+            return;
+        }
+        log("refresh images")
+        execBashDetached(`rm ${workDir}/*`) // clean the tmp dir
+        script.regenerateNotePreview();
     }
 
 }
