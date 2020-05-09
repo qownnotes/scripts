@@ -9,13 +9,13 @@ import QtQuick 2.0
  * If you changed the preamble you have to clean the tmp folder to regenerate the images.
  * Don't make it too complicated, this size works though: $[33] \\frac{1}{2\\pi}\\int{-\\infty}^{\\infty}e^{-\\frac{x^2}{a}}dx$
  * Hint: You might want to add the $-signs after writing the formula to prevent intermediate image generation.
- * test cmd: klatexformula -b '#ff0000' --latexinput '\delta(x) = \frac{1}{2\pi} \int e^{ikx}\,dk' --dpi 300 --output dirac-delta.png
+ * test cmd: klatexformula -b '#ff0000' --latexinput '\delta(x) = \frac{1}{2\pi} \int e^{ikx}\,dk' --dpi 300 --output dirac-delta.png 
  */
 QtObject {
     property string settingImageSize;
     property string settingDPI;
     property string executable;
-    property string workDir;
+    property string workDir
     property string formulaPrefix;
     property string formulaColor;
     property string formulaBgColor;
