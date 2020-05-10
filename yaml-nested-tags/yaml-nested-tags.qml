@@ -90,23 +90,10 @@ Script {
     var tagLineEndIndex = 0;
 
 
-    if (noteText.substring(0, 4) === '---\n') {
-      var yamlEndIndex = noteText.indexOf('\n...\n')
-
-      // If there's no proper "..." YAML ending "---" is recognized as one
-      if (yamlEndIndex === -1)
-        yamlEndIndex = noteText.indexOf('\n---\n')
-      if (yamlEndIndex !== -1) {
-        noteYaml = noteText.substring(0, yamlEndIndex)
-        const tagLineMatch = noteYaml.match(/^tags:(.*)/m)
-        if (tagLineMatch !== null) {
-          tagLineStartIndex = tagLineMatch.index
-          tagLineEndIndex = tagLineStartIndex + tagLineMatch[0].length
-          tagLine = tagLineMatch[0].trim()
-          if (tagLine.length !== 5) // "tags:".length = 5
-            yamlTags = tagLineMatch[1].trim().split(' ')
-        }
-      }
+    let regex_yaml_header = /^[\s]*---[\r\n]{1,2}tags:\s*([\s\S]*)[\r\n]{1,2}(---|\.\.\.)/ // group 1: tags, group 2: yaml ending
+    var match = noteText.match(regex_yaml_header)
+    if (match) {
+      yamlTags = match[1].trim().split(' ')
     }
 
     switch (action) {
@@ -162,9 +149,6 @@ Script {
         } else {
           newTagHierarchy += tagHierarchySeparator + newTagName // build the new tag hierarchy
         }
-        log("~~ renaming '" + tagHierarchy + "' to '" + newTagHierarchy + "'")
-        //if (yamlTags.indexOf(tagHierarchy) === -1) // does not work for birds in /animals/birds/ducks
-        //  return
 
         yamlTags.forEach(function(tags, i, array) {
           if (tags.startsWith(tagHierarchy)) {
