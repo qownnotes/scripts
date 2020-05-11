@@ -81,68 +81,66 @@ Script {
    */
   function noteTaggingByObjectHook(note, action, tag, newTagName) {
     var tagHierarchy = getTagHierarchy(tag)
-
-    const noteText = note.noteText
+    var noteText = note.noteText
     var noteYaml = null
     var tagLine = null
     var yamlTags = []
-    var tagLineStartIndex = 0;
-    var tagLineEndIndex = 0;
 
+    var yamlCloser = "..."
+    if (useDashesForClosing) {
+        yamlCloser = "---"
+    }
 
-    let regex_yaml_header = /^[\s]*---[\r\n]{1,2}tags:\s*([\s\S]*)[\r\n]{1,2}(---|\.\.\.)/ // group 1: tags, group 2: yaml ending
+    const regex_space = / /g
+    const yamlHeader = `---\ntags:\n${yamlCloser}\n`
+    const regex_yaml_header = /^(---)[\r\n]*?(tags:)\s*(.*)[\r\n]*?(---|\.\.\.)/; // g0: full match, g1: ---, g2: "tags:", g3: tags, g4: yaml ending
+
+    if (!regex_yaml_header.test(noteText)) {
+        noteText = yamlHeader + noteText
+    }
     var match = noteText.match(regex_yaml_header)
-    if (match) {
-      yamlTags = match[1].trim().split(' ')
+    yamlTags = match[3].trim().split(' ')
+
+    function updateNoteText(nText, tagsArray){
+      var newTags = tagsArray.join(' ')
+      nText = nText.replace(regex_yaml_header, `$1\n$2 ${newTags}\n$4`)
+      return nText
     }
 
     switch (action) {
-      // adds the tag "tagName" to the note
+      // adds the tag "tagHierarchy" to the note
       // the new note text has to be returned so that the note can be updated
       // returning an empty string indicates that nothing has to be changed
       case 'add':
         tagHierarchy = tagHierarchy.trim()
-        tagHierarchy = tagHierarchy.replace(/ /g, '_')
+        tagHierarchy = tagHierarchy.replace(regex_space, '_')
+        // tag already present
         if (yamlTags.indexOf(tagHierarchy) !== -1)
           return
 
         yamlTags.push(tagHierarchy)
         yamlTags.sort()
-        var yamlCloser = "\n...\n\n"
-        if (useDashesForClosing) {
-          yamlCloser = '\n---\n\n'
-        }
-        if (noteYaml === null) {
-          return '---\ntags: ' + tagHierarchy + yamlCloser + noteText
-        } else if (tagLine === null) {
-          return noteText.substring(0, 4) + 'tags: ' + tagHierarchy + '\n' + noteText.substring(4)
-        } else {
-          return noteText.substring(0, tagLineStartIndex) +
-            'tags: ' + yamlTags.join(' ') + noteText.substring(tagLineEndIndex)
-        }
+        return updateNoteText(noteText, yamlTags)
 
         // removes the tag "tagName" from the note
         // the new note text has to be returned so that the note can be updated
         // returning an empty string indicates that nothing has to be changed
       case 'remove':
-        tagHierarchy = tagHierarchy.replace(/ /g, '_')
-
-
-        if (yamlTags.indexOf(tagHierarchy) === -1)
+        tagHierarchy = tagHierarchy.replace(regex_space, '_')
+        if (yamlTags.indexOf(tagHierarchy) === -1){
           return
-
-        yamlTags.splice(yamlTags.indexOf(tagHierarchy), 1)
-        return noteText.substring(0, tagLineStartIndex) +
-          'tags: ' + yamlTags.join(' ') + noteText.substring(tagLineEndIndex);
+        }
+        yamlTags.splice(yamlTags.indexOf(tagHierarchy), 1) // remove index of tag
+        return updateNoteText(noteText, yamlTags)
 
         // renames the tag "tagName" in the note to "newTagName"
         // the new note text has to be returned so that the note can be updated
         // returning an empty string indicates that nothing has to be changed
       case 'rename':
         var newTagHierarchy = getTagHierarchy(tag, true) // just the ancestor tree
-        newTagHierarchy = newTagHierarchy.replace(/ /g, '_')
-        tagHierarchy = tagHierarchy.replace(/ /g, '_')
-        newTagName = newTagName.replace(/ /g, '_')
+        newTagHierarchy = newTagHierarchy.replace(regex_space, '_')
+        tagHierarchy = tagHierarchy.replace(regex_space, '_')
+        newTagName = newTagName.replace(regex_space, '_')
 
         if (newTagHierarchy.length === 0) { // root tag was renamed -> no leading separator needed
           newTagHierarchy = newTagName;
@@ -155,16 +153,10 @@ Script {
             array[i] = array[i].replace(tagHierarchy, newTagHierarchy)
           }
         })
-
-
         // tag1 tag2 tag2/subtag/3rdsub2
         // find the old hierarchy and replace it with the new one
-        //yamlTags.splice(yamlTags.indexOf(tagHierarchy), 1, newTagHierarchy) // array.splice(start[, deleteCount[, item1[, item2[, ...]]]])
-        //yamlTags.push(newTagHierarchy)
         yamlTags.sort()
-
-        return noteText.substring(0, tagLineStartIndex) +
-          'tags: ' + yamlTags.join(' ') + noteText.substring(tagLineEndIndex);
+        return updateNoteText(noteText, yamlTags)
 
         // returns a list of all tag ids of the note
         // animals/mammals/dogs -> returns dogs id
@@ -204,7 +196,6 @@ Script {
       return html.replace(/\<hr\/\>(\n|.)*?\<h2 id=\"toc_0\"\>(\n|.)*?\<\/h2\>/, '')
     }
   }
-
 
   function init() {
     log("init");
