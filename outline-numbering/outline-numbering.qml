@@ -12,7 +12,7 @@ Script {
   * Initializes the custom action
   **/
   function init() {
-    script.registerCustomAction("outlineNumbering", "Refresh Outline Numbers in Headings", "Outline Numbers", "", true, true);
+    script.registerCustomAction("outlineNumbering", "Update Outline Numbers", "Outline Numbers", "", true, true);
   }
 
   /**
@@ -25,31 +25,30 @@ Script {
     // set the current nums to their start
     var curNums = [0,0,0,0,0,0];
     var depth = 0;
-    var last_depth=0;
+    var last_depth = 0;
 
     // go through all the lines
     for (var n = 0; n < lines.length; n++) {
       // if we found a heading
       var match = lines[n].match(/^(#+)\s*([0-9\.]*)\s+(.*)$/);
       if (match) {
-        
+
         // get the depth - the heading number
-        depth=match[1].length-1;
+        depth = match[1].length - 1;
 
         // if the current depth is at a higher level than the last, reset all the lower level vals
         if (depth < last_depth) {
-          for (var n=depth; n< curNums.length ; n++) {
-            curNums[n] == 0;
+          for (var j = depth; n < curNums.length ; n++) {
+            curNums[j] == 0;
           }
         }
         
         // up the val for the current depth and save this depth as the last one
         curNums[depth] += 1;
         last_depth = depth;
-
+        
         // rewrite the currentt line with the number
         lines[n] = match[1] + " " + getOlNumber(curNums, depth) + " " + match[3];
-
       };
     }
     return lines;
@@ -61,6 +60,9 @@ Script {
   * 
   * @param nums a 6 element array containing the current oultline numbering values
   * @param depth the current depth that we want a number for
+  * @return string containing #depth numbers seperated by "."s
+  *
+  * example: getOlNumber([1,2,3,4,5,6], 4) returns "1.2.3.4"
   **/
   function getOlNumber(nums, depth) {
 
@@ -89,8 +91,6 @@ Script {
       var cursorPositionStart = script.noteTextEditSelectionStart();
       var cursorPositionEnd = script.noteTextEditSelectionEnd();
 
-      script.log("presave selection: " + cursorPositionStart + "," + cursorPositionEnd);
-
       // select all and overwrite with the new text
       script.noteTextEditSelectAll();
       script.noteTextEditWrite(updated_lines.join("\n"));
@@ -99,4 +99,3 @@ Script {
       script.noteTextEditSetSelection(cursorPositionStart, cursorPositionEnd);
     }
   }
-}
