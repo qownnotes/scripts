@@ -2,12 +2,12 @@ import QtQml 2.0
 
 /**
  * This script renders any plantuml text embedded in a note with the language hint, into a uml diagram.
- * 
+ *
     * Dependencies:
     * Node.js: https://nodejs.org/en/download/
     * java: https://java.com/en/download/
     * plantuml: http://plantuml.com/download
-    * 
+    *
     * Install node and java. download the plantuml jar and provide the full path to the script.
     *
  */
@@ -122,23 +122,26 @@ QtObject {
                 return imgElement + matchedStr;
             }
         });
-        
+
         return updatedHtml;
     }
 
     /**
      * This function is called when the markdown html of a note is generated
-     * 
+     *
      * It allows you to modify this html
      * This is for example called before by the note preview
-     * 
-     * @param {Note} note - the note object
+     *
+     * The method can be used in multiple scripts to modify the html of the preview
+     *
+     * @param {NoteApi} note - the note object
      * @param {string} html - the html that is about to being rendered
-     * @return {string} the modfied html or an empty string if nothing should be modified
+     * @param {string} forExport - the html is used for an export, false for the preview
+     * @return {string} the modified html or an empty string if nothing should be modified
      */
-    function noteToMarkdownHtmlHook(note, html) {
+     function noteToMarkdownHtmlHook(note, html, forExport) {
         var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
-        
+
         var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
 
         if (plantumlFiles.length) {

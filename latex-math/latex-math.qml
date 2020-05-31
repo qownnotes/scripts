@@ -9,7 +9,7 @@ import QtQuick 2.0
  * If you changed the preamble you have to clean the tmp folder to regenerate the images.
  * Don't make it too complicated, this size works though: $[33] \\frac{1}{2\\pi}\\int{-\\infty}^{\\infty}e^{-\\frac{x^2}{a}}dx$
  * Hint: You might want to add the $-signs after writing the formula to prevent intermediate image generation.
- * test cmd: klatexformula -b '#ff0000' --latexinput '\delta(x) = \frac{1}{2\pi} \int e^{ikx}\,dk' --dpi 300 --output dirac-delta.png 
+ * test cmd: klatexformula -b '#ff0000' --latexinput '\delta(x) = \frac{1}{2\pi} \int e^{ikx}\,dk' --dpi 300 --output dirac-delta.png
  */
 QtObject {
     property string settingImageSize;
@@ -113,9 +113,10 @@ QtObject {
      *
      * @param {NoteApi} note - the note object
      * @param {string} html - the html that is about to being rendered
+     * @param {string} forExport - the html is used for an export, false for the preview
      * @return {string} the modified html or an empty string if nothing should be modified
      */
-    function noteToMarkdownHtmlHook(note, html){
+     function noteToMarkdownHtmlHook(note, html, forExport) {
       // $ were replaced by <x-equation> tags
       //const regex_latex = /\$(?:\[(\d+)\])?([\s\S]+?)\$(?!\d)/g   // don't allow $4 as closing character
       const regex_latex = /(?:<x-equation>)(?:\[(\d+)\])?([\s\S]+?)(?:<\/x-equation>)/g   // don't allow $4 as closing character

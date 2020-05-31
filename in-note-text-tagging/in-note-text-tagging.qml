@@ -35,7 +35,7 @@ Script {
             "default": "purple",
         },
     ]
-    
+
     /**
      * Handles note tagging for a note
      *
@@ -61,12 +61,12 @@ Script {
                 if (noteText.search(tagRegExp) > 0) {
                     return "";
                 }
-                
+
                 const tag = tagMarker + tagName.replace(/ /g, "_");
-                
+
                 // add the tag to the beginning or to the end of the note
                 if (putToBeginning) {
-                    
+
                     // make an array of up to 3 first lines and other text as last item
                     var textLines = [];
                     for (var lineCount = 0, lineStart = 0, lineEnd = 0; lineCount != 3; lineCount++) {
@@ -80,8 +80,8 @@ Script {
                     }
 
                     textLines.push(noteText.substring(lineStart));
-                    
-                    // if line after headline is a line for tags add tag there, 
+
+                    // if line after headline is a line for tags add tag there,
                     // or make a new line for tags after headline
                     function appendTag(text, tag, prepend) {
                         if (text.substring(0, tagMarker.length) == tagMarker ||
@@ -90,7 +90,7 @@ Script {
                         else
                             return prepend + tag + "\n" + text;
                     }
-                    
+
                     // use different tag line number depending on a headline type
                     if (textLines[0].substring(0, 1) == "#")
                         textLines[1] = appendTag(textLines[1], tag, "\n");
@@ -98,13 +98,13 @@ Script {
                         textLines[2] = appendTag(textLines[2], tag, "\n");
                     else
                         textLines[0] = appendTag(textLines[0], tag, "");
-                        
+
                     noteText = textLines.join("");
                 }
 
-                else 
+                else
                     noteText += "\n" + tag;
-                
+
                 return noteText;
 
             // removes the tag "tagName" from the note
@@ -126,7 +126,7 @@ Script {
 
                 while ((result = re.exec(noteText)) !== null) {
                     tagName = result[1].replace(/_/g, " ");
-                    
+
                     // add the tag if it wasn't in the list
                     if (tagNameList.indexOf(tagName) ==  -1) {
                         tagNameList.push(tagName);
@@ -134,23 +134,23 @@ Script {
                 }
                 return tagNameList;
         }
-    
+
         return "";
     }
-    
+
     // Removes tag marker in note preview and highlights tag name with set color
-    function noteToMarkdownHtmlHook(note, html) {
+   function noteToMarkdownHtmlHook(note, html, forExport) {
         if (tagHighlightColor == "")
             return;
-        
+
         var re = new RegExp("\\B%1([^\\s,;]+)".arg(escapeRegExp(tagMarker)), "gi"), result;
 
         while ((result = re.exec(html)) !== null)
             html = html.replace(result[0], '<b><font color="%1">%2</font></b>'.arg(tagHighlightColor).arg(result[1]));
-            
+
         return html;
     }
-    
+
     // Escapes a string for regular expressions
     function escapeRegExp(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -166,15 +166,15 @@ Script {
         if (!word.startsWith(tagMarker)) {
             return [];
         }
-        
+
         // cut the tag marker off of the string and do a substring search for tags
         var tags = script.searchTagsByName(word.substr(tagMarker.length));
-        
-        // convert tag names with spaces to in-text tags with "_", "tag one" to @tag_one 
+
+        // convert tag names with spaces to in-text tags with "_", "tag one" to @tag_one
         for (var i = 0; i < tags.length; i++) {
             tags[i] = tags[i].replace(/ /g, "_");
         }
-        
+
         return tags;
     }
 }

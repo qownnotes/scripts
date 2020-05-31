@@ -6,7 +6,7 @@ import "markdown-it-deflist.js" as MarkdownItDeflist
 
 QtObject {
     property variant md;
-    
+
     property string options;
     property string customStylesheet;
     property bool useDeflistPlugin;
@@ -61,18 +61,18 @@ QtObject {
             "default": null,
         },
     ];
-    
+
     function init() {
-        
+
         var optionsObj = eval("("+options+")");
         // md = new MarkdownIt.markdownit(optionsObj);
         md = new this.markdownit(optionsObj); // workaround because its a node module and qml-browserify didn't work
-        
+
         if (useDeflistPlugin) {
             // md.use(MarkdownItDeflist.markdownitDeflist);
             md.use(this.markdownitDeflist); // workaround because its a node module and qml-browserify didn't work
         }
-        
+
         //Allow file:// url scheme
         var validateLinkOrig = md.validateLink;
         var GOOD_PROTO_RE = /^(file):/;
@@ -82,11 +82,24 @@ QtObject {
             return GOOD_PROTO_RE.test(str) ? true : validateLinkOrig(url);
         }
     }
-    
-    function noteToMarkdownHtmlHook(note, html) {
+
+    /**
+     * This function is called when the markdown html of a note is generated
+     *
+     * It allows you to modify this html
+     * This is for example called before by the note preview
+     *
+     * The method can be used in multiple scripts to modify the html of the preview
+     *
+     * @param {NoteApi} note - the note object
+     * @param {string} html - the html that is about to being rendered
+     * @param {string} forExport - the html is used for an export, false for the preview
+     * @return {string} the modified html or an empty string if nothing should be modified
+     */
+    function noteToMarkdownHtmlHook(note, html, forExport) {
         
         var mdHtml = md.render(note.noteText);
-        
+
         //Insert root folder in attachments and media relative urls
         var path = script.currentNoteFolderPath();
         if (script.platformIsWindows()) {
@@ -94,14 +107,14 @@ QtObject {
         }
         mdHtml = mdHtml.replace(new RegExp("href=\"file://attachments/", "gi"), "href=\"file://" + path + "/attachments/");
         mdHtml = mdHtml.replace(new RegExp("src=\"file://media/", "gi"), "src=\"file://" + path + "/media/");
-        
+
         //Get original styles
         var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
         //Add custom styles
         head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;}" + customStylesheet + "</style>");
-        
+
         mdHtml = "<html>"+head+"<body>"+mdHtml+"</body></html>";
-        
+
         return mdHtml;
     }
 }

@@ -2,8 +2,8 @@
   "name": "Checkbox preview and export",
   "identifier": "export-checkboxes",
   "script": "export-checkboxes.qml",
-  "version": "0.0.3",
-  "minAppVersion": "17.12.0",
+  "version": "0.0.4",
+  "minAppVersion": "20.6.0",
   "authors": ["@m-wim", "@visika", "@bendem"],
   "description" : "This script changes the html output of the preview and export. If a list item starts with a checkbox-mark like <pre>- [x]</pre>, <pre>- [X]</pre> and <pre>- [ ]</pre> the list-bullet and mark are replaced with a single UTF-8 character &#x2611; and &#x2610; for checked/unchecked states."
 }
