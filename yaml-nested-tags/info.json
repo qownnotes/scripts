@@ -2,7 +2,7 @@
   "name": "YAML nested tags",
   "identifier": "yaml-nested-tags",
   "script": "yaml-nested-tags.qml",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "platforms": ["linux", "macos", "windows"],
   "minAppVersion": "20.5.0",
   "authors": ["@r00tr4v3n"],

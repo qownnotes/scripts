@@ -2,7 +2,7 @@
   "name": "Latex Math",
   "identifier": "latex-math",
   "script": "latex-math.qml",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "platforms": ["linux", "macos", "windows"],
   "minAppVersion": "20.5.0",
   "authors": ["@r00tr4v3n"],
