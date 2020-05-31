@@ -3,7 +3,7 @@
   "identifier": "image-preview",
   "script": "image-preview.qml",
   "version": "1.0.1",
-  "minAppVersion": "17.11.6",
+  "minAppVersion": "20.6.0",
   "authors": ["@sanderboom"],
   "description" : "This script does two things: 1) Display the image with an user defined width; 2) Wrap the image in an anchor tag that links to the full size image."
 }

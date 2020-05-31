@@ -4,7 +4,7 @@
   "script": "yaml-nested-tags.qml",
   "version": "0.0.6",
   "platforms": ["linux", "macos", "windows"],
-  "minAppVersion": "20.5.0",
+  "minAppVersion": "20.6.0",
   "authors": ["@r00tr4v3n"],
   "description" : "Based on the epsilon-notes script from @Maboroshy. \nAfter enabling this script internal QOwnNotes tag data will be lost!\n\nThis script makes QOwnNotes read and save nested tags to a YAML section before the note text.\nThis makes tags independent from the Markdown editor.\nIf there's no YAML section in the note the script will add one on first tag assignment.\nMake sure to choose the correct option for '...' or '---' YAML ending that is supported by your app.\n\nThe YAML section must start at the first line of the note.\nYAML format for tags is:\n---\ntags: tag1 nested/tag multi_word_tag\n... or ---\n"
 }

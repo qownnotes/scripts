@@ -5,6 +5,6 @@
   "authors": ["@Maboroshy"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.9",
-  "minAppVersion": "17.09.9",
+  "minAppVersion": "20.6.0",
   "description" : "With this script you can <b>store your tags in your note-text</b>. Use tags like <i>@tag</i> or <i>@tag_one</i> for 'tag one' inside your note-text to tag your notes. You can change '@' to something else in script settings.\n\nYou also are able to use the functionality of the QOwnNotes user-interface to tag with this tags inside your note texts, like for adding a tag to the current note as well as bulk operations for adding and removing tags to your note. If you rename a tag inside QOwnNotes the text-tags in your notes are also updated.\n\nIf you start writing a tag you can also use the autocompleter to get a list of already existing tags.\n\nYou can also use this script as template for implementing your own, unique tagging mechanism.\n\n<b>If you install this script you will loose all links between notes and tags and instead your in-note tags will be used!\n\nThis functionality is still experimental!</b>\nPlease report your experiences."
 }
