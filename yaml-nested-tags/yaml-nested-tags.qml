@@ -178,7 +178,7 @@ Script {
   }
 
   // Exclude YAML from note preview
-  function noteToMarkdownHtmlHook(note, html) {
+  function noteToMarkdownHtmlHook(note, html, forExport) {
 
     if (note.noteText.substring(0, 4) === '---\n') {
 
