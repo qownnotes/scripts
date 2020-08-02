@@ -1,4 +1,4 @@
-import QtQml 2.14
+import QtQml 2.13
 import com.qownnotes.noteapi 1.0
 import QtQuick 2.0
 
@@ -21,15 +21,15 @@ QtObject {
     property string formulaBgColor;
     property string usepackages;
     property string customPreamble;
+    property bool debug;
 
     // register your settings variables so the user can set them in the script settings
-    property variant settingsVariables: [
-        {
+    property variant settingsVariables: [{
             "identifier": "settingImageSize",
             "name": "Default image height size",
             "description": "The default size of the LaTex image. Change it via parameter e. g. $[14] x^2$",
             "type": "integer",
-            "default": "22"
+            "default": "16"
         },
         {
             "identifier": "settingDPI",
@@ -44,13 +44,6 @@ QtObject {
             "description": "Please enter a path to KLatexFormula",
             "type": "file",
             "default": "/usr/bin/klatexformula"
-        },
-        {
-            "identifier": "workDir",
-            "name": "Working directory",
-            "description": "Please enter a path to be used as working directory i.e. temporary directory for file creation:",
-            "type": "file",
-            "default": "/tmp/qon/latex"
         },
         {
             "identifier": "formulaPrefix",
@@ -87,10 +80,19 @@ QtObject {
             "type": "text",
             "default": "\\newcommand{\\mycmd}[1]{\\bf \\underline{#1}}"
         },
+        {
+            "identifier": "debug",
+            "name": "Debug logs",
+            "description": "Display debug logs in the script panel.",
+            "type": "boolean",
+            "default": "false",
+        }
     ];
 
-    function log(text){
-        script.log("[LaTex] "+text)
+    function log(text) {
+        if (debug) {
+            script.log("[LaTex] " + text)
+        }
     }
 
     /**
@@ -101,6 +103,8 @@ QtObject {
         var result = script.startSynchronousProcess("mkdir", ["-p", workDir]);
         // create a menu entry to paste Latex code as an image
         script.registerCustomAction("latex-math-refresh", "Refresh LaTex Images", "Latex", "view-refresh");
+        workDir = script.cacheDir("latex-math");
+        log(workDir)
     }
 
     /**
@@ -116,107 +120,120 @@ QtObject {
      * @param {string} forExport - the html is used for an export, false for the preview
      * @return {string} the modified html or an empty string if nothing should be modified
      */
-     function noteToMarkdownHtmlHook(note, html, forExport) {
-      // $ were replaced by <x-equation> tags
-      //const regex_latex = /\$(?:\[(\d+)\])?([\s\S]+?)\$(?!\d)/g   // don't allow $4 as closing character
-      const regex_latex = /(?:<x-equation>)(?:\[(\d+)\])?([\s\S]+?)(?:<\/x-equation>)/g   // don't allow $4 as closing character
+    function noteToMarkdownHtmlHook(note, html, forExport) {
+        // $ were replaced by <x-equation> tags
+        //const regex_latex = /\$(?:\[(\d+)\])?([\s\S]+?)\$(?!\d)/g   // don't allow $4 as closing character
+        const regex_latex = /(?:<x-equation>)(?:\[(\d+)\])?([\s\S]+?)(?:<\/x-equation>)/g // don't allow $4 as closing character
+        var count = 0;
+        var cmdList = [];
+        html = html.replace(regex_latex, function(match, matchImageSize, latex, offset) {
 
-      html = html.replace(regex_latex, function(match, matchImageSize, latex, offset) {
+            let imageSize = settingImageSize;
 
-        let imageSize = settingImageSize;
+            if (matchImageSize != null && matchImageSize.length > 0) {
+                imageSize = matchImageSize
+            }
 
-        if(matchImageSize != null && matchImageSize.length > 0){
-          imageSize = matchImageSize
+            latex = formulaPrefix + latex // add prefix from settings
+            latex = latex.trim()
+            const latexBase64 = Qt.btoa(latex)
+            const filename = Qt.md5(latex)
+            const path = workDir + "/" + filename + ".png"
+
+            if (!script.fileExists(path)) { // performance: do not create the same formula twice
+                count++;
+                var bashCmd = getBashCmd(path, latexBase64)
+                //execBashDetached(bashCmd, true)
+                cmdList.push([count, path, bashCmd])
+            }
+
+            return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${path}" alt="LaTex">`; //style='vertical-align: middle;'
+        });
+        if (cmdList.length > 0) {
+            execBashList(cmdList); // use a 'thread pool'
         }
-
-        var path = generateLaTexImage(latex)
-        return `<img style='vertical-align: middle;' height='${imageSize}' src="${path}">`; //style='vertical-align: middle;'
-      });
-      return html
+        return html
     }
 
-
-    /**
-     * Create the LaTex image
-     * @return path
-     */
-    function generateLaTexImage(latex) {
-      latex = formulaPrefix + latex // add prefix from settings
-      log(latex)
-      latex = latex.trim()
-      function getPreamble(){
+    function getPreamble() {
         var packages = usepackages.split(',')
         var preamble = ""
         // add packages
         packages.forEach(function myFunction(item) {
-          preamble += `\\usepackage{${item}}`
+            preamble += `\\usepackage{${item}}`
         });
         // add custom preamble
         preamble += customPreamble
         return preamble
-      }
-
-      function getBash(isQuiet = true){
-        const exec = executable
-        const preamble = Qt.btoa(getPreamble())
-        const quiet = isQuiet ? " --quiet 1" : ""; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `${exec} -f '${formulaColor}' -b '${formulaBgColor}' --base64arg --preamble="${preamble}" --base64arg --latexinput="${base64Latex}" --dpi ${settingDPI} ${quiet} --output ${path}`
-        //log("cmd: "+cmd)
-        return cmd
-      }
-
-      const base64Latex = Qt.btoa(latex)
-      const filename = base64Latex
-      const path = workDir + "/" + filename + ".png"
-
-      if (!fileExists(path)) { // performance: do not create the same formula twice
-        // try to generate or prompt error msg
-        if(!execBash(getBash())){ // check for result
-          log(`[ERR]: ${latex} (${base64Latex})`)
-          var bash = getBash(false)
-          var result = execBashDetached(bash, true) // check result with non quiet bash cmd
-          // more anoying than helpful
-          //var result = execBash(bash, true) // check result with non quiet bash cmd
-          //script.informationMessageBox("LaTex error, check the script log for more details.", "LaTex error")
-          //log("[ERR]: "+result)
-        }else{
-          //log("[OK]: "+latex)
-        }
-      }
-      return path
     }
 
+    function getBashCmd(path, latexBase64) {
+        const exec = executable
+        const preamble = Qt.btoa(getPreamble())
+        const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
+        const cmd = `${exec} -f '${formulaColor}' -b '${formulaBgColor}' --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
+        //log("cmd: "+cmd)
+        return cmd
+    }
+
+    /**
+     * This function is called when a script thread is done executing.
+     * Hint: thread[1]==0 helps to determine if a bulk of started processes for a certain identifier is done.
+     *
+     * @param {QString} callbackIdentifier - the provided id when calling startDetachedProcess()
+     * @param {QString} resultSet - the result of the process
+     * @param {QVariantList} cmd - the entire command array [0-executablePath, 1-parameters, 2-exitCode]
+     * @param {QVariantList} thread - the thread information array [0-passed callbackParameter, 1-remaining threads for this identifier]
+     */
+    function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
+        if (callbackIdentifier == "callback-latex-math") {
+            log("remaining: " + thread[1])
+            if (thread[0].length > 0) {
+                log("more to do")
+                execBashList(thread[0])
+            } else {
+                log("done")
+                script.regenerateNotePreview();
+            }
+        }
+    }
 
     /**
      * check for a file
      *
      */
-    function fileExists(path){
-      return execBash(`test -f ${path}`)
+    function fileExists(path) {
+        return execBash(`test -f ${path}`)
     }
 
 
     /**
-     * This function invoces a bash command
+     * This function invokes a bash command
+     * @param cmdList 0-cmdNumber, 1-path, 2-cmd
      * @return the result or [true/false] if detached = true
      */
-    function execBashDetached(cmd){
+    function execBashList(cmdList) {
         const exec = "bash"
-        const param = ["-c", cmd]
-        return script.startDetachedProcess(exec, param);
+        log("got cmds: " + cmdList.length)
+        if (cmdList.length > 0) {
+            const cmd = cmdList.pop();
+            const param = ["-c", cmd[2]]
+            log("exec no: " + cmd[0] + " " + cmd)
+            script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
+        }
     }
 
     /**
      * This function invoces a bash command
-     * @return the result or [true/false]
+     * @return [true/false] or the resultSet
      */
-    function execBash(cmd, getResult=false) {
-      const prefix = "2>&1 " // use 2>&1 to redirect stderr to stdout and use as error msg
-      const exec = "bash"
-      const successSuffix = getResult ? "" : " && echo 1 || echo 0"
-      const param = ["-c", prefix+cmd+successSuffix]
-      var result = script.startSynchronousProcess(exec, param);
-      return getResult ? String(result) : result == 1
+    function execBash(cmd, getResult = false) {
+        const prefix = "2>&1 " // use 2>&1 to redirect stderr to stdout and use as error msg
+        const exec = "bash"
+        const successSuffix = getResult ? "" : " && echo 1 || echo 0"
+        const param = ["-c", prefix + cmd + successSuffix]
+        var result = script.startSynchronousProcess(exec, param);
+        return getResult ? String(result) : result == 1
     }
 
     /**
@@ -229,8 +246,8 @@ QtObject {
         if (identifier !== "latex-math-refresh") {
             return;
         }
-        log("refresh images")
-        execBashDetached(`rm ${workDir}/*`) // clean the tmp dir
+        log("clearing cache dir ...")
+        log(script.clearCacheDir("latex-math"))
         script.regenerateNotePreview();
     }
 
