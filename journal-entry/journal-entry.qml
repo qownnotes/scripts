@@ -5,12 +5,14 @@ import com.qownnotes.noteapi 1.0
  * This script creates a menu item and a button to create or jump to the current date's journal entry
  */
 QtObject {
-     property string defaultFolder;
-     property string defaultTags;
-     property bool singleJournalPerDay;
-     property string noteBodyTemplate;
+    id: journalEntry
+    property string defaultFolder;
+    property string defaultTags;
+    property bool singleJournalPerDay;
+    property string noteBodyTemplate;
+    property var dialog;
 
-     property variant settingsVariables: [
+    property variant settingsVariables: [
         {
             "identifier": "defaultFolder",
             "name": "Default folder",
@@ -46,13 +48,16 @@ QtObject {
      */
     function init() {
         if (singleJournalPerDay) {
-            script.registerCustomAction("journalEntry", "Create or open a journal entry", "Journal", "document-new");
+            script.registerCustomAction("journalEntry", "Create or open a journal entry for today", "Journal", "document-new");
         } else {
             script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");
         }
 
         // Create custom action for 'Create or open journal entry for tomorrow'.
         script.registerCustomAction("journalEntryTomorrow", "Create or open a journal entry for tomorrow", "Journal tomorrow", "document-multiple")
+
+        // Create custom action for 'Create or open journal entry for a certain date'.
+        script.registerCustomAction("journalEntryDate", "Create or open a journal entry for a certain date", "Journal date", "view-calendar")
     }
 
     /**
@@ -62,18 +67,23 @@ QtObject {
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
-        if (identifier != "journalEntry" && identifier != "journalEntryTomorrow") {
-            return;
-        }
-
         // Get the date for the headline.
         var m = new Date();
 
-        // Set date to tomorrow if action is 'journalEntryTomorrow'.
-        if (identifier == "journalEntryTomorrow") {
-            m.setDate(m.getDate() + 1);
+        switch (identifier) {
+            case "journalEntryTomorrow":
+                // Set date to tomorrow if action is 'journalEntryTomorrow'.
+                m.setDate(m.getDate() + 1);
+            case "journalEntry":
+                createOrJumpToJournalEntry(m, identifier);
+            break;
+            case "journalEntryDate":
+                showCalendar();
+            break;
         }
+    }
 
+    function createOrJumpToJournalEntry(m, identifier) {
         var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
 
         // When the configuration option "singleJournalPerDay" is not selected, and we are not creating a journal entry
@@ -131,6 +141,16 @@ QtObject {
                         script.tagCurrentNote(i);
                     });
             }
+        }
+    }
+
+    function showCalendar() {
+        var component = Qt.createComponent("calendar-window.qml");
+
+        if (component.status === Component.Ready) {
+            dialog = component.createObject();
+        } else {
+            console.error(component.errorString());
         }
     }
 }
