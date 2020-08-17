@@ -55,17 +55,17 @@ Script {
         if (currentWord.length === 0) {
             return [];
         }
-        
+
         var resultList = [];
         var resultCount = 0;
 
         for (var i = 0; i < stringListLength; i++) {
             const word = stringList[i];
-            if (word.indexOf(currentWord) > -1) {
+            if (word.indexOf(currentWord) === 0) {
                 // remove everything after a "/", this is a specifica of the dictionary file
                 resultList.push(word.split("/")[0]);
                 resultCount++;
-                
+
                 if (resultCount > maxResults) {
                     break;
                 }

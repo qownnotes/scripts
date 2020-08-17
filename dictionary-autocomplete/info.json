@@ -1,8 +1,8 @@
 {
-  "name": "Dictionary autocomplete",
+  "name": "Dictionary Autocomplete",
   "identifier": "dictionary-autocomplete",
   "script": "dictionary-autocomplete.qml",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minAppVersion": "20.8.0",
   "authors": ["@pbek"],
   "description" : "This script attempts to autocomplete the current word based on a dictionary file that contains a list of words, separated by a newline character. You can use the Libre Office dictionary files, that can be downloaded in QOwnNotes as source (*.dic). You will get the dictionary path from the <i>Debug settings</i>."
