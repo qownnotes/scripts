@@ -49,8 +49,8 @@ QtObject {
 	// split public keys for gpg call
 	var pubKeys = publicKey.split(';');
 	for (var i = 0; i < pubKeys.length; i++) {
-		encryptCommand.append("-r");
-		encryptCommand.append(pubKeys[i]);
+		encryptCommand.push("-r");
+		encryptCommand.push(pubKeys[i]);
 	}
 
         // encrypt the text for public key or decrypt with gpg
