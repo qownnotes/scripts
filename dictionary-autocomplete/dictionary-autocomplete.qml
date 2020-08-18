@@ -16,6 +16,7 @@ Script {
     property int stringListLength
 
     property string dictFile
+    property string codec
     property int maxResults
 
     property variant settingsVariables: [
@@ -25,6 +26,13 @@ Script {
             "description": "Please select the dictionary file:",
             "type": "file",
             "default": "",
+        },
+        {
+            "identifier": "codec",
+            "name": "Encoding of the dictionary file",
+            "description": "Please enter a encoding:",
+            "type": "string",
+            "default": "iso-8859-1",
         },
         {
             "identifier": "maxResults",
@@ -42,7 +50,7 @@ Script {
         }
 
         if (script.fileExists(dictFile)) {
-            stringList = script.readFromFile(dictFile).split("\n");
+            stringList = script.readFromFile(dictFile, codec).split("\n");
             stringListLength = stringList.length;
         } else {
             console.error("Dictionary file " + dictFile + " doesn't exist!");
