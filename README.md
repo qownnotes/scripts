@@ -8,6 +8,7 @@
 [IRC Chat](https://kiwiirc.com/client/irc.freenode.net/#qownnotes) |
 [Gitter Chat](https://gitter.im/qownnotes/qownnotes)
 
+[![Run tests](https://github.com/qownnotes/scripts/workflows/Run%20tests/badge.svg?branch=master)](https://github.com/qownnotes/scripts/actions)
 [![Build Status](https://travis-ci.org/qownnotes/scripts.svg?branch=master)](https://travis-ci.org/qownnotes/scripts)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/qownnotes/scripts.svg)](http://isitmaintained.com/project/qownnotes/scripts "Percentage of issues still open")
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/qownnotes/qownnotes)
