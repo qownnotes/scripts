@@ -15,7 +15,7 @@
 
 Here you will find the scripts you can directly access in [QOwnNotes](http://www.qownnotes.org), the plain-text file notepad with markdown support and Nextcloud and ownCloud integration.
 
-Please visit the [Scripting documentation](http://docs.qownnotes.org/en/develop/scripting/README.html) for more information about scripting and how to write your own.
+Please visit the [Scripting documentation](https://docs.qownnotes.org/en/latest/scripting/) for more information about scripting and how to write your own.
 
 ## Contributing
 
