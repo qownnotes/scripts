@@ -17,6 +17,8 @@ Here you will find the scripts you can directly access in [QOwnNotes](http://www
 
 Please visit the [Scripting documentation](http://docs.qownnotes.org/en/develop/scripting/README.html) for more information about scripting and how to write your own.
 
+## Contributing
+
 To bring your script into the **script repository** you just have to do the following:
 
 - **[fork](https://help.github.com/articles/fork-a-repo/)** the repository <https://github.com/qownnotes/scripts> on GitHub
