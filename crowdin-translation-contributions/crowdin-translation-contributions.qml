@@ -39,7 +39,7 @@ QtObject {
                     var activity = activities[s];
                     //script.log(activity);
                     
-                    var regExp = /<a class="user-link".+?href="https:\/\/crowdin.com\/profile\/(.+?)".+?>.+?<\/a>.+?suggested.+?into (.+?)<\/div>/im;
+                    var regExp = /<a class="user-link".+?href="https:\/\/crowdin.com\/profile\/(.+?)".*?>.+?<\/a>.+?suggested.+?into (.+?)<\/div>/im;
                     var match = regExp.exec(activity);
                     
                     if (match != null) {

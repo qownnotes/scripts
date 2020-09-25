@@ -3,7 +3,7 @@
   "identifier": "crowdin-translation-contributions",
   "script": "crowdin-translation-contributions.qml",
   "authors": ["@pbek"],
-  "version": "1.1.0",
+  "version": "1.2.0",
   "minAppVersion": "17.05.6",
-  "description" : "This script creates a note text edit context menu item that parses text copied from the <a href='https://crowdin.com/project/qownnotes/activity_stream'>Crowdin activity stream</a> and outputs a changelog translation log text."
+  "description" : "This script creates a note text edit context menu item that parses text copied from the <a href='https://crowdin.com/project/qownnotes/activity_stream'>Crowdin activity stream</a> and outputs a changelog translation log text into the current note."
 }
