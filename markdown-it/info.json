@@ -3,8 +3,8 @@
   "identifier": "markdown-it",
   "script": "markdown-it.qml",
   "resources": ["markdown-it.js", "markdown-it-deflist.js"],
-  "authors": ["@milan-rusev", "@pbek", "@bessw"],
+  "authors": ["@milan-rusev", "@bessw"],
   "version": "1.4",
   "minAppVersion": "20.6.0",
-  "description" : "This script replaces the default markdown renderer with markdown-it.\n\n<b>Dependencies</b>\n<a href=\"https://github.com/markdown-it/markdown-it\">markdown-it.js</a> (v8.4.2 bundled with the script)\n\n<b>Usage</b>\nFor the possible configuration options check <a href=\"https://github.com/markdown-it/markdown-it/tree/master/lib/presets\">here</a>."
+  "description" : "This script replaces the default markdown renderer with markdown-it.\n\n<b>Dependencies</b>\n<a href=\"https://github.com/markdown-it/markdown-it\">markdown-it.js</a> (v8.4.2 bundled with the script)\n\n<b>Usage</b>\nFor the possible configuration options check <a href=\"https://github.com/markdown-it/markdown-it/tree/master/lib/presets\">here</a>.\n\nImportant: This script currently only works with legacy media links. You can turn them on in the <i>General Settings</i>."
 }
