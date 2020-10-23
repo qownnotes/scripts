@@ -1,0 +1,10 @@
+{
+  "name": "QOwnNotes blog post",
+  "identifier": "qownnotes-blog-post",
+  "script": "qownnotes-blog-post.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.10.0",
+  "description" : "This script creates new QOwnNotes blog posts in the current note folder (that needs to point to the \"webpage\" directory in the QOwnNotes git repository)."
+}
