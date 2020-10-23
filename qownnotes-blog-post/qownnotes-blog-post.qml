@@ -39,7 +39,7 @@ QtObject {
         // get the date headline
         var m = new Date();
         var dateString = m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2)
-        var order = m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2)
+        var order = m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2) + "000000"
 
         var headline = script.inputDialogGetText(
             "Title", "Please enter blog post title", "New blog post");
