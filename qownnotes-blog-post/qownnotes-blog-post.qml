@@ -22,7 +22,7 @@ QtObject {
      * Initializes the custom action
      */
     function init() {
-        script.registerCustomAction("qownnotesBlogPost", "Creates a QOwnNotes Blog Post", "QON Blog Post", "document-new");
+        script.registerCustomAction("qownnotesBlogPost", "Create a QOwnNotes Blog Post", "QON Blog Post", "document-new");
     }
 
     /**
