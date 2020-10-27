@@ -91,6 +91,9 @@ QtObject {
             if (currentNote.allowDifferentFileName()) {
                 currentNote.renameNoteFile(fileName);
                 mainWindow.buildNotesIndexAndLoadNoteDirectoryList(false, true);
+
+                // reload the current note because the path changed
+                mainWindow.reloadCurrentNoteByNoteId();
             }
         }
     }
