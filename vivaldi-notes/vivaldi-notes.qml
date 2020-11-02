@@ -13,7 +13,7 @@ Script {
      */
     function init() {
         script.registerCustomAction("importVivaldiNotes", "Import Vivaldi Notes", "Import Vivaldi Notes", "", false, false, false);
-        script.registerCustomAction("exportVivaldiNotes", "Export Vivaldi Notes", "Export Vivaldi Notes", "", false, false, false);
+        script.registerCustomAction("exportVivaldiNotes", "Export Vivaldi Notes", "Export Vivaldi Notes", "", false, false, true);
     }
 
     /**
@@ -24,19 +24,43 @@ Script {
      */
     function customActionInvoked(identifier) {
         if (identifier === "importVivaldiNotes") {
-            var notesFilePath = script.getOpenFileName("Select Vivaldi notes file", "", "");
-            var notesData = script.readFromFile(notesFilePath);
-            var rootItem = JSON.parse(notesData);
-            importItem(rootItem, "");
+            importNotes();
         } else if (identifier === "exportVivaldiNotes") {
             exportNotes();
         }
+    }
+    
+    /* Notes import */
+    
+    function importNotes() {
+        var notesFilePath = script.getOpenFileName("Select Vivaldi notes file", "", "");
+        if (notesFilePath === "") {
+            script.log("Empty filename; abort note import operation");
+            return;
+        }
+        
+        if (!script.fileExists(notesFilePath)) {
+            script.log("Notes file does not exist; abort note import operation");
+            return;
+        }
+
+        var notesData = script.readFromFile(notesFilePath);
+        var rootItem;
+        
+        try {
+            rootItem = JSON.parse(notesData);
+        } catch (e) {
+            script.log("Failed to parse Vivaldi notes file; abort note import operation");
+            return;
+        }
+        
+        importItem(rootItem, "");
     }
 
     function importItem(item, currentPath) {
         if (currentPath !== "") {
             if (!script.jumpToNoteSubFolder(currentPath)) {
-                script.log('failed to change subfolder to:' + currentPath);
+                script.log('Failed to change subfolder to:' + currentPath);
             }
         }
 
@@ -51,7 +75,22 @@ Script {
         }
     }
 
+    /* Notes export */
+
     function exportNotes() {
+        var selectedNotesIds = script.selectedNotesIds();
+        var numSelectedNotes = selectedNotesIds.length;
+        var exportAllNotes = true;
+
+        if (numSelectedNotes > 1) {
+            var result = script.questionMessageBox(
+                numSelectedNotes + " notes selected.<br/>Export all notes or only selected notes ?", "Export notes", 0x00000800|0x00001000, 0x00001000);
+
+            if (result === 0x00000800) {
+                exportAllNotes = false;
+            }
+        }
+
         var filename = script.getSaveFileName("Select file to save notes to", "", "");
         if (filename === "") {
             script.log("Empty filename; abort note export operation");
@@ -70,7 +109,9 @@ Script {
                 {
                 "subject": uniqueFoldername,
                 "type": "folder",
-                "children": getNoteSubFoldersByParentId(0).concat(getNotesInNoteSubFolder(rootSubFolder))
+                "children": (exportAllNotes ?
+                             getNoteSubFoldersByParentId(0).concat(getNotesInNoteSubFolder(rootSubFolder)) :
+                             getSelectedNotes(selectedNotesIds))
                 }
             ]
         };
@@ -114,6 +155,25 @@ Script {
             };
 
            notes.push(noteObj);
+        }
+
+        return notes;
+    }
+    
+    function getSelectedNotes(selectedNotesIds) {
+        var notes = [];
+
+        for (var idx in selectedNotesIds) {
+            var noteId = selectedNotesIds[idx];
+            var note = script.fetchNoteById(noteId);
+
+            var noteObj = {
+                "subject": note.name,
+                "type": "note",
+                "content": note.noteText
+            };
+
+            notes.push(noteObj);
         }
 
         return notes;
