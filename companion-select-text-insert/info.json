@@ -1,0 +1,10 @@
+{
+  "name": "Insert From Web Companion",
+  "identifier": "sort-lines",
+  "script": "selected-text.qml",
+  "authors": ["@v3ss0n"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.1.0",
+  "minAppVersion": "18.04.3",
+  "description" : "This script insert selected text from webpage."
+}
