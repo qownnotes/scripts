@@ -12,9 +12,9 @@ Script {
         if (requestType != "selection") {
             return false;
         }
-
+        let result =`\n- ${rawData} : <${pageUrl}>`
         // write selected text from the page to the current note
-        script.noteTextEditWrite(rawData);
+        script.noteTextEditWrite(result)
 
         return true;
     }

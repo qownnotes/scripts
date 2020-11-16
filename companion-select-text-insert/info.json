@@ -1,6 +1,6 @@
 {
-  "name": "Insert From Web Companion",
-  "identifier": "sort-lines",
+  "name": "Insert Texa and URL From Web Companion",
+  "identifier": "insert-webtext-at-cursor",
   "script": "selected-text.qml",
   "authors": ["@v3ss0n"],
   "platforms": ["linux", "macos", "windows"],
