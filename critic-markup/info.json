@@ -1,0 +1,10 @@
+{
+  "name": "Critic Markup",
+  "identifier": "critic-markup",
+  "script": "critic-markup.qml",
+  "authors": ["@mleo2003", "@ryliejamesthomas, @Beurt"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.6.0",
+  "description" : "Provide a way to highlight text with Critic Markup (only in the preview at the moment). Learn more about Critic Markup on their website : http://criticmarkup.com/."
+}
