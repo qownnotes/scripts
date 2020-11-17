@@ -11,10 +11,32 @@ Script {
         // we only want to handle selection requests, page requests are ignored
         if (requestType != "selection") {
             return false;
-        }
-        let result =`\n- ${rawData} : <${pageUrl}>`
-        // write selected text from the page to the current note
-        script.noteTextEditWrite(result)
+        };
+
+        
+        let uid = Date.now();
+        let selected =`\n- ${rawData} : [(link)][${uid}]`;
+        let url = `\n[${uid}]: ${pageUrl}`;
+        let posBefore = script.noteTextEditCursorPosition();
+
+        // Insert Selected text after current line
+        script.noteTextEditSelectCurrentLine();
+        script.noteTextEditSetSelection(
+            script.noteTextEditSelectionEnd() ,
+            script.noteTextEditSelectionEnd() )
+        script.noteTextEditWrite(selected);
+
+        // Go to end of file and append web URL
+
+        script.noteTextEditSetCursorPosition(-1);   
+        script.noteTextEditWrite(url);
+
+        // Go back to current editing position
+        script.noteTextEditSetCursorPosition(posBefore);
+
+
+
+
 
         return true;
     }
