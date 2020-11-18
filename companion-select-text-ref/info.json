@@ -1,6 +1,6 @@
 {
   "name": "Insert Text and Append URL at EOF From Web Companion",
-  "identifier": "insert-webtext-at-EOF",
+  "identifier": "insert-webtext-eof",
   "script": "selected-text.qml",
   "authors": ["@v3ss0n"],
   "platforms": ["linux", "macos", "windows"],
