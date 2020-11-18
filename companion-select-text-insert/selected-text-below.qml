@@ -14,24 +14,15 @@ Script {
         };
 
         
-        let uid = Date.now();
-        let selected =`\n- ${rawData} : [(link)][${uid}]`;
-        let url = `\n[${uid}]: ${pageUrl}`;
+        let selected =`\n- ${rawData}: <${pageUrl}>`;
         let posBefore = script.noteTextEditCursorPosition();
 
-        // Insert Selected text after current line
+        // Insert Selected text below current line
         script.noteTextEditSelectCurrentLine();
         script.noteTextEditSetSelection(
             script.noteTextEditSelectionEnd() ,
             script.noteTextEditSelectionEnd() )
         script.noteTextEditWrite(selected);
-
-        // Go to end of file and append web URL
-
-        script.noteTextEditSetCursorPosition(-1);   
-        script.noteTextEditWrite(url);
-
-        // Go back to current editing position
         script.noteTextEditSetCursorPosition(posBefore);
 
 
