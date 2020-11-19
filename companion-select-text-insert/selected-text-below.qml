@@ -18,12 +18,13 @@ Script {
         {
             "identifier": "linkStyle",
             "name": "Insert Link according to the selection",
-            "description": "Below: Inserts Pages's URL under current line.<br>Ref: Insert Page's URL as Refrence Style Linking.<br>NoLink: without links",
+            "description": "Below: Inserts page's URL under current line.<br>Ref: Insert page's URL as reference style linking.<br>NoLink: without links",
             "type": "selection",
             "default": "Below",
             "items": {"Below": "Below", "Ref": "Ref", "NoLink": "NoLink"},
         }
     ]
+
     function websocketRawDataHook(requestType, pageUrl, pageTitle, rawData,
                                   screenshotDataUrl) {
         // we only want to handle selection requests, page requests are ignored
@@ -46,8 +47,8 @@ Script {
                 return true
                 break;
         }
-
     }
+
     function insertTextBelow(requestType, pageUrl, pageTitle, rawData,
                                   screenshotDataUrl) {
 
@@ -61,6 +62,7 @@ Script {
 
         return true;
     }
+
     function insertTextRefBottom(requestType, pageUrl, pageTitle, rawData,
                                   screenshotDataUrl) {
         let uid = Date.now();
@@ -78,6 +80,7 @@ Script {
 
         return true;
     }
+
     function insertTextOnly(requestType, pageUrl, pageTitle, rawData,
                                   screenshotDataUrl) {
         let uid = Date.now();
@@ -87,7 +90,8 @@ Script {
 
         return true;
     }
-    function writeSelected(selected){
+
+    function writeSelected(selected) {
         script.noteTextEditSelectCurrentLine();
         script.noteTextEditSetSelection(
         script.noteTextEditSelectionEnd() ,
