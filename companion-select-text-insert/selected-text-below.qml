@@ -34,23 +34,19 @@ Script {
 
         switch (linkStyle) {
             case "Below":
-                insertTextBelow(requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-                return true
+                insertTextBelow(requestType, pageUrl, pageTitle, rawData, screenshotDataUrl);
                 break;
             case "Ref":
-                insertTextRefBottom (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-                return true
+                insertTextRefBottom(requestType, pageUrl, pageTitle, rawData, screenshotDataUrl);
                 break;
-        
             default:
-                insertTextOnly (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-                return true
-                break;
+                insertTextOnly(requestType, pageUrl, pageTitle, rawData, screenshotDataUrl);
         }
+
+        return true;
     }
 
-    function insertTextBelow(requestType, pageUrl, pageTitle, rawData,
-                                  screenshotDataUrl) {
+    function insertTextBelow(requestType, pageUrl, pageTitle, rawData, screenshotDataUrl) {
 
         let selected =`\n- ${rawData} : <${pageUrl}>`;
         let posBefore = script.noteTextEditCursorPosition();
@@ -64,7 +60,7 @@ Script {
     }
 
     function insertTextRefBottom(requestType, pageUrl, pageTitle, rawData,
-                                  screenshotDataUrl) {
+                                 screenshotDataUrl) {
         let uid = Date.now();
         let selected =`\n- ${rawData} : [(link)][${uid}]`;
         let url = `\n[${uid}]: ${pageUrl}`;
@@ -82,7 +78,7 @@ Script {
     }
 
     function insertTextOnly(requestType, pageUrl, pageTitle, rawData,
-                                  screenshotDataUrl) {
+                            screenshotDataUrl) {
         let uid = Date.now();
         let selected =` ${rawData} `;
         // Insert Selected text
@@ -94,8 +90,9 @@ Script {
     function writeSelected(selected) {
         script.noteTextEditSelectCurrentLine();
         script.noteTextEditSetSelection(
-        script.noteTextEditSelectionEnd() ,
-        script.noteTextEditSelectionEnd() )
+            script.noteTextEditSelectionEnd(),
+            script.noteTextEditSelectionEnd()
+        );
         script.noteTextEditWrite(selected);
     }
 }
