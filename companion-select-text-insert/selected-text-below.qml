@@ -8,14 +8,20 @@ Script {
      */
  
     property string linkStyle;
+
+    // register your settings variables so the user can set them in the script settings
+    //
+    // unfortunately there is no QVariantHash in Qt, we only can use
+    // QVariantMap (that has no arbitrary ordering) or QVariantList (which at
+    // least can be ordered arbitrarily)
     property variant settingsVariables: [
         {
             "identifier": "linkStyle",
             "name": "Insert Link as Ref Style",
             "description": "Insert link As Reference , Below or NoLink ?",
             "type": "selection",
-            "default": "option1",
-            "items": {"option1": "Below", "option2": "Ref", "option3": "NoLink"},
+            "default": "Below",
+            "items": {"Below": "Below", "Ref": "Ref", "NoLink": "NoLink"},
         }
     ]
     function websocketRawDataHook(requestType, pageUrl, pageTitle, rawData,
@@ -25,37 +31,44 @@ Script {
             return false;
         };
 
-        if ( linkStyle == "Below") {
-            insertTextUnder(requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-        } else if ( linkStyle == "Ref") {
-            sertTextRefBottom (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-        } else {
-            insertTextOnly (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-        }
-        return true;
-    }
-    function insertTextUnder(requestType, pageUrl, pageTitle, rawData,
-                                  screenshotDataUrl) {
-        // we only want to handle selection requests, page requests are ignored
-        if (requestType != "selection") {
-            return false;
-        };
-
+        switch (linkStyle) {
+            case "Below":
+                script.log(linkStyle)
+                insertTextBelow(requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
+                script.log("insertTextBelow")
+                return true
+                break;
+            case "Ref":
+                script.log(linkStyle)
+                script.log("insertTextRefBottom")
+                insertTextRefBottom (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
+                return true
+                break;
         
-        let selected =`\n- ${rawData}: <${pageUrl}>`;
+            default:
+                script.log(linkStyle)
+                script.log("default")
+                insertTextOnly (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
+                return true
+                break;
+        }
+
+    }
+    function insertTextBelow(requestType, pageUrl, pageTitle, rawData,
+                                  screenshotDataUrl) {
+
+        let selected =`\n- ${rawData} : <${pageUrl}>`;
         let posBefore = script.noteTextEditCursorPosition();
 
         // Insert Selected text below current line
         writeSelected(selected)
+
         script.noteTextEditSetCursorPosition(posBefore);
 
         return true;
     }
     function insertTextRefBottom(requestType, pageUrl, pageTitle, rawData,
                                   screenshotDataUrl) {
-        // we only want to handle selection requests, page requests are ignored
-
-        
         let uid = Date.now();
         let selected =`\n- ${rawData} : [(link)][${uid}]`;
         let url = `\n[${uid}]: ${pageUrl}`;
@@ -73,16 +86,10 @@ Script {
     }
     function insertTextOnly(requestType, pageUrl, pageTitle, rawData,
                                   screenshotDataUrl) {
-        // we only want to handle selection requests, page requests are ignored
-
-        
         let uid = Date.now();
-        let selected =`\n- ${rawData} : [(link)][${uid}]`;
-        let posBefore = script.noteTextEditCursorPosition();
-
-        // Insert Selected text after current line
+        let selected =` ${rawData} `;
+        // Insert Selected text
         writeSelected(selected)
-        script.noteTextEditWrite(selected);
 
         return true;
     }
