@@ -1,11 +1,11 @@
 {
-  "name": "Insert selected text from web companion addon and Append current URL below current line ",
+  "name": "Inserts selected text from web companion addon and appends current URL below current line ",
   "identifier": "companion-select-text-insert",
   "script": "selected-text-below.qml",
   "authors": ["@v3ss0n"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minAppVersion": " 20.11.7",
-  "description" : "This script insert selected text from webpage and append the URL below current line.Requires  Web Companion addon for Browsers : https://github.com/qownnotes/web-companion/"
+  "description" : "This script inserts selected text from webpage and appends the URL below current line.\n Requires  Web companion browser extensions : https://github.com/qownnotes/web-companion/"
 }
 

@@ -17,8 +17,8 @@ Script {
     property variant settingsVariables: [
         {
             "identifier": "linkStyle",
-            "name": "Insert Link as Ref Style",
-            "description": "Insert link As Reference , Below or NoLink ?",
+            "name": "Insert Link according to the selection",
+            "description": "Below : Inserts Pages's URL under current line. Ref: Insert Page's URL as Refrence Style Linking. NoLink : without links",
             "type": "selection",
             "default": "Below",
             "items": {"Below": "Below", "Ref": "Ref", "NoLink": "NoLink"},
@@ -33,21 +33,15 @@ Script {
 
         switch (linkStyle) {
             case "Below":
-                script.log(linkStyle)
                 insertTextBelow(requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
-                script.log("insertTextBelow")
                 return true
                 break;
             case "Ref":
-                script.log(linkStyle)
-                script.log("insertTextRefBottom")
                 insertTextRefBottom (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
                 return true
                 break;
         
             default:
-                script.log(linkStyle)
-                script.log("default")
                 insertTextOnly (requestType, pageUrl, pageTitle, rawData,screenshotDataUrl)
                 return true
                 break;
