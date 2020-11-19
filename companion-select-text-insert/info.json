@@ -1,5 +1,5 @@
 {
-  "name": "Inserts selected text from web companion addon and appends current URL below current line ",
+  "name": "Inserts selected text from the web companion browser extension and appends current URL below current line",
   "identifier": "companion-select-text-insert",
   "script": "selected-text-below.qml",
   "authors": ["@v3ss0n"],
