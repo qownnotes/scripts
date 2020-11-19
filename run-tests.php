@@ -25,13 +25,18 @@ print "No errors were found\n";
 exit(0);
 
 class TestHelper {
-    public $errors = array();
+    public $errors = [];
 
     /**
      * Tests the files in a directory
      */
     public function testDirectory($dir) {
-        $errors = array();
+        $errors = [];
+
+        if (preg_match('/[^a-z0-9\-]/', $dir)) {
+            $errors[] = "Invalid characters were found in directory name '$dir'!";
+        }
+
         $jsonData = file_get_contents($dir . "/info.json");
         $data = json_decode($jsonData, true);
 
@@ -42,8 +47,12 @@ class TestHelper {
         $identifier = $data["identifier"];
         if ($identifier == "") {
             $errors[] = "No identifier was entered!";
-        } elseif (preg_match('/[^a-z0-9\-_]/', $identifier)) {
+        } elseif (preg_match('/[^a-z0-9\-]/', $identifier)) {
             $errors[] = "Invalid characters were found in identifier '$identifier'!";
+        }
+
+        if ($identifier != $dir) {
+            $errors[] = "Identifier and directory name do not match!";
         }
 
         if ($data["description"] == "") {
