@@ -18,7 +18,7 @@ Script {
         {
             "identifier": "linkStyle",
             "name": "Insert Link according to the selection",
-            "description": "Below : Inserts Pages's URL under current line. Ref: Insert Page's URL as Refrence Style Linking. NoLink : without links",
+            "description": "Below: Inserts Pages's URL under current line.Ref: Insert Page's URL as Refrence Style Linking.NoLink: without links",
             "type": "selection",
             "default": "Below",
             "items": {"Below": "Below", "Ref": "Ref", "NoLink": "NoLink"},

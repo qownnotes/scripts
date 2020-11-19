@@ -6,6 +6,6 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.1",
   "minAppVersion": " 20.11.7",
-  "description" : "This script inserts selected text from webpage and appends the URL below current line.\n Requires  Web companion browser extensions : https://github.com/qownnotes/web-companion/"
+  "description": "This script inserts selected text from webpage and appends the URL below current line.\nRequires Web companion browser extensions:https://github.com/qownnotes/web-companion/"
 }
 
