@@ -1,0 +1,10 @@
+{
+  "name": "Chinese Space Preview",
+  "identifier": "chinese-space-preview",
+  "script": "chinese-space-preview.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.10.0",
+  "description" : "Intruduces a workaround to show html non-breaking spaces instead of chinese spaces in the preview, so that they will be rendered at the beginning of lines."
+}
