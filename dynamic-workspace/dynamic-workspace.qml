@@ -3,7 +3,7 @@ import QOwnNotesTypes 1.0
 import com.qownnotes.noteapi 1.0
 
 /**
- * This script exports multiple notes as one HTML file
+ * This script provides a way to dynamically switch between workspaces depending on window state (maximized / non-maximized).
  */
 Script {
     
