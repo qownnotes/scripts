@@ -31,7 +31,7 @@ Script {
         script.log('Window state changed: ' + windowState);
         var workspaceName = (windowState == 'nostate' ? nonMaximizedWorkspaceName : (windowState == 'maximized' ? maximizedWorkspaceName : ''));
         if (workspaceName) {
-            var workspaceUuid = mainWindow.getWorkspaceUuuid(workspaceName);
+            var workspaceUuid = mainWindow.getWorkspaceUuid(workspaceName);
             if (workspaceUuid) {
                 mainWindow.setCurrentWorkspace(workspaceUuid);
             } else {
