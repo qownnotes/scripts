@@ -14,7 +14,7 @@ QtObject {
         // { jy: 1395, jm: 1, jd: 23 }
         const jalaaliDate = Jalaali.toJalaali(date);
         
-        var text = "Note " + jalaaliDate.jy + "-" + pad(jalaaliDate.jm, 2) + "-" + pad(jalaaliDate.jd, 2) +
+        var text = "یادداشت " + jalaaliDate.jy + "٫" + pad(jalaaliDate.jm, 2) + "٫" + pad(jalaaliDate.jd, 2) +
             " " + pad(date.getHours(), 2) + "." + pad(date.getMinutes(), 2) + "." + pad(date.getSeconds(), 2);
             
         var underline = "\n";
