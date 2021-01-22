@@ -3,8 +3,6 @@ import QOwnNotesTypes 1.0
 
 // see: https://github.com/jalaali/jalaali-js
 import "jalaali.js" as Jalaali
-//import "https://code.jquery.com/jquery-1.12.4.min.js" as jquerylib
-//import "persianNum.jquery-2.js" as persianNum
 
 QtObject {
     /**
@@ -16,17 +14,10 @@ QtObject {
         // { jy: 1395, jm: 1, jd: 23 }
         const jalaaliDate = Jalaali.toJalaali(date);
         
-        var text = "یادداشت " + jalaaliDate.jy + "٫" + pad(jalaaliDate.jm, 2) + "٫" + pad(jalaaliDate.jd, 2) +
-            " " + pad(date.getHours(), 2) + "." + pad(date.getMinutes(), 2) + "." + pad(date.getSeconds(), 2);
-            
-        var underline = "\n";
-
-        // add the underline
-        for (var i = 0; i < (text.length - 1); i++) {
-            underline += "=";
-        }
-
-        return text + underline;
+        var text = " یادداشت \n --- \n تاریخ: " + toPersianNum(jalaaliDate.jy) + "٫" + toPersianNum(pad(jalaaliDate.jm, 2)) + "٫" + toPersianNum(pad(jalaaliDate.jd, 2)) +
+            "\n --- \n  ساعت: " + toPersianNum(pad(date.getHours(), 2)) + ":" + toPersianNum(pad(date.getMinutes(), 2)) + ":" + toPersianNum(pad(date.getSeconds(), 2))+"\n --- \n";
+        
+        return text;
     }
 
     function pad(num, size) {
@@ -34,4 +25,29 @@ QtObject {
         while (s.length < size) s = "0" + s;
         return s;
     }
+    function toPersianNum( num, dontTrim ) {
+
+    var i = 0,
+
+        dontTrim = dontTrim || false,
+
+        num = dontTrim ? num.toString() : num.toString().trim(),
+        len = num.length,
+
+        res = '',
+        pos,
+
+        persianNumbers = typeof persianNumber == 'undefined' ?
+            ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'] :
+            persianNumbers;
+
+    for (; i < len; i++)
+        if (( pos = persianNumbers[num.charAt(i)] ))
+            res += pos;
+        else
+            res += num.charAt(i);
+
+    return res;
+}
+
 }
