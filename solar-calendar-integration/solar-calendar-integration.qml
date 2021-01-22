@@ -3,8 +3,8 @@ import QOwnNotesTypes 1.0
 
 // see: https://github.com/jalaali/jalaali-js
 import "jalaali.js" as Jalaali
-import "https://code.jquery.com/jquery-1.12.4.min.js" as jquerylib
-import "persianNum.jquery-2.js" as persianNum
+//import "https://code.jquery.com/jquery-1.12.4.min.js" as jquerylib
+//import "persianNum.jquery-2.js" as persianNum
 
 QtObject {
     /**
