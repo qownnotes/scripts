@@ -19,13 +19,15 @@ You can use bold and italic buildin formating buttons directly, because reStruct
 
 You'd better use dark theme, because code highlight using darcula theme now.(Enable dark mode in Setting > Interface , and select dark color schema in Setting > Editor > Editor font & colors)
 
+Only tested on windows10. Should works on all platforms.
 
-todo:
- - add reStructuredText keyword highlight and autocomplete.
- - reuse buildin formating buttons?
- - add reStructuredText table more other formating actions.
- - and reStructuredText Directive templates.
- - note head use reStructuredText style Title.
+
+Todo:
+ - Add reStructuredText keyword highlight and autocomplete.
+ - Reuse buildin formating buttons?  Maybe need more new QOwnNotes script methods/hooks helping to do it.
+ - Add reStructuredText table more other formating actions.
+ - And reStructuredText Directive templates.
+ - Note head use reStructuredText style Title.
 */
 
 import QtQml 2.0
@@ -65,8 +67,10 @@ QtObject {
             var text = note.noteText;
             text = text.replace(/\n/g, "\\n").replace(/'/g, "\\'").replace(/"/g, "\\\"");
             var scriptDir = script.fromNativeDirSeparators(scriptDirPath);
+            var python = "python3";
+            if (script.platformIsWindows()) python = "python";
             return script.startSynchronousProcess(
-                "python", ["-c", "import docutils.core;\
+                python, ["-c", "import docutils.core;\
 print(docutils.core.publish_string('"+text+"',writer_name='html',settings_overrides={\
 'no_generator':True,'no_source_link':True,'tab_width':4,'file_insertion_enabled':False,\
 'raw_enabled':False,'stylesheet_path':None,'traceback':True,'halt_level':5,\
