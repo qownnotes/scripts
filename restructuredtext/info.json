@@ -1,0 +1,10 @@
+{
+  "name": "reStructuredText",
+  "identifier": "restructuredtext",
+  "script": "restructuredtext",
+  "authors": ["@jack"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.06.2",
+  "description" : "reStructuredText support script.\n\nBefore using this script, you must install python, docutils and pygments firstly."
+}
