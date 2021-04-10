@@ -7,8 +7,8 @@ docutils
 Usage
 1. Install dependencies.
 (1). Install python3.
-(2). Install docutils: pip3 install docutils docutils
-(3). Install pygments: pip3 install docutils pygments (if you need code highlight)
+(2). Install docutils: pip3 install docutils
+(3). Install pygments: pip3 install pygments (if you need code highlight)
 
 2. Change default note file extension to rst.(Settings > General)
 
