@@ -45,8 +45,17 @@ QtObject {
         script.registerCustomAction("createTitle0", "-title", "-");
         script.registerCustomAction("createTitle1", "~title", "~");
         script.registerCustomAction("createTitle2", "`title", "`");
+        script.registerCustomAction("strikeText", "strike", "strike text", "format-text-strikethrough");
         // create LineBlock.
         script.registerCustomAction("createLineBlock", "LineBlock", "|");
+        script.registerCustomAction("insertTable", "insert table", "insert table", "table");
+        script.registerCustomAction("alignCol", "align current table column", "|=|");
+        script.registerCustomAction("tableNewLine", "newline in table", "\\n");
+
+        script.registerCustomAction("addCol", "add table column", "addCol",
+                                    scriptDirPath + "/table-insert-column-after.svg");
+        script.registerCustomAction("delCol", "delete table column", "delCol",
+                                    scriptDirPath + "/table-delete-column.svg");
     }
 
     /**
@@ -64,18 +73,24 @@ QtObject {
      */
     function noteToMarkdownHtmlHook(note, html, forExport) {
         if (note.fileName.endsWith(".rst")) {
-            var text = note.noteText;
-            text = text.replace(/\n/g, "\\n").replace(/'/g, "\\'").replace(/"/g, "\\\"");
-            var scriptDir = script.fromNativeDirSeparators(scriptDirPath);
-            var python = "python3";
-            if (script.platformIsWindows()) python = "python";
-            return script.startSynchronousProcess(
-                python, ["-c", "import docutils.core;\
-print(docutils.core.publish_string('"+text+"',writer_name='html',settings_overrides={\
-'no_generator':True,'no_source_link':True,'tab_width':4,'file_insertion_enabled':False,\
-'raw_enabled':False,'stylesheet_path':None,'traceback':True,'halt_level':5,\
-'syntax_highlight':'short','template':'"+scriptDir+"/template.txt',\
-'stylesheet':'"+scriptDir+"/basic.css,"+scriptDir+"/darcula.css,"+scriptDir+"/misc.css'}).decode())"]);
+            let text = note.noteText;
+            text = text.replace(/\r/g, "").replace(/\n/g, "\\n")
+                       .replace(/'/g, "\\'").replace(/"/g, "\\\"");
+            let scriptDir = script.fromNativeDirSeparators(scriptDirPath);
+            let python = "python3";
+            if (script.platformIsWindows()) {
+                python = "python";
+            }
+            let params = ["-c", "import os;os.chdir('"+scriptDir+"');" +
+                                "import rst2html;rst2html.rst2html('"+text+"');"];
+            let result = script.startSynchronousProcess(python, params);
+            let u8arr = new Uint8Array(result);
+            for (let i=0; i<u8arr.length/2; i++) {
+                u8arr[i] = parseInt(String.fromCharCode(u8arr[2*i]) +
+                                    String.fromCharCode(u8arr[2*i+1]), 16);
+            }
+            u8arr = null;
+            return result.slice(0, result.byteLength/2);
         }
     }
 
@@ -97,17 +112,7 @@ print(docutils.core.publish_string('"+text+"',writer_name='html',settings_overri
      *                                 context menu (default: false)
      */
     function customActionInvoked(identifier) {
-        function createTitle(titleChar) {
-            var text = script.noteTextEditSelectedText();
-            if (text === "") {
-                text = "Section title.";
-            }
-            var underline = "";
-            for (var i = 0; i < text.length; i++) {
-                underline += titleChar;
-            }
-            script.noteTextEditWrite(text + "\n" + underline + "\n\n");
-        }
+        var text;
 
         switch (identifier) {
         case "createTitle0":
@@ -120,16 +125,159 @@ print(docutils.core.publish_string('"+text+"',writer_name='html',settings_overri
             createTitle("`");
             break;
         case "createLineBlock":
-            var start = script.noteTextEditSelectionStart();
-            var end = script.noteTextEditSelectionEnd();
+            let start = script.noteTextEditSelectionStart();
+            let end = script.noteTextEditSelectionEnd();
             // add LineBlock char to the head of start line.
             script.noteTextEditSetSelection(0, start);
-            var text = script.noteTextEditSelectedText();
+            text = script.noteTextEditSelectedText();
             script.noteTextEditSetSelection(text.lastIndexOf("\n"), end);
             text = script.noteTextEditSelectedText();
             text = text.replace(/\n/g, "\n| ");
             script.noteTextEditWrite(text);
             break;
+        case "strikeText":
+            text = script.noteTextEditSelectedText();
+            if (text === "") {
+                script.noteTextEditWrite(":strike:``");
+                let pos = script.noteTextEditCursorPosition();
+                script.noteTextEditSetCursorPosition(pos - 1);
+            } else {
+                text = ":strike:`" + text + "`";
+                script.noteTextEditWrite(text);
+            }
+            break;
+        case "insertTable":
+            let result = script.inputDialogGetText(
+                "insert table", "Please enter TitleNum RowNum ColumnNum", "1 4 4");
+            let arr = result.split(" ", 3);
+            let tn = Number(arr[0]);
+            let rn = Number(arr[1]);
+            let cn = Number(arr[2]);
+            let w = 10;
+            let u0 = " ".repeat(w) + "|";
+            let u1 = "-".repeat(w) + "+";
+            let u2 = "=".repeat(w) + "+";
+            let l0 = "   |" + u0.repeat(cn) + "\n";
+            let l1 = "   +" + u1.repeat(cn) + "\n";
+            let l2 = "   +" + u2.repeat(cn) + "\n";
+            let t = l1 + l0;
+            let r = l0 + l1;
+            text = ".. table:: table\n   :widths: auto\n\n" + t.repeat(tn) + l2 + r.repeat(rn);
+            script.noteTextEditWrite(text);
+            break;
+        case "alignCol":
+            rebuildTable(function(fontLines, backLines) {
+                let curLineFont = fontLines[fontLines.length - 1];
+                let colStart = curLineFont.lastIndexOf("|");
+                let curLine = curLineFont + backLines[0];
+                let diffn = curLine.trim().length - fontLines[1].trim().length;
+                let cArr = curLine.match(/[^\x00-\xff]/ig);
+                if (cArr !== null) diffn += cArr.length;
+
+                function rebuildLine(line) {
+                    let splitChar = line.charAt(colStart);
+                    let i = line.indexOf(splitChar, colStart + 1);
+                    if (diffn > 0) {
+                        let fillChar = line.charAt(i - 1);
+                        return line.slice(0, i) + fillChar.repeat(diffn) + line.slice(i);
+                    }
+                    else return line.slice(0, i + diffn) + line.slice(i);
+                }
+
+                let i;
+                for (i=1; i<fontLines.length-1; i++) {
+                    fontLines[i] = rebuildLine(fontLines[i]);
+                }
+                for (i=1; i<backLines.length-1; i++) {
+                    backLines[i] = rebuildLine(backLines[i]);
+                }
+                return (fontLines.length - 2) * diffn;
+            });
+            break;
+        case "tableNewLine":
+            rebuildTable(function(fontLines, backLines) {
+                let curLineFont = fontLines[fontLines.length - 1];
+                let curLine = curLineFont + backLines[0];
+                fontLines[fontLines.length - 1] = curLine;
+                backLines[0] = fontLines[1].replace(/-/g, " ").replace(/\+/g, "|");
+                return curLine.length;
+            });
+            break;
+        case "addCol":
+            rebuildTable(function(fontLines, backLines) {
+                let curLineFont = fontLines[fontLines.length - 1];
+                let curLine = curLineFont + backLines[0];
+                let y = fontLines[fontLines.length - 1].length;
+
+                function rebuildLine(line) {
+                    return line.slice(0, y) +
+                        line.slice(y).replace(/(.+?)([-= ])([\+|])(.+)/,
+                                              '$1$2$3'+'$2'.repeat(10)+'$3$4');
+                }
+
+                let i;
+                for (i=1; i<fontLines.length-1; i++) {
+                    fontLines[i] = rebuildLine(fontLines[i]);
+                }
+                for (i=1; i<backLines.length-1; i++) {
+                    backLines[i] = rebuildLine(backLines[i]);
+                }
+                backLines[0] = rebuildLine(curLine);
+                fontLines.pop();
+                return (fontLines.length - 1) * 11;
+            });
+            break;
+        case "delCol":
+            rebuildTable(function(fontLines, backLines) {
+
+            });
+            break;
         }
+    }
+
+    function createTitle(titleChar) {
+        let text = script.noteTextEditSelectedText();
+        if (text === "") {
+            text = "Section title.";
+        }
+        let underline = "";
+        for (let i = 0; i < text.length; i++) {
+            underline += titleChar;
+        }
+        script.noteTextEditWrite(text + "\n" + underline + "\n\n");
+    }
+
+    // refactor(fontLines, backLines) -> n chars add(+)/del(-) before cursor.
+    function rebuildTable(refactor){
+        let pos = script.noteTextEditCursorPosition();
+        script.noteTextEditSelectAll();
+        let text = script.noteTextEditSelectedText();
+        let fontLines = [];
+        let line;
+        let i0 = pos;
+        let i;
+        do {
+            i = text.lastIndexOf("\n", i0 - 1);
+            line = text.slice(i, i0);
+            fontLines.unshift(line);
+            i0 = i;
+        } while (line.trim() !== "");
+
+        let start = i;
+        let backLines = [];
+        i0 = pos;
+        do {
+            i = text.indexOf("\n", i0 + 1);
+            line = text.slice(i0, i);
+            backLines.push(line);
+            i0 = i;
+        } while (line.trim() !== "");
+        let end = i;
+
+        pos += refactor(fontLines, backLines);
+
+        script.noteTextEditSetSelection(start, end);
+        script.noteTextEditWrite(fontLines.join("") + backLines.join(""));
+        script.noteTextEditSetSelection(pos, pos);
     }
 }
