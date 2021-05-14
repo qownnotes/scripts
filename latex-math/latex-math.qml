@@ -144,8 +144,11 @@ QtObject {
                 //execBashDetached(bashCmd, true)
                 cmdList.push([count, path, bashCmd])
             }
-
-            return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${path}" alt="LaTex">`; //style='vertical-align: middle;'
+			
+			// we need third slash after file:// if path contains drive letter (e.g. c:) in Windows
+			const thirdSlash = script.platformIsWindows() && path.indexOf(":")===1 ? "/" : "";
+			
+			return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${thirdSlash}${path}" alt="LaTex">`; //style='vertical-align: middle;'
         });
         if (cmdList.length > 0) {
             execBashList(cmdList); // use a 'thread pool'
