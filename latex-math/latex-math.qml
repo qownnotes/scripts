@@ -1,6 +1,5 @@
 import QtQml 2.13
 import com.qownnotes.noteapi 1.0
-import QtQuick 2.0
 
 
 /**
@@ -100,7 +99,6 @@ QtObject {
      */
     function init() {
         log("init")
-        var result = script.startSynchronousProcess("mkdir", ["-p", workDir]);
         // create a menu entry to paste Latex code as an image
         script.registerCustomAction("latex-math-refresh", "Refresh LaTex Images", "Latex", "view-refresh");
         workDir = script.cacheDir("latex-math");
@@ -197,15 +195,6 @@ QtObject {
             }
         }
     }
-
-    /**
-     * check for a file
-     *
-     */
-    function fileExists(path) {
-        return execBash(`test -f ${path}`)
-    }
-
 
     /**
      * This function invokes a bash command
