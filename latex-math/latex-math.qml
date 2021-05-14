@@ -202,12 +202,13 @@ QtObject {
      * @return the result or [true/false] if detached = true
      */
     function execBashList(cmdList) {
-        const exec = script.platformIsWindows() ? "cmd" : "bash";
+        const linuxExec = "bash";
         log("got cmds: " + cmdList.length)
         if (cmdList.length > 0) {
             const cmd = cmdList.pop();
-            const param = script.platformIsWindows() ? ["/c", "\""+cmd[2]+"\""] : ["-c", cmd[2]];
-            log("exec" + cmd[0] + ": " + [exec, param.join(" ")].join(" "))
+			const exec = script.platformIsWindows() ? cmd[2] : linuxExec;
+            const param = script.platformIsWindows() ? [] : ["-c", cmd[2]];
+            log("exec" + cmd[0] + ": " + exec)
             script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
         }
     }
