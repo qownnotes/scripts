@@ -169,7 +169,7 @@ QtObject {
         const exec = executable
         const preamble = Qt.btoa(getPreamble())
         const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `${exec} -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
+        const cmd = `"${exec}" -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
         //log("cmd: "+cmd)
         return cmd
     }
@@ -202,12 +202,12 @@ QtObject {
      * @return the result or [true/false] if detached = true
      */
     function execBashList(cmdList) {
-        const exec = "bash"
+        const exec = script.platformIsWindows() ? "cmd" : "bash";
         log("got cmds: " + cmdList.length)
         if (cmdList.length > 0) {
             const cmd = cmdList.pop();
-            const param = ["-c", cmd[2]]
-            log("exec no: " + cmd[0] + " " + cmd)
+            const param = script.platformIsWindows() ? ["/c", "\""+cmd[2]+"\""] : ["-c", cmd[2]];
+            log("exec" + cmd[0] + ": " + [exec, param.join(" ")].join(" "))
             script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
         }
     }
