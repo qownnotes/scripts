@@ -169,7 +169,7 @@ QtObject {
         const exec = executable
         const preamble = Qt.btoa(getPreamble())
         const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `${exec} -f '${formulaColor}' -b '${formulaBgColor}' --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
+        const cmd = `${exec} -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
         //log("cmd: "+cmd)
         return cmd
     }
