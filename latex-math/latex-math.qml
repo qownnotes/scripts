@@ -214,19 +214,6 @@ QtObject {
     }
 
     /**
-     * This function invoces a bash command
-     * @return [true/false] or the resultSet
-     */
-    function execBash(cmd, getResult = false) {
-        const prefix = "2>&1 " // use 2>&1 to redirect stderr to stdout and use as error msg
-        const exec = "bash"
-        const successSuffix = getResult ? "" : " && echo 1 || echo 0"
-        const param = ["-c", prefix + cmd + successSuffix]
-        var result = script.startSynchronousProcess(exec, param);
-        return getResult ? String(result) : result == 1
-    }
-
-    /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
      *
