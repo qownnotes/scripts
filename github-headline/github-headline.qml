@@ -26,7 +26,7 @@ QtObject {
             // script.log(output);
 
             // parse the headline
-            var re2 = /<span class="\s*js-issue-title.+">([^>]+)<\/span>/im
+            var re2 = /<span class="\s*js-issue-title.+"[^>]*>([^>]+)<\/span>/im
             var result2 = re2.exec(output);
 
             if (result2 !== null) {
