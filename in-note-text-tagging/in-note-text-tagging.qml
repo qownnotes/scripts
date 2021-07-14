@@ -121,7 +121,7 @@ Script {
 
             // returns a list of all tag names of the note
             case "list":
-                var re = new RegExp("\\B%1([^\\s,;]+)".arg(escapeRegExp(tagMarker)), "gi"),
+                var re = new RegExp("\\B%1([^\\s,;%1]+)".arg(escapeRegExp(tagMarker)), "gi"),
                     result, tagNameList = [];
 
                 while ((result = re.exec(noteText)) !== null) {
@@ -139,16 +139,16 @@ Script {
     }
 
     // Removes tag marker in note preview and highlights tag name with set color
-   function noteToMarkdownHtmlHook(note, html, forExport) {
+   function preNoteToMarkdownHtmlHook(note, text, forExport) {
         if (tagHighlightColor == "")
             return;
 
-        var re = new RegExp("\\B%1([^\\s,;]+)".arg(escapeRegExp(tagMarker)), "gi"), result;
+        var re = new RegExp("\\B%1([^\\s,;%1]+)".arg(escapeRegExp(tagMarker)), "gi"), result;
 
-        while ((result = re.exec(html)) !== null)
-            html = html.replace(result[0], '<b><font color="%1">%2</font></b>'.arg(tagHighlightColor).arg(result[1]));
+        while ((result = re.exec(text)) !== null && result !== '')
+            text = text.replace(result[0], '<b><font color="%1">%2</font></b>'.arg(tagHighlightColor).arg(result[1]));
 
-        return html;
+        return text;
     }
 
     // Escapes a string for regular expressions
