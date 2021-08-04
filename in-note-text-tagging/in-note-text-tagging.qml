@@ -10,7 +10,6 @@ import QOwnNotesTypes 1.0
 Script {
     property string tagMarker
     property bool putToBeginning
-    property string tagHighlightColor
 
     property variant settingsVariables: [
         {
@@ -26,13 +25,6 @@ Script {
             "description": "If enabled tags, added by UI, will be put to the first line of note or right after top headline",
             "type": "boolean",
             "default": "false",
-        },
-        {
-            "identifier": "tagHighlightColor",
-            "name": "The color for tag highlighting in note preview",
-            "description": "Put a <a href=\"https://www.w3.org/TR/SVG/types.html#ColorKeywords\">color name</a> or a <a href=\"http://doc.qt.io/qt-5/qcolor.html#setNamedColor\">supported</a> color code here. Leave empty to disable tag highlighting in preview.",
-            "type": "string",
-            "default": "purple",
         },
     ]
 
@@ -136,19 +128,6 @@ Script {
         }
 
         return "";
-    }
-
-    // Removes tag marker in note preview and highlights tag name with set color
-   function preNoteToMarkdownHtmlHook(note, text, forExport) {
-        if (tagHighlightColor == "")
-            return;
-
-        var re = new RegExp("\\B%1([^\\s,;%1]+)".arg(escapeRegExp(tagMarker)), "gi"), result;
-
-        while ((result = re.exec(text)) !== null && result !== '')
-            text = text.replace(result[0], '<b><font color="%1">%2</font></b>'.arg(tagHighlightColor).arg(result[1]));
-
-        return text;
     }
 
     // Escapes a string for regular expressions
