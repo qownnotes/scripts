@@ -1,0 +1,10 @@
+{
+  "name": "Toggle note list sort order",
+  "identifier": "toggle-note-list-sort-order",
+  "script": "toggle-note-list-sort-order.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.10.7",
+  "description" : "This script toggles the sort order of the note list between 'Alphabetical' and 'By date'."
+}
