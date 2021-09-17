@@ -2,7 +2,8 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 /**
- * This script toggles the sort order of the note list between 'Alphabetical' and 'By date'.
+ * This script creates a custom action that toggles the sort order of the note list
+ * between 'Alphabetical' and 'By date'.
  */
 Script {
 
