@@ -1,0 +1,9 @@
+{
+  "name": "Black mode",
+  "identifier": "black-mode",
+  "script": "black-mode.qml",
+  "authors": ["@pbek"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.7",
+  "description" : "This script makes the dark mode even darker. It makes it black! Make sure to also enable <strong>Dark mode</strong> in the <em>Interface settings</em>."
+}
