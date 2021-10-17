@@ -1,0 +1,10 @@
+{
+  "name": "Fix New Note Headline",
+  "identifier": "fix-new-note-headline",
+  "script": "fix-new-note-headline.qml",
+  "authors": ["@dohliam"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.6.0",
+  "description" : "Fix new note headlines to use atx rather than setext headers."
+}
