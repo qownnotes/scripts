@@ -1,0 +1,10 @@
+{
+  "name": "Wiki Links",
+  "identifier": "wiki-links",
+  "script": "wiki-links.qml",
+  "authors": ["@dohliam"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.6.0",
+  "description" : "Support for wiki-style internal links (e.g., [[link]])."
+}
