@@ -28,7 +28,8 @@ Script {
 
     function getSubFolder(note, path) {
         var fileName = note.fullNoteFilePath;
-        var pathRe = new RegExp(path + "\/((.*)\/)*.*");
+        var sep = script.dirSeparator();
+        var pathRe = new RegExp(path + sep + "((.*)" + sep + ")*.*");
         var subfolderName = fileName.replace(pathRe, "$2");
         return subfolderName;
     }
@@ -51,9 +52,10 @@ Script {
             var path = script.currentNoteFolderPath();
             var subFolder = getSubFolder(note, path);
             var noteName = note.name;
-            var exportFolder = path + "/export/" + subFolder;
+            var sep = script.dirSeparator();
+            var exportFolder = path + sep + "export" + sep + subFolder;
             script.startSynchronousProcess("mkdir", ["-p", exportFolder]);
-            var exportPath = exportFolder + "/" + noteName + ".html";
+            var exportPath = exportFolder + sep + noteName + ".html";
             var noteHtml = note.toMarkdownHtml();
             var titleMatch = noteHtml.match(/<h1>(.*)<\/h1>/);
             var noteTitle = noteName;
@@ -80,7 +82,7 @@ Script {
                 });
             }
             script.writeToFile(exportPath, noteHtml);
-            script.log("Successfully exported note: " + subFolder + "/" + note.name);
+            script.log("Successfully exported note: " + subFolder + sep + note.name);
         });
 
         script.log("All notes succssfully exported!");
