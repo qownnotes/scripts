@@ -1,0 +1,10 @@
+{
+  "name": "Backlinks Script",
+  "identifier": "backlinks",
+  "script": "backlinks.qml",
+  "authors": ["@dohliam"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.4.18",
+  "description" : "This script generates a list of backlinks to the current note from all other notes in the collection. More information can be found at <a href='https://github.com/qownnotes/scripts/wiki/backlinks'>backlinks</a>."
+}
