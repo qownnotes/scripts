@@ -1,10 +1,10 @@
 {
-  "name": "Fix New Note Headline",
-  "identifier": "fix-new-note-headline",
-  "script": "fix-new-note-headline.qml",
+  "name": "ATX Headline",
+  "identifier": "atx-headline",
+  "script": "atx-headline.qml",
   "authors": ["@dohliam"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "20.6.0",
-  "description" : "Fix new note headlines to use atx rather than setext headers."
+  "description" : "Fix new note headlines to use atx rather than setext headers. More information can be found at <a href='https://github.com/qownnotes/scripts/wiki/atx-headline'>atx-headline</a>."
 }
