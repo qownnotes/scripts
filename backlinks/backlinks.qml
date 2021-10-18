@@ -4,13 +4,14 @@ import QOwnNotesTypes 1.0
 QtObject {
     property string scriptDirPath
     property string backlinksHtml
-    property bool triggerOnPreview;
+    property bool triggerOnPreview
+    property string dirSep
 
     property variant settingsVariables: [
         {
             "identifier": "triggerOnPreview",
             "name": "Trigger backlink generation on preview",
-            "description": "Generates backlinks everytime the preview is updated (affects performance; recommended only in conjunction with Export to Website script)",
+            "description": "Generates backlinks everytime the preview is updated (affects performance; recommended only in conjunction with Export Notes to Website script)",
             "type": "boolean",
             "default": false,
         },
@@ -18,7 +19,7 @@ QtObject {
 
     function getSubFolder(note, path) {
         var fileName = note.fullNoteFilePath;
-        var pathRe = new RegExp(path + "\/((.*)\/)*.*");
+        var pathRe = new RegExp(path + dirSep + "((.*)" + dirSep + ")*.*");
         var subfolderName = fileName.replace(pathRe, "$2");
         return subfolderName;
     }
@@ -29,14 +30,15 @@ QtObject {
 
     function normalizeLink(group, link) {
         groupPrefix = "";
-        if (!link.match(/\//)) {
-            groupPrefix = group + "/";
+        if (!link.match(dirSep)) {
+            groupPrefix = group + dirSep;
         }
         normalize = normalizeText(link);
         return groupPrefix + normalize;
     }
 
     function printBacklinks(backlinks) {
+        dirSep = script.dirSeparator();
         var out = "";
         if (backlinks.length != 0) {
             out += "<h2>Backlinks</h2>\n\n<ul>\n";
@@ -74,7 +76,7 @@ QtObject {
                     }
                 } else {
                     var subfolderNormalized = normalizeText(subfolderName);
-                    var re = new RegExp("\\[\\[" + subfolderNormalized + "/" + nameNormalized + "\\]\\]");
+                    var re = new RegExp("\\[\\[" + subfolderNormalized + dirSep + nameNormalized + "\\]\\]");
                     if (re.test(normalizedText)) {
                         isBacklink = true;
                     }
