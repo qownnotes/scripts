@@ -9,6 +9,7 @@ import com.qownnotes.noteapi 1.0
  */
 QtObject {
     property bool checkboxCharacterUppercase;
+    property bool onlyTouchCheckboxes;
     property string multipleLinesMethod;
 
     property variant settingsVariables: [
@@ -16,6 +17,13 @@ QtObject {
             'identifier': 'checkboxCharacterUppercase',
             'name': 'Preferred checkbox-character',
             'description': 'Use - [X] instead of the default - [x] as checkbox-character.',
+            'type': 'boolean',
+            'default': 'false',
+        },
+        {
+            'identifier': 'onlyTouchCheckboxes',
+            'name': 'Only touch checkboxes',
+            'description': 'Don\'t touch normal list items or normal lines.',
             'type': 'boolean',
             'default': 'false',
         },
@@ -123,12 +131,12 @@ QtObject {
                     lines[i] = lines[i].replace(/- \[(x|X)\] /, UNCHECKED);
                 }
                 // Convert plain list lines (-, *, +) to unchecked checkboxes lines.
-                else if (lines[i].match(/(-|\*|\+) /)) {
+                else if (!onlyTouchCheckboxes && lines[i].match(/(-|\*|\+) /)) {
                     script.log('Convert plain list to unchecked');
                     lines[i] = lines[i].replace(/(-|\*|\+) /, UNCHECKED);
                 }
                 // Add checkboxes when unpresent (empty lines are skipped).
-                else {
+                else if (!onlyTouchCheckboxes) {
                     // TODO block adding UNCHECKED mid sentence, how to detect?
                     script.log('Convert no list to unchecked');
                     lines[i] = UNCHECKED + lines[i];
