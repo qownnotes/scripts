@@ -4,7 +4,7 @@
   "script": "mermaid.qml",
   "authors": ["@dohliam"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minAppVersion": "20.6.0",
   "description" : "Support for rendering mermaid diagrams in mermaid code blocks as image. Uses the external API from <a href='https://mermaid.ink/'>mermaid.ink</a>."
 }
