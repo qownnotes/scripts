@@ -2,7 +2,7 @@
   "name": "Mermaid Diagrams",
   "identifier": "mermaid",
   "script": "mermaid.qml",
-  "authors": ["@dohliam"],
+  "authors": ["@dohliam", "@cyclops1982"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.2",
   "minAppVersion": "20.6.0",
