@@ -18,13 +18,11 @@ QtObject {
 
     function preNoteToMarkdownHtmlHook(note, markdown, forExport) {
         var re = /```mermaid\n([\s\S]*?)\n```/gim;
-        markdown = markdown.replace(re, function(_, diag){
-            var normalize = diag.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/").replace(/&#40;/g,"\(").replace(/&#41;/g,"\)");
-            var encodedData = Qt.btoa(normalize);
+        markdown = note.decryptedNoteText.replace(re, function(_, diag){
+            var encodedData = Qt.btoa(diag);
             var ink = '![](https://mermaid.ink/img/' + encodedData + ')';
             return ink;
         });
         return markdown;
     }
-
 }
