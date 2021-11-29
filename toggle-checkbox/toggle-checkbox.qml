@@ -88,6 +88,7 @@ QtObject {
         var CHECKED = (checkboxCharacterUppercase)
             ? '- [X] '
             : '- [x] ';
+        var DISABLED = '- [-] ';
 
         // Set up synchronizeChecked.
         if (multipleLinesMethod === 'synchronizeChecked') {
@@ -125,10 +126,15 @@ QtObject {
                     script.log('Convert unchecked to checked');
                     lines[i] = lines[i].replace(/- \[ \] /, CHECKED);
                 }
-                // Toggle checked to unchecked.
+                // Toggle checked to disabled.
                 else if (lines[i].match(/- \[(x|X)\] /)) {
-                    script.log('Convert checked to unchecked');
-                    lines[i] = lines[i].replace(/- \[(x|X)\] /, UNCHECKED);
+                    script.log('Convert checked to disabled');
+                    lines[i] = lines[i].replace(/- \[(x|X)\] /, DISABLED);
+                }
+                // Toggle disabled to unchecked.
+                else if (lines[i].match(/- \[-\] /)) {
+                    script.log('Convert disabled to unchecked');
+                    lines[i] = lines[i].replace(/- \[-\] /, UNCHECKED);
                 }
                 // Convert plain list lines (-, *, +) to unchecked checkboxes lines.
                 else if (!onlyTouchCheckboxes && lines[i].match(/(-|\*|\+) /)) {
