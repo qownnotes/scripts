@@ -1,9 +1,0 @@
-{
-  "name": "Paste HTML as GitHub Flavored Markdown",
-  "identifier": "paste-html-as-github-flavored-markdown",
-  "script": "paste-html-as-github-flavored-markdown.qml",
-  "authors": ["@pbek"],["@Zorziel"]
-  "version": "0.0.1",
-  "minAppVersion": "17.08.2",
-  "description" : "With this script, forked from paste-html-as-github-markdown, you can right click in the note edit and paste previously copied HTML from a website as GitHub Flavored Markdown (gfm) with the help of Pandoc.\n\n<b>Dependencies</b>\n<a href=\"http://pandoc.org\">Pandoc</a>\n\n<b>Installation</b>\nAfter you have installed <i>Pandoc</i> you have to configure its path in the script settings.\n\nIf converting with gfm is not producting the right results in QOwnNotes, try with the original <a href=https://github.com/qownnotes/scripts/tree/master/paste-html-as-github-markdown>paste-html-as-github-markdown</a> script"
-}
