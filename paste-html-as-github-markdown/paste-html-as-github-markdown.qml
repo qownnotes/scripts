@@ -40,7 +40,12 @@ Script {
         var html = script.clipboard(true);
         
         // you need pandoc to convert HTML to Markdown
-        var params = ["-f", "html", "-t", "markdown_github"];
+        /**
+         * UPDATE 2021-12-01:
+         *  replacing "markdown_github" with "gfm" as markdown_github is now deprecated and does not have all of the features as gfm
+         *  Original call: var params = ["-f", "html", "-t", "markdown_github"];
+        */
+        var params = ["-f", "html", "-t", "gfm"];
         var markdown = script.startSynchronousProcess(pandocPath, params, html);
         
         script.noteTextEditWrite(markdown);
