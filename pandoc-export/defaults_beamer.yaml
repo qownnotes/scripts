@@ -1,0 +1,37 @@
+# This is a defaults.yaml file for exporting to beamer presentation.
+# Copy this file to the notes folder/subfolder containing your markdown slides
+# as defaults.yaml
+to: beamer
+
+# Specify user data directory
+### data-dir: ../resources
+
+# Include options from the specified defaults files.
+# The files will be searched for first in the working directory
+# and then in the defaults subdirectory of the user data directory.
+# The files are included in the same order in which they appear in
+# the list. Options specified in this defaults file always have
+# priority over the included ones.
+### defaults:
+### - ../resources/defaults.yaml
+
+variables:
+  theme: metropolis
+  header-includes:
+    - \usepackage{appendixnumberbeamer}
+    - \usepackage[scale=2]{ccicons}
+    - \usepackage{etoolbox}
+    - \makeatletter
+    - \patchcmd{\beamer@sectionintoc}{\vskip1.5em}{\vskip\itemsep}{}{}
+    - \makeatother
+    - \usepackage{caption}
+    - \captionsetup{labelformat=empty}
+    - \setbeamersize{text margin left=20pt,text margin right=20pt}
+    - \setbeamercolor{caption}{fg=mLightBrown}
+  handout: true
+
+number-sections: false
+
+incremental: true
+slide-level: 3
+
