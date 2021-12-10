@@ -2,6 +2,7 @@
   "name": "Pandoc Export",
   "identifier": "pandoc-export",
   "script": "pandoc-export.qml",
+  "resources": ["defaults.yaml", "defaults_beamer.yaml"],
   "authors": ["@student4life"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
