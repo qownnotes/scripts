@@ -2,9 +2,9 @@
   "name": "Vivaldi Notes",
   "identifier": "vivaldi-notes",
   "script": "vivaldi-notes.qml",
-  "authors": ["@fnkabit"],
+  "authors": ["@fnkabit", "@fnkhz"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.3",
+  "version": "0.0.4",
   "minAppVersion": "20.11.0",
   "description" : "This script adds a button for importing/exporting notes from Vivaldi. Vivaldi notes must be provided in a JSON file.\nVivaldi stores notes in <i>ProfilePath/Notes</i>. Profile path specified in <i>vivaldi://about</i> page."
 }

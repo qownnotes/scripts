@@ -65,7 +65,32 @@ Script {
         }
 
         if (item.type == 'note') {
-            script.createNote(item.subject !== "" ? (item.subject + "\n===\n" + item.content) : item.content);
+            var content = item.content;
+
+            var subject;
+            if (item.subject !== "") {
+                subject = item.subject + "\n";
+            } else {
+                var subjectCandidate = content.match(".+\n");
+                if (subjectCandidate.length !== 0) {
+                    subject = subjectCandidate;
+                } else {
+                    subject = content.substring(0, Math.min(content.length, 50));
+                }
+            }
+            subject += "===\n";
+
+            var attachments = "";
+            if (item.attachments) {
+                attachments = '\n\n# Attachments\n';
+                for (var idx in item.attachments) {
+                    var attachment = "\n![attachment" + idx + "](" + item.attachments[idx].content + ")\n";
+                    attachments += attachment;
+                }
+            }
+
+            var noteData = subject + content + attachments;
+            script.createNote(noteData);
         } else if (item.type == 'folder') {
             mainWindow.createNewNoteSubFolder(item.subject);
             for (var idx in item.children) {
