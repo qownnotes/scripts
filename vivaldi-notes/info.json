@@ -2,7 +2,7 @@
   "name": "Vivaldi Notes",
   "identifier": "vivaldi-notes",
   "script": "vivaldi-notes.qml",
-  "authors": ["@fnkabit"],
+  "authors": ["@fnkabit", "@fnkhz"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.4",
   "minAppVersion": "20.11.0",
