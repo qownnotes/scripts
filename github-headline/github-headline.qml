@@ -17,16 +17,16 @@ QtObject {
 
         // http://www.regexpal.com is your friend
         // check if the pasted text is a GitHub issue url
-        var re = /^http[s]?:\/\/github\.com.+\/issues\//igm;
+        var re = /^http[s]?:\/\/github\.com.+\/(issues|pull)\//igm;
         if (re.test(text)) {
             script.log("Found GitHub issue url in clipboard: " + text);
 
             // download matched GitHub url
             var output = script.downloadUrlToString(text);
-            // script.log(output);
+            script.log(output);
 
             // parse the headline
-            var re2 = /<span class="\s*js-issue-title.+"[^>]*>\s*(.+?)\s*<\/span>/im
+            var re2 = /<span class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/span>/im
             var result2 = re2.exec(output);
 
             if (result2 !== null) {
