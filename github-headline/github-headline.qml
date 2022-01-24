@@ -23,7 +23,7 @@ QtObject {
 
             // download matched GitHub url
             var output = script.downloadUrlToString(text);
-            script.log(output);
+            // script.log(output);
 
             // parse the headline
             var re2 = /<span class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/span>/im
