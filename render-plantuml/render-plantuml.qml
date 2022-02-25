@@ -4,11 +4,10 @@ import QtQml 2.0
  * This script renders any plantuml text embedded in a note with the language hint, into a uml diagram.
  *
     * Dependencies:
-    * Node.js: https://nodejs.org/en/download/
     * java: https://java.com/en/download/
     * plantuml: http://plantuml.com/download
     *
-    * Install node and java. download the plantuml jar and provide the full path to the script.
+    * Install java. download the plantuml jar and provide the full path to the script.
     *
  */
 QtObject {
@@ -71,11 +70,9 @@ QtObject {
 
         var match = plantumlSectionRegex.exec(html);
         while (match != null) {
+            var filePath = workDir + "/" + note.id + "_" + (++index);
 			//escape the \n into \|n
             var matchedUml = match[1].replace(/\\n/gm, "\\|n");
-            var filePath = workDir + "/" + note.id + "_" + (++index);
-			// Tranform the real line breaks into \n
-			matchedUml = matchedUml.replace(/\n/gm, "\\n");
 			//Unescape HTML entities because some special char are used by PlantUML
 			matchedUml = unescape(matchedUml);
 			// unescape \|n to a real escaped line break \n (cf. https://stackoverflow.com/questions/27363399/how-to-escape-line-break-already-present-in-a-string/27363443#27363443)
@@ -87,16 +84,16 @@ QtObject {
                 matchedUml = matchedUml.replace(/^<b><font color=\"\w+\">(start\w+)<\/font><\/b>\\n/gi, "@$1\\n").replace(/<b><font color=\"\w+\">(end\w+)<\/font><\/b>\\n$/gi, "@$1\\n");
 
                 //If needed adds @startuml/@enduml
-                if (!(matchedUml.match(/^\n?@start\w+\n/gi)))
-					matchedUml = "@startuml\\n" + matchedUml;
-                if (!(matchedUml.match(/\n@end\w+\n?$/gi)))
-					matchedUml = matchedUml + "\\n@enduml\\n";
+                if (!(matchedUml.match(/^\n?@start\w+(\n|\\n)/gi)))
+					matchedUml = "@startuml\n" + matchedUml;
+                if (!(matchedUml.match(/(\n|\\n)@end\w+\n?$/gi)))
+					matchedUml = matchedUml + "\n@enduml\n";
             }
 
-            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\\\"").replace(/&quot;/g, "\\\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/");
+            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/");
 
-            var params = ["-e", "require('fs').writeFileSync('" + filePath + "', \"" + matchedUml + "\", 'utf8');"];
-            var result = script.startSynchronousProcess("node", params, html);
+            script.writeToFile(filePath, matchedUml);
+            script.log(`${filePath}`);
 
             plantumlFiles.push(filePath);
 
@@ -108,7 +105,8 @@ QtObject {
 
     function generateUmlDiagrams(html, plantumlFiles) {
         var params = ["-jar", plantumlJarPath, "-o", workDir, additionalParams].concat(plantumlFiles);
-        var result = script.startSynchronousProcess(javaExePath, params, html);
+        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" ,1, html);
+        script.log(`p${params} r${result}`);
     }
 
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
@@ -124,6 +122,13 @@ QtObject {
         });
 
         return updatedHtml;
+    }
+
+    function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
+        if (callbackIdentifier == "plantuml-callback") {
+            script.regenerateNotePreview();
+            script.log(`refresh`);
+        }
     }
 
     /**
