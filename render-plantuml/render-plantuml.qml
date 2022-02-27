@@ -18,6 +18,7 @@ QtObject {
     property string noStartUml;
     property string svgOrPng;
     property string additionalParams;
+    property string noteId;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -40,7 +41,7 @@ QtObject {
             "name": "Working directory",
             "description": "Please enter a path to be used as working directory i.e. temporary directory for file creation:",
             "type": "file",
-            "default": defaultCacheDir
+            "default": ""
         },
         {
             "identifier": "hideMarkup",
@@ -74,11 +75,10 @@ QtObject {
 
     function extractPlantUmlText(html, plantumlSectionRegex, note) {
         var plantumlFiles = [];
+        var diagramsToGenerate = [];
         var index = 0;
 
         var match = plantumlSectionRegex.exec(html);
-        workDir = workDir ? workDir: script.cacheDir("render-plantuml");
-        script.log(workDir);
         while (match != null) {
             var filePath = workDir + "/" + note.id + "_" + (++index);
 			//escape the \n into \|n
@@ -102,32 +102,34 @@ QtObject {
 
             matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/");
 
-            script.writeToFile(filePath, matchedUml);
             script.log(`${filePath}`);
 
+            var cached = isCached(filePath,matchedUml);
+            script.log(cached);
+            if (cached == "notCached") {
+                script.writeToFile(filePath, matchedUml);
+                diagramsToGenerate.push(filePath);
+            }
             plantumlFiles.push(filePath);
 
             match = plantumlSectionRegex.exec(html);
         }
 
+        if (diagramsToGenerate.length) generateUmlDiagrams(html, diagramsToGenerate);
+
         return plantumlFiles;
     }
 
     function generateUmlDiagrams(html, plantumlFiles) {
-        var outputFormatOption = "-tpng";
-        if (svgOrPng == "true")
-            outputFormatOption = "-tsvg";
-        var params = ["-jar", plantumlJarPath, "-o", workDir, outputFormatOption, additionalParams].concat(plantumlFiles);
-        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" ,1, html);
+        var params = ["-jar", plantumlJarPath, "-o", workDir, "-t" + svgOrPng, additionalParams].concat(plantumlFiles);
+        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" + noteId ,0, html);
     }
 
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
-        var outputFormatOption = "png";
-        if (svgOrPng == "true")
-            outputFormatOption = "svg";
         var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
-            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + outputFormatOption + "?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
+            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + svgOrPng + "?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
+
             if (hideMarkup == "true") {
                 return imgElement;
             } else {
@@ -137,10 +139,22 @@ QtObject {
 
         return updatedHtml;
     }
+    // Check if the same plantUML content has already been saved
+    // if an image was generated
+    // and verify if it is the same
+    function isCached(filePath,newContent) {
+        var cached = "notCached";
+        if(script.fileExists(filePath) && script.fileExists(filePath + "." + svgOrPng)){
+            var oldContent = script.readFromFile(filePath);
+            if (Qt.md5(oldContent) == Qt.md5(newContent))
+                cached = "cached";
+        }
+        return cached;
+    }
 
     function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
-        if (callbackIdentifier == "plantuml-callback") {
-            script.regenerateNotePreview();
+        if (callbackIdentifier == "plantuml-callback" + noteId) {
+            // script.regenerateNotePreview();
             script.log(`refresh`);
         }
     }
@@ -159,15 +173,20 @@ QtObject {
      * @return {string} the modified html or an empty string if nothing should be modified
      */
      function noteToMarkdownHtmlHook(note, html, forExport) {
+        script.log("launch");
         var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
+        // Ugly trick invoving pseudo globals
+        workDir = workDir ? workDir: script.cacheDir("render-plantuml");
+        script.log(workDir);
+        svgOrPng = svgOrPng ? "svg":"png";
+        script.log(svgOrPng);
+        noteId = note.id + (new Date());
 
         var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
 
         if (plantumlFiles.length) {
-            generateUmlDiagrams(html, plantumlFiles);
             return injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
         }
-
         return html;
     }
 }
