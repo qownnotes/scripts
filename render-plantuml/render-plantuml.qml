@@ -123,9 +123,11 @@ QtObject {
 
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
+        var outputFormatOption = "png";
+        if (svgOrPng == "true")
+            outputFormatOption = "svg";
         var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
-            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + ".png?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
-
+            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + outputFormatOption + "?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
             if (hideMarkup == "true") {
                 return imgElement;
             } else {
