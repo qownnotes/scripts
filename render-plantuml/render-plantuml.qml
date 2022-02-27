@@ -40,7 +40,7 @@ QtObject {
             "name": "Working directory",
             "description": "Please enter a path to be used as working directory i.e. temporary directory for file creation:",
             "type": "file",
-            "default": "/tmp"
+            "default": defaultCacheDir
         },
         {
             "identifier": "hideMarkup",
@@ -77,6 +77,8 @@ QtObject {
         var index = 0;
 
         var match = plantumlSectionRegex.exec(html);
+        var workDir = workDir ? workDir: script.cacheDir("render-plantuml");
+        script.log(workDir);
         while (match != null) {
             var filePath = workDir + "/" + note.id + "_" + (++index);
 			//escape the \n into \|n
