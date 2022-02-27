@@ -77,7 +77,7 @@ QtObject {
         var index = 0;
 
         var match = plantumlSectionRegex.exec(html);
-        var workDir = workDir ? workDir: script.cacheDir("render-plantuml");
+        workDir = workDir ? workDir: script.cacheDir("render-plantuml");
         script.log(workDir);
         while (match != null) {
             var filePath = workDir + "/" + note.id + "_" + (++index);
