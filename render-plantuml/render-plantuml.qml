@@ -16,6 +16,7 @@ QtObject {
     property string workDir;
     property string hideMarkup;
     property string noStartUml;
+    property string svgOrPng;
     property string additionalParams;
 
     // register your settings variables so the user can set them in the script settings
@@ -54,6 +55,13 @@ QtObject {
             "description": "Enable if you don't want to add @startuml/@enduml to your plantUml code (compat with tagging in note text)",
             "type": "boolean",
             "default": true
+        },
+        {
+            "identifier": "svgOrPng",
+            "name": "SVG output format (default: PNG)",
+            "description": "Enable if you want to use SVG as output format instead of the default PNG format",
+            "type": "boolean",
+            "default": false
         },
         {
             "identifier": "additionalParams",
@@ -104,9 +112,11 @@ QtObject {
     }
 
     function generateUmlDiagrams(html, plantumlFiles) {
-        var params = ["-jar", plantumlJarPath, "-o", workDir, additionalParams].concat(plantumlFiles);
+        var outputFormatOption = "-tpng";
+        if (svgOrPng == "true")
+            outputFormatOption = "-tsvg";
+        var params = ["-jar", plantumlJarPath, "-o", workDir, outputFormatOption, additionalParams].concat(plantumlFiles);
         var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" ,1, html);
-        script.log(`p${params} r${result}`);
     }
 
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
