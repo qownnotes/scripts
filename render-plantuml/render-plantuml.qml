@@ -18,7 +18,6 @@ QtObject {
     property string noStartUml;
     property string svgOrPng;
     property string additionalParams;
-    property string noteId;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -80,7 +79,7 @@ QtObject {
 
         var match = plantumlSectionRegex.exec(html);
         while (match != null) {
-            var filePath = workDir + "/" + note.id + "_" + (++index);
+            var filePath = script.getPersistentVariable("renderPlantUML/workDir") + "/" + note.id + "_" + (++index);
 			//escape the \n into \|n
             var matchedUml = match[1].replace(/\\n/gm, "\\|n");
 			//Unescape HTML entities because some special char are used by PlantUML
@@ -121,14 +120,15 @@ QtObject {
     }
 
     function generateUmlDiagrams(html, plantumlFiles) {
-        var params = ["-jar", plantumlJarPath, "-o", workDir, "-t" + svgOrPng, additionalParams].concat(plantumlFiles);
-        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" + noteId ,0, html);
+        var params = ["-jar", plantumlJarPath, "-o", script.getPersistentVariable("renderPlantUML/workDir"), "-t" + script.getPersistentVariable("renderPlantUML/svgOrPng"), additionalParams].concat(plantumlFiles);
+        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" + script.getPersistentVariable("renderPlantUML/noteId") ,0, html);
+        script.setPersistentVariable("renderPlantUML/pumlRunning/" + script.getPersistentVariable("renderPlantUML/noteId"), "running")
     }
 
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
         var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
-            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + svgOrPng + "?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
+            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + script.getPersistentVariable("renderPlantUML/svgOrPng") + "?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
 
             if (hideMarkup == "true") {
                 return imgElement;
@@ -144,7 +144,7 @@ QtObject {
     // and verify if it is the same
     function isCached(filePath,newContent) {
         var cached = "notCached";
-        if(script.fileExists(filePath) && script.fileExists(filePath + "." + svgOrPng)){
+        if(script.fileExists(filePath) && script.fileExists(filePath + "." + script.getPersistentVariable("renderPlantUML/svgOrPng"))){
             var oldContent = script.readFromFile(filePath);
             if (Qt.md5(oldContent) == Qt.md5(newContent))
                 cached = "cached";
@@ -153,8 +153,9 @@ QtObject {
     }
 
     function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
-        if (callbackIdentifier == "plantuml-callback" + noteId) {
-            // script.regenerateNotePreview();
+        if (callbackIdentifier == "plantuml-callback" + script.getPersistentVariable("renderPlantUML/noteId")) {
+            script.setPersistentVariable("renderPlantUML/pumlRunning/" + script.getPersistentVariable("renderPlantUML/noteId"), "done");
+            script.regenerateNotePreview();
             script.log(`refresh`);
         }
     }
@@ -174,18 +175,24 @@ QtObject {
      */
      function noteToMarkdownHtmlHook(note, html, forExport) {
         script.log("launch");
-        var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
-        // Ugly trick invoving pseudo globals
-        workDir = workDir ? workDir: script.cacheDir("render-plantuml");
-        script.log(workDir);
-        svgOrPng = svgOrPng ? "svg":"png";
-        script.log(svgOrPng);
-        noteId = note.id + (new Date());
+        script.log(script.getPersistentVariable("renderPlantUML/pumlRunning/" + note.id));
+        if (script.getPersistentVariable("renderPlantUML/pumlRunning/" + note.id) != "done") {
+            var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
+            script.setPersistentVariable("renderPlantUML/workDir", workDir ? workDir: script.cacheDir("render-plantuml"));
+            script.log(script.getPersistentVariable("renderPlantUML/workDir"));
+            script.setPersistentVariable("renderPlantUML/svgOrPng", svgOrPng ? "svg":"png");
+            script.log(script.getPersistentVariable("renderPlantUML/svgOrPng"));
+            script.setPersistentVariable("renderPlantUML/noteId", note.id);
+            script.log(script.getPersistentVariable("renderPlantUML/noteId"));
 
-        var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
+            var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
 
-        if (plantumlFiles.length) {
-            return injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
+            if (plantumlFiles.length) {
+                return injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
+            }
+        }
+        else {
+            script.setPersistentVariable("renderPlantUML/pumlRunning/" + note.id, "");
         }
         return html;
     }
