@@ -101,10 +101,10 @@ QtObject {
 
             matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/").replace(/&#40;/g,"\(").replace(/&#41;/g,"\)");
 
-            script.log(`${filePath}`);
+            // script.log(`${filePath}`);
 
             var cached = isCached(filePath,matchedUml);
-            script.log(cached);
+            // script.log(cached);
             if (cached == "notCached") {
                 script.writeToFile(filePath, matchedUml);
                 diagramsToGenerate.push(filePath);
@@ -114,21 +114,37 @@ QtObject {
             match = plantumlSectionRegex.exec(html);
         }
 
-        if (diagramsToGenerate.length) generateUmlDiagrams(html, diagramsToGenerate);
+        if (diagramsToGenerate.length)
+            generateUmlDiagrams(html, diagramsToGenerate);
 
         return plantumlFiles;
     }
 
     function generateUmlDiagrams(html, plantumlFiles) {
-        var params = ["-jar", plantumlJarPath, "-o", script.getPersistentVariable("renderPlantUML/workDir"), "-t" + script.getPersistentVariable("renderPlantUML/svgOrPng"), additionalParams].concat(plantumlFiles);
-        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback" + script.getPersistentVariable("renderPlantUML/noteId") ,0, html);
-        script.setPersistentVariable("renderPlantUML/pumlRunning/" + script.getPersistentVariable("renderPlantUML/noteId"), "running")
+        const d = new Date();
+        var noteId = script.getPersistentVariable("renderPlantUML/noteId");
+        script.setPersistentVariable("renderPlantUML/currentTimeStamp", d.getTime());
+        var timeStamp = script.getPersistentVariable("renderPlantUML/currentTimeStamp");
+        var params = [
+                "-jar", plantumlJarPath,
+                "-o", script.getPersistentVariable("renderPlantUML/workDir"),
+                "-t" + script.getPersistentVariable("renderPlantUML/svgOrPng"),
+                additionalParams
+                ].concat(plantumlFiles);
+        var result = script.startDetachedProcess(
+                javaExePath,
+                params,
+                "plantuml-callback-" + noteId + "-" + timeStamp,
+                0,
+                html);
+        script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "running")
+        //script.log("launching PUML: " + noteId + "-" + timeStamp);
     }
 
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
         var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
-            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + script.getPersistentVariable("renderPlantUML/svgOrPng") + "?t=" + +(new Date()) + "\" alt=\"Wait for it..\"/></div>";
+            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + script.getPersistentVariable("renderPlantUML/svgOrPng") + "?t=" + +(new Date()) + "\" alt=\"Generated Diagram\"/></div>";
 
             if (hideMarkup == "true") {
                 return imgElement;
@@ -153,15 +169,20 @@ QtObject {
     }
 
     function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
-        if (callbackIdentifier == "plantuml-callback" + script.getPersistentVariable("renderPlantUML/noteId")) {
+        var noteId = script.getPersistentVariable("renderPlantUML/noteId");
+        if (callbackIdentifier
+                ==
+                "plantuml-callback-" + noteId + "-" + script.getPersistentVariable("renderPlantUML/currentTimeStamp")
+            ) {
+            //script.log("entering callback: " + noteId + "-" + script.getPersistentVariable("renderPlantUML/currentTimeStamp"));
             // If the flag is not set to done, then refresh
-            if (script.getPersistentVariable("renderPlantUML/pumlRunning/" + script.getPersistentVariable("renderPlantUML/noteId")) != "done") {
-                script.setPersistentVariable("renderPlantUML/pumlRunning/" + script.getPersistentVariable("renderPlantUML/noteId"), "done");
+            if (script.getPersistentVariable("renderPlantUML/pumlRunning/" + noteId) != "done") {
+                script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "done");
                 script.regenerateNotePreview();
-                script.log(`refresh`);
+                //script.log(`refresh`);
             } else {
                 // else, reset the flag for the next modification
-                script.setPersistentVariable("renderPlantUML/pumlRunning/" + script.getPersistentVariable("renderPlantUML/noteId"), "");
+                script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "");
             }
         }
     }
@@ -179,21 +200,20 @@ QtObject {
      * @return {string} the modified html or an empty string if nothing should be modified
      */
      function noteToMarkdownHtmlHook(note, html, forExport) {
-        script.log("launch");
-        script.log(script.getPersistentVariable("renderPlantUML/pumlRunning/" + note.id));
+        //script.log("launch");
+        //script.log("flag is: " + script.getPersistentVariable("renderPlantUML/pumlRunning/" + note.id));
+
         var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
         script.setPersistentVariable("renderPlantUML/workDir", workDir ? workDir: script.cacheDir("render-plantuml"));
-        script.log(script.getPersistentVariable("renderPlantUML/workDir"));
         script.setPersistentVariable("renderPlantUML/svgOrPng", svgOrPng ? "svg":"png");
-        script.log(script.getPersistentVariable("renderPlantUML/svgOrPng"));
         script.setPersistentVariable("renderPlantUML/noteId", note.id);
-        script.log(script.getPersistentVariable("renderPlantUML/noteId"));
 
         var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
 
         if (plantumlFiles.length) {
-            return injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
+            html = injectDiagrams(html, plantumlSectionRegex, plantumlFiles);
         }
+
         return html;
     }
 }
