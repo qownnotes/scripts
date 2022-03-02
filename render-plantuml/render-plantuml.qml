@@ -85,7 +85,7 @@ QtObject {
 			//Unescape HTML entities because some special char are used by PlantUML
 			matchedUml = unescape(matchedUml);
 			// unescape \|n to a real escaped line break \n (cf. https://stackoverflow.com/questions/27363399/how-to-escape-line-break-already-present-in-a-string/27363443#27363443)
-			matchedUml = matchedUml.replace(/(\\)\|n/gm, "\\$1n");
+			matchedUml = matchedUml.replace(/(\\)\|n/gm, "\\n");
 
 
             if (noStartUml == "true") {
