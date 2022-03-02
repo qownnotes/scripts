@@ -99,7 +99,7 @@ QtObject {
 					matchedUml = matchedUml + "\n@enduml\n";
             }
 
-            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/");
+            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/").replace(/&#40;/g,"\(").replace(/&#41;/g,"\)");
 
             script.log(`${filePath}`);
 
