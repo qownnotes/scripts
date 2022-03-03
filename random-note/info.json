@@ -1,0 +1,9 @@
+{
+  "name": "Random note",
+  "identifier": "random-note",
+  "script": "random-note.qml",
+  "authors": ["@dohliam"],
+  "version": "1.0",
+  "minAppVersion": "20.4.16",
+  "description" : "This script creates a menu item and a button to jump to a random note from the collection. More information can be found at <a href='https://github.com/qownnotes/scripts/wiki/random-note'>random-note</a>."
+}

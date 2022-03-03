@@ -1,0 +1,10 @@
+{
+  "name": "Blank Note",
+  "identifier": "blank-note",
+  "script": "blank-note.qml",
+  "authors": ["@dohliam"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "22.2.6",
+  "description" : "Create a new blank note with no headline or other text."
+}

@@ -17,29 +17,30 @@ QtObject {
 
         // http://www.regexpal.com is your friend
         // check if the pasted text is a GitHub issue url
-        var re = /^http[s]?:\/\/github\.com.+\/issues\//igm;
+        var re = /^http[s]?:\/\/github\.com.+\/(issues|pull)\//igm;
         if (re.test(text)) {
-            script.log("found GitHub issue url in clipboard: " + text);
+            script.log("Found GitHub issue url in clipboard: " + text);
 
             // download matched GitHub url
             var output = script.downloadUrlToString(text);
+            // script.log(output);
 
             // parse the headline
-            var re2 = /<span class="\s*js-issue-title">([^>]+)<\/span>/im
+            var re2 = /<span class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/span>/im
             var result2 = re2.exec(output);
 
             if (result2 !== null) {
                 var headline = entityToHtml(result2[1].trim());
-                script.log("found headline: " + headline);
+                script.log("Found headline: " + headline);
 
                 // generate markdown to paste
                 var result = "## " + headline + "\n- <" + text + ">\n";
                 return result;
             }
 
-            script.log("no headline was found!");
+            script.log("No headline was found!");
         } else {
-            script.log("no GitHub issue url was found");
+            script.log("No GitHub issue url was found");
         }
 
         return "";

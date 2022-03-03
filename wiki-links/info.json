@@ -1,0 +1,10 @@
+{
+  "name": "Wiki Links",
+  "identifier": "wiki-links",
+  "script": "wiki-links.qml",
+  "authors": ["@dohliam"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.6.0",
+  "description" : "This script adds support for wiki-style internal links (e.g., [[link]]) in the preview. You will find more information on <a href='https://dohliam.github.io/qownnotes-scripting/scripts/wiki-links.html'>wiki-links</a>."
+}

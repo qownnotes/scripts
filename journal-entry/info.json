@@ -3,8 +3,8 @@
   "identifier": "journal-entry",
   "script": "journal-entry.qml",
   "resources": ["calendar-window.qml"], 
-  "version": "1.5.1",
-  "minAppVersion": "17.11.6",
+  "version": "1.6.0",
+  "minAppVersion": "20.4.16",
   "authors": ["@pbek", "@sanderboom", "@kantrol"],
   "description" : "This script creates menu items and buttons to create or jump to the current date's (or tomorrow's date) journal entry. It also allows to open a calendar to choose the date."
 }

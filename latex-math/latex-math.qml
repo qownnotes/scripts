@@ -1,6 +1,5 @@
 import QtQml 2.13
 import com.qownnotes.noteapi 1.0
-import QtQuick 2.0
 
 
 /**
@@ -100,7 +99,6 @@ QtObject {
      */
     function init() {
         log("init")
-        var result = script.startSynchronousProcess("mkdir", ["-p", workDir]);
         // create a menu entry to paste Latex code as an image
         script.registerCustomAction("latex-math-refresh", "Refresh LaTex Images", "Latex", "view-refresh");
         workDir = script.cacheDir("latex-math");
@@ -146,8 +144,11 @@ QtObject {
                 //execBashDetached(bashCmd, true)
                 cmdList.push([count, path, bashCmd])
             }
-
-            return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${path}" alt="LaTex">`; //style='vertical-align: middle;'
+			
+			// we need third slash after file:// if path contains drive letter (e.g. c:) in Windows
+			const thirdSlash = script.platformIsWindows() && path.indexOf(":")===1 ? "/" : "";
+			
+			return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${thirdSlash}${path}" alt="LaTex">`; //style='vertical-align: middle;'
         });
         if (cmdList.length > 0) {
             execBashList(cmdList); // use a 'thread pool'
@@ -171,7 +172,7 @@ QtObject {
         const exec = executable
         const preamble = Qt.btoa(getPreamble())
         const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `${exec} -f '${formulaColor}' -b '${formulaBgColor}' --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
+        const cmd = `"${exec}" -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
         //log("cmd: "+cmd)
         return cmd
     }
@@ -199,41 +200,20 @@ QtObject {
     }
 
     /**
-     * check for a file
-     *
-     */
-    function fileExists(path) {
-        return execBash(`test -f ${path}`)
-    }
-
-
-    /**
      * This function invokes a bash command
      * @param cmdList 0-cmdNumber, 1-path, 2-cmd
      * @return the result or [true/false] if detached = true
      */
     function execBashList(cmdList) {
-        const exec = "bash"
+        const linuxExec = "bash";
         log("got cmds: " + cmdList.length)
         if (cmdList.length > 0) {
             const cmd = cmdList.pop();
-            const param = ["-c", cmd[2]]
-            log("exec no: " + cmd[0] + " " + cmd)
+			const exec = script.platformIsWindows() ? cmd[2] : linuxExec;
+            const param = script.platformIsWindows() ? [] : ["-c", cmd[2]];
+            log("exec" + cmd[0] + ": " + exec)
             script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
         }
-    }
-
-    /**
-     * This function invoces a bash command
-     * @return [true/false] or the resultSet
-     */
-    function execBash(cmd, getResult = false) {
-        const prefix = "2>&1 " // use 2>&1 to redirect stderr to stdout and use as error msg
-        const exec = "bash"
-        const successSuffix = getResult ? "" : " && echo 1 || echo 0"
-        const param = ["-c", prefix + cmd + successSuffix]
-        var result = script.startSynchronousProcess(exec, param);
-        return getResult ? String(result) : result == 1
     }
 
     /**

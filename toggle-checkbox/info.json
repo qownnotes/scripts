@@ -2,8 +2,8 @@
   "name": "Toggle checkbox",
   "identifier": "toggle-checkbox",
   "script": "toggle-checkbox.qml",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "minAppVersion": "19.3.2",
-  "authors": ["@sanderboom"],
-  "description" : "This script creates a menu item and a button to toggle checkbox state. Change one or more selected lines regarding checkboxes: plainlist -> unchecked, unchecked -> checked, checked -> unchecked. Hint: assign a shortcut."
+  "authors": ["@sanderboom", "@pbek"],
+  "description" : "This script creates a menu item and a button to toggle checkbox state. Change one or more selected lines regarding checkboxes: plainlist -> unchecked, unchecked -> checked, checked -> disabled, disabled -> unchecked. Hint: assign a shortcut."
 }

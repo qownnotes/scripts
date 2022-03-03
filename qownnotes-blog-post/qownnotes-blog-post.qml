@@ -83,8 +83,8 @@ QtObject {
             }
 
             // Create the new blog post.
-            script.createNote("---\ntitle: " + headline + "\ndescription: \ndate: " + dateString + "\norder: " + order + "\n---\n\n# " + headline + "\n\n" +
-                "<BlogDate v-bind:fm=\"$frontmatter\" />\n\n\n");
+            script.createNote("---\ntitle: " + headline + "\ndescription: \nimage: /assets/img/my-image.jpg\ndate: " + dateString + "\norder: " + order + "\n---\n\n# " + headline + "\n\n" +
+                "<BlogDate v-bind:fm=\"$frontmatter\" />\n\n\n![image title](./media/my-image.jpg)");
             const currentNote = script.currentNote();
 
             // rename the note file if needed

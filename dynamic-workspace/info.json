@@ -1,0 +1,10 @@
+{
+  "name": "Dynamic Workspace",
+  "identifier": "dynamic-workspace",
+  "script": "dynamic-workspace.qml",
+  "authors": ["@fnkabit"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.2",
+  "minAppVersion": "21.1.3",
+  "description" : "Provides a way to dynamically switch between workspaces depending on window state (maximized / non-maximized)."
+}
