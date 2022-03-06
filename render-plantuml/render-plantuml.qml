@@ -79,7 +79,7 @@ QtObject {
 
         var match = plantumlSectionRegex.exec(html);
         while (match != null) {
-            var filePath = script.getPersistentVariable("renderPlantUML/workDir") + "/" + note.id + "_" + (++index);
+            var filePath = script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir") + "/" + note.id + "_" + (++index));
 			//escape the \n into \|n
             var matchedUml = match[1].replace(/\\n/gm, "\\|n");
 			//Unescape HTML entities because some special char are used by PlantUML
@@ -127,7 +127,7 @@ QtObject {
         var timeStamp = script.getPersistentVariable("renderPlantUML/currentTimeStamp");
         var params = [
                 "-jar", plantumlJarPath,
-                "-o", script.getPersistentVariable("renderPlantUML/workDir"),
+                "-o", script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir")),
                 "-t" + script.getPersistentVariable("renderPlantUML/svgOrPng"),
                 additionalParams
                 ].concat(plantumlFiles);
@@ -144,7 +144,7 @@ QtObject {
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
         var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
-            var imgElement = "<div><img src=\"file://" + plantumlFiles[index++] + "." + script.getPersistentVariable("renderPlantUML/svgOrPng") + "?t=" + +(new Date()) + "\" alt=\"Generated Diagram\"/></div>";
+            var imgElement = "<div><img src=\"file:///" + plantumlFiles[index++] + "." + script.getPersistentVariable("renderPlantUML/svgOrPng") + "?t=" + +(new Date()) + "\" alt=\"Generated Diagram\"/></div>";
 
             if (hideMarkup == "true") {
                 return imgElement;
