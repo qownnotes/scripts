@@ -3,7 +3,7 @@
   "identifier": "render-plantuml",
   "script": "render-plantuml.qml",
   "authors": ["@nikhilw", "@Beurt"],
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minAppVersion": "20.6.0",
   "description" : "This script renders any plantuml text embedded in a note with the language hint, into a uml diagram.\n\nIt needs java (<a href=\"https://java.com/en/download/\">https://java.com/en/download/</a>) and plantuml (<a href=\"http://plantuml.com/download\">http://plantuml.com/download</a>) to be installed. Install java. Download the plantuml jar and provide the full path in script settings."
 }

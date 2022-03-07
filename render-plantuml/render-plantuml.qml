@@ -71,7 +71,70 @@ QtObject {
             "default": ""
         }
     ];
-
+    
+	function init() {
+		script.registerCustomAction("insertPumlDiagram", "PUML: insert Diagram", "", "",1);
+		script.registerCustomAction("insertPumlGraphviz", "PUML: insert Graphviz Diagram", "", "",1);
+		script.registerCustomAction("insertPumlJSON", "PUML: insert JSON Diagram", "", "",1);
+		script.registerCustomAction("insertPumlYAML", "PUML: insert YAML Diagram", "", "",1);
+		script.registerCustomAction("insertPumlSalt", "PUML: insert Wireframe (Salt) Diagram", "", "",1);
+		script.registerCustomAction("insertPumlGantt", "PUML: insert Gantt Diagram", "", "",1);
+		script.registerCustomAction("insertPumlMindMap", "PUML: insert MindMap Diagram", "", "",1);
+		script.registerCustomAction("insertPumlWBS", "PUML: insert WBS Diagram", "", "",1);
+	}
+    function customActionInvoked(identifier) {
+		switch (identifier) {
+			case "insertPumlDiagram":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startuml\n\t" + script.noteTextEditSelectedText() + "\n@enduml\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlGraphviz":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startuml\ndigraph Diagram {\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlJSON":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startjson\n\t" + script.noteTextEditSelectedText() + "\n@endjson\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlYAML":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startyaml\n\t" + script.noteTextEditSelectedText() + "\n@endyaml\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlSalt":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startsalt\n{\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlGantt":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startgantt\n" + script.noteTextEditSelectedText() + "\n@endgantt\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlMindMap":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startmindmap\n" + script.noteTextEditSelectedText() + "\n@endmindmap\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+			case "insertPumlWBS":
+				// getting selected text from the note text edit
+				var text = "```plantuml\n@startwbs\n" + script.noteTextEditSelectedText() + "\n@endwbs\n```";
+				// put the result to the current cursor position in the note text edit
+				script.noteTextEditWrite(text);
+			break;
+		}
+	}
+	
     function extractPlantUmlText(html, plantumlSectionRegex, note) {
         var plantumlFiles = [];
         var diagramsToGenerate = [];
