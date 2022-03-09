@@ -89,48 +89,56 @@ QtObject {
 				var text = "```plantuml\n@startuml\n\t" + script.noteTextEditSelectedText() + "\n@enduml\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-12);
 			break;
 			case "insertPumlGraphviz":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startuml\ndigraph Diagram {\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-14);
 			break;
 			case "insertPumlJSON":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startjson\n\t" + script.noteTextEditSelectedText() + "\n@endjson\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-13);
 			break;
 			case "insertPumlYAML":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startyaml\n\t" + script.noteTextEditSelectedText() + "\n@endyaml\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-13);
 			break;
 			case "insertPumlSalt":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startsalt\n{\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-14);
 			break;
 			case "insertPumlGantt":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startgantt\n" + script.noteTextEditSelectedText() + "\n@endgantt\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-14);
 			break;
 			case "insertPumlMindMap":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startmindmap\n" + script.noteTextEditSelectedText() + "\n@endmindmap\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-16);
 			break;
 			case "insertPumlWBS":
 				// getting selected text from the note text edit
 				var text = "```plantuml\n@startwbs\n" + script.noteTextEditSelectedText() + "\n@endwbs\n```";
 				// put the result to the current cursor position in the note text edit
 				script.noteTextEditWrite(text);
+                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-12);
 			break;
 		}
 	}
