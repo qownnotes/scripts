@@ -1,0 +1,10 @@
+{
+  "name": "Show Note Folder",
+  "identifier": "show-note-folder",
+  "script": "show-note-folder.qml",
+  "authors": ["@hbarel"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "22.3.4",
+  "description" : "A short simple script to display the folder of the currently-selected note in the scripting panel."
+}
