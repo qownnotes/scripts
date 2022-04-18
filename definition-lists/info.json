@@ -1,0 +1,10 @@
+{
+  "name": "Definition lists",
+  "identifier": "definition-lists",
+  "script": "definition-lists.qml",
+  "authors": ["@dohliam"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "20.6.0",
+  "description" : "Add support for definition lists."
+}
