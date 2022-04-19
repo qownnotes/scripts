@@ -18,8 +18,25 @@ QtObject {
 
     function noteToMarkdownHtmlHook(note, html, forExport) {
         html = html.replace(/<\/style>/, "dt {font-weight: bold; font-style: italic;}</style>");
-        var re = new RegExp("<p>(.*?)\n: (.*?)</p>", "g");
-        html = html.replace(re, "<dl>\n  <dt>$1</dt>\n  <dd>$2</dd>\n</dl>");
+        var re = new RegExp("<p>(.*?\n: [^]*?)</p>", "g");
+        if (re.test(html)) {
+            html = html.replace(re, function(_, dl) {
+                var output = "<dl>\n"
+                var dlArray = dl.split("\n");
+                for (var i = 0; i < dlArray.length; i++) {
+                    var item = dlArray[i];
+                    var entryText = "  <dt>" + item + "</dt>\n";
+                    if (item.match(/^: /)) {
+                        var defText = item.replace(/^: /g, "")
+                        entryText = "  <dd>" + defText + "</dd>\n";
+                    }
+                    output += entryText;
+                }
+                output += "</dl>";
+                script.log(output);
+                return output;
+            });
+        }
         return html;
     }
 }
