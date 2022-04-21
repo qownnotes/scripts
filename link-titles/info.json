@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "20.6.0",
-  "description" : "Add titles / pop-ups to links showing their target location."
+  "description" : "Add titles / pop-ups to links in the preview, showing their target location."
 }
