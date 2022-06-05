@@ -28,7 +28,7 @@ QtObject {
 
 //                script.log(html);
                 
-                var activities = html.split('<div class="list-activity-action"');
+                var activities = html.split('<div class="list-activity__container__title-holder"');
 //                 script.log(activities.length);
                 //script.log(activities);
                 
