@@ -1,10 +1,10 @@
 {
   "name": "Tab Sessions",
-  "identifier": "example-script",
-  "script": "example-script.qml",
+  "identifier": "tab-sessions",
+  "script": "tab-sessions.qml",
   "authors": ["@macsunmood"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.1 alpha",
+  "version": "0.0.1",
   "minAppVersion": "22.8.4",
-  "description" : "This script lets you manage <b>Tab Sessions</b> - predefined layouts of tabs to be opened. .\n\nTo create a Tab Session make a tag named `[[<title>]]` and the script will automatically rebuild the sessions on load."
+  "description" : "This script lets you manage <b>Tab Sessions</b> - predefined layouts of tabs to be opened. \n\nTo create a Tab Session make a tag named `[[<title>]]` and the script will automatically rebuild the sessions on load."
 }
