@@ -14,16 +14,16 @@ Script {
                 let tag_obj = script.getTagByNameBreadcrumbList([tag_name], false);
                 // create related custom action with button
                 let session_name = tag_name.replace('[[', '').replace(']]', '');
-                script.registerCustomAction(`openTabSession_${session_name}`, `Open Tab Session: ${session_name}`, tag_name);
+                script.registerCustomAction(`switchToTabSession_${session_name}`, `Switch to Tab Session: ${session_name}`, tag_name);
             }
         }
 
-        script.registerCustomAction("closeAllNotesTabs", "Close all notes tabs", "Close All Tabs");
+        script.registerCustomAction("closeAllNoteTabs", "Close all note tabs", "Close All Tabs");
     }
 
     function customActionInvoked(identifier) {
-        if (identifier.startsWith("openTabSession")) {
-            let desktop_tag = `[[${identifier.replace('openTabSession_', '')}]]`;
+        if (identifier.startsWith("switchToTabSession")) {
+            let desktop_tag = `[[${identifier.replace('switchToTabSession_', '')}]]`;
             // script.log(`The tag string is: ${desktop_tag}`);
             
             // Retrieve the tag object related to the Tab Session
@@ -37,16 +37,15 @@ Script {
             
             // Close all currently opened note tabs
             while (mainWindow.removeNoteTab(0)) { }
-            
-            // First, replace the single open tab with the tag-related tab with index=0
-            script.setCurrentNote(tag_notes[0], true)
-            mainWindow.removeNoteTab(0)
 
-            // Then, open the rest tag-related notes, starting from index=1
-            let i = 1;
+           // Then, open all the tag-related notes
+            let i = 0;
             let callBack = () => {
                 // script.log(`Opening note ${i}: ${tag_notes[i]}`);
                 script.setCurrentNote(tag_notes[i], true);
+                if (i === 0) {
+                    mainWindow.removeNoteTab(0)  // needs to be done because of weird behaviour!
+                }
             }
             let stopConditionFunc = () => {
                 i++;
@@ -56,7 +55,7 @@ Script {
             timer.triggerUntil(1, callBack, stopConditionFunc)
         }
             
-        else if (identifier === "closeAllNotesTabs") {
+        else if (identifier === "closeAllNoteTabs") {
             // Close all opened note tabs
             while (mainWindow.removeNoteTab(0)) { };
         }
