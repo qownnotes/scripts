@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "22.8.4",
-  "description" : "This script lets you manage <b>Tab Sessions</b> - predefined layouts of tabs to be opened. \n\nTo create a Tab Session make a tag named `[[<title>]]` and the script will automatically rebuild the sessions on load."
+  "description" : "This script lets you manage <b>Tab Sessions</b> - predefined layouts of tabs to be opened. \n\nTo create a Tab Session make a tag named <code>[[session_name]]</code> (where <i>session_name</i> is the name of the session and <i>square brackets</i> are a mask telling the script that the tag is related to Tab Session). \nThe script will automatically rebuild all the sessions on load."
 }
