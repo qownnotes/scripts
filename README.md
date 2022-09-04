@@ -10,7 +10,6 @@
 
 [![Run tests](https://github.com/qownnotes/scripts/workflows/Run%20tests/badge.svg?branch=master)](https://github.com/qownnotes/scripts/actions)
 [![Build Status](https://travis-ci.org/qownnotes/scripts.svg?branch=master)](https://travis-ci.org/qownnotes/scripts)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/qownnotes/scripts.svg)](http://isitmaintained.com/project/qownnotes/scripts "Percentage of issues still open")
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/qownnotes/qownnotes)
 
 Here you will find the scripts you can directly access in [QOwnNotes](http://www.qownnotes.org), the plain-text file notepad with markdown support and Nextcloud and ownCloud integration.
