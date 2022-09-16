@@ -24,7 +24,6 @@ Script {
     function customActionInvoked(identifier) {
         if (identifier.startsWith("switchToTabSession")) {
             let desktop_tag = `[[${identifier.replace('switchToTabSession_', '')}]]`;
-            // script.log(`The tag string is: ${desktop_tag}`);
             
             // Retrieve the tag object related to the Tab Session
             let tag_obj = script.getTagByNameBreadcrumbList([desktop_tag], false);
@@ -53,6 +52,9 @@ Script {
             }
 
             timer.triggerUntil(1, callBack, stopConditionFunc)
+
+             // Focus related tag in the tag list
+            mainWindow.jumpToTag(tag_obj.id)
         }
             
         else if (identifier === "closeAllNoteTabs") {
@@ -78,16 +80,6 @@ Script {
             timer.repeat = true
             timer.interval = delayTime;
             timer.start();
-        }
-
-        function triggerOnce(delayTime, callBack) {
-            let busy = true
-            timer.triggerUntil(
-                delayTime, 
-                () => { busy = false }, 
-                () => { return busy === false; }, 
-                callBack
-            )
         }
     }
 }
