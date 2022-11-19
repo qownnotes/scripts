@@ -26,12 +26,28 @@ Script {
             "", "applications-internet", false, true, true);
     }
 
-    function getSubFolder(note, path) {
+    function getSubFolderInLinux(note, path) {
         var fileName = note.fullNoteFilePath;
         var sep = script.dirSeparator();
         var pathRe = new RegExp(path + sep + "((.*)" + sep + ")*.*");
         var subfolderName = fileName.replace(pathRe, "$2");
         return subfolderName;
+    }
+    
+    function getSubFolderInWindows(note, path) {
+        var fileName = note.fullNoteFilePath;
+        var sep = '\/';
+        var pathRe = new RegExp(path + sep + "((.*)" + sep + ")*.*");
+        var subfolderName = fileName.replace(pathRe, "$2");
+        return subfolderName;        
+    }
+    
+    function mkDirInLinux(path) {
+        script.startSynchronousProcess("mkdir", ["-p", exportFolder]);
+    }
+    
+    function mkDirInWindows(path) {
+        script.startSynchronousProcess('cmd', ['/c','mkdir',path]);
     }
 
     /**
@@ -50,11 +66,12 @@ Script {
         noteIds.forEach(function (noteId) {
             var note = script.fetchNoteById(noteId);
             var path = script.currentNoteFolderPath();
-            var subFolder = getSubFolder(note, path);
+            var subFolder = script.platformIsWindows() ? getSubFolderInWindows(note, path) : getSubFolderInLinux(note, path);
             var noteName = note.name;
             var sep = script.dirSeparator();
             var exportFolder = path + sep + "export" + sep + subFolder;
-            script.startSynchronousProcess("mkdir", ["-p", exportFolder]);
+            if (script.platformIsWindows()) { mkDirInWindows(exportFolder); }
+            else { mkDirInLinux(exportFolder); }
             var exportPath = exportFolder + sep + noteName + ".html";
             var noteHtml = note.toMarkdownHtml();
             var titleMatch = noteHtml.match(/<h1>(.*)<\/h1>/);
