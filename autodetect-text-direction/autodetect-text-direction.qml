@@ -1,6 +1,6 @@
 import QtQml 2.0
 
-Script {
+QtObject {
 
     /**
      * adds 'dir="rtl"' to content tags whose first character with a strong direction is RTL.
