@@ -30,7 +30,10 @@ To bring your script into the **script repository** you just have to do the foll
 - **commit and push** your changes to your repository
 - create a **[pull request](https://help.github.com/articles/creating-a-pull-request/)** to get your script merged into the QOwnNotes script repository
 
-When editing an existing script in the github web interface, do the following:
+### Editing an existing script in the GitHub web interface
+
+When editing an existing script in the GitHub web interface, do the following:
+
 - If you do not already have a fork:
   - Go to <https://github.com/qownnotes/scripts>.
   - Click the **Fork** button in the upper right of the screen (between **Watch** and **Star**).
