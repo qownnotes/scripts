@@ -23,14 +23,14 @@ Script {
         {
             "identifier": "defaultExportFolder",
             "name": "Set export folder name",
-            "description" : "If the 'Save files in each notebook' is selected, this is the name of the eport folder. Default is export. If 'Save files in central location is selected, this field has no effect.",
+            "description" : "If the 'Save files in each notebook' is selected, this is the name of the eport folder. Default is export. If 'Save files in central location is selected, this field has no effect. If this field is left blank, the default of 'export' is used.",
             "type": "string",
             "default" : "export"
         },        
         {
             "identifier": "defaultExportPath",
             "name": "Set base folder for website export",
-            "description": "If the 'Save files in subfolder in central location' is used, this is the folder path for the save. Each website will be saved in a subfolder named after the notebook name. If 'Save files in each notebook' is selected, this property has no effect.",
+            "description": "If the 'Save files in subfolder in central location' is used, this is the folder path for the save. Each website will be saved in a subfolder named after the notebook name. If 'Save files in each notebook' is selected, this property has no effect. If this setting is blank, the old behavior occurs.",
             "type":"directory",
             "default": ""
         },
@@ -85,16 +85,17 @@ Script {
         if (identifier != "exportWebsite") {
             return;
         }
-        
-        var isWin = script.platformIsWindows();
+	
+	var isWin = script.platformIsWindows();
         var sep = script.dirSeparator();
         var exportBasePath = "";
         var exportBaseFolder = "";
-        
-        switch(exportStyleSelection) {
+
+	var exportOption = (exportStyleSelection == "opt2" && defaultExportPath == "") ? "opt1" : exportStyleSelection;
+        switch(exportOption) {
             case "opt1":
                 exportBasePath = script.toNativeDirSeparators(script.currentNoteFolderPath());
-                exportBaseFolder = defaultExportFolder;
+                exportBaseFolder = (defaultExportFolder == "") ? "export" : defaultExportFolder;
                 break;
             case "opt2":
                 exportBasePath = script.toNativeDirSeparators(defaultExportPath);
