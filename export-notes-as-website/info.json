@@ -2,7 +2,7 @@
   "name": "Export notes as website",
   "identifier": "export-notes-as-website",
   "script": "export-notes-as-website.qml",
-  "authors": ["@dohliam"],
+  "authors": ["@dohliam", "@bvn9ne"],
   "platforms": ["linux", "macos", "windows"],
   "version": "1.1.0",
   "minAppVersion": "22.11.8",
