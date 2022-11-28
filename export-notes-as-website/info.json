@@ -4,7 +4,7 @@
   "script": "export-notes-as-website.qml",
   "authors": ["@dohliam"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "1.0.2",
+  "version": "1.1.0",
   "minAppVersion": "22.11.8",
   "description" : "This script exports all notes in the collection as interlinked HTML files that can be viewed using any web browser. More information can be found at <a href='https://github.com/qownnotes/scripts/wiki/export-notes-as-website'>export-notes-as-website</a>."
 }
