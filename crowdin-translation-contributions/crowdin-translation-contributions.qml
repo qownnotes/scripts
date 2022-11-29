@@ -28,7 +28,7 @@ QtObject {
 
 //                script.log(html);
                 
-                var activities = html.split('<div class="list-activity__container__title-holder"');
+                var activities = html.split('general-activity-item');
 //                 script.log(activities.length);
                 //script.log(activities);
                 
@@ -39,7 +39,7 @@ QtObject {
                     var activity = activities[s];
                     //script.log(activity);
                     
-                    var regExp = /<a class="user-link".+?href="https:\/\/crowdin.com\/profile\/(.+?)".*?>.+?<\/a>.+?suggested.+?into (.+?)<\/div>/im;
+                    var regExp = /<a class="user-link".+?href="http.+\/profile\/(.+?)".*?>.+?<\/a>.+?suggested.+?into (.+?)<\/div>/im;
                     var match = regExp.exec(activity);
                     
                     if (match != null) {
