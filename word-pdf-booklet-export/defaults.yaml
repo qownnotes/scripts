@@ -1,0 +1,20 @@
+from: markdown+emoji+autolink_bare_uris+lists_without_preceding_blankline
+to: odt
+
+standalone: true
+self-contained: false
+
+strip-empty-paragraphs: true
+
+# lf, crlf, or native
+eol: lf
+
+strip-comments: false
+
+### ascii: true
+default-image-extension: ".jpg"
+
+# either a style name or a style definition file:
+highlight-style: pygments
+### syntax-definitions:
+### - c.xml
