@@ -80,7 +80,11 @@ Script {
         if ( !script.fileExists(defaultsFile) ) {
             defaultsFile = scriptDirPath + "/defaults.yaml";
         }
-        var pandocArgs = [fullFileName, "-d", defaultsFile, "-o", odtFile];
+        var dataDir = noteFileDir;
+        if(!script.fileExists(noteFileDir + "/reference.odt")) {
+            dataDir = scriptDirPath;
+        }
+        var pandocArgs = [fullFileName, "-d", defaultsFile, "--data-dir", dataDir, "-o", odtFile];
 
         // Uncomment for enabling Pandoc logging
         // var log = "--log=" + noteFileDir + "/" + noteName + "_log.json";
@@ -115,10 +119,13 @@ Script {
             
             // Remove ODT file
             // script.removeFile(outFile); // This is missing ;-)
+            var resultRm = "";
             if(script.platformIsLinux() || script.platformIsOSX()) {
-                var resultRm = script.startSynchronousProcess("rm", [odtFile]);
-                script.log(callbackIdentifier + ": removed file " + odtFile + ", result: " + resultRm);
+                resultRm = script.startSynchronousProcess("rm", [odtFile]);
+            } else if(script.platformIsWindows()) {
+                resultRm = script.startSynchronousProcess("del", [odtFile]);
             }
+            script.log(callbackIdentifier + ": removed file " + odtFile + ", result: " + resultRm);
             
             // Create booklet using pdfbook2   input.pdf
             var pdfbook2Args = ["--paper=a4paper", "--short-edge", outFile + ".pdf"];

@@ -1,22 +1,8 @@
 from: markdown+emoji+autolink_bare_uris+lists_without_preceding_blankline
 to: odt
 
-# Include options from the specified defaults files.
-# The files will be searched for first in the working directory
-# and then in the defaults subdirectory of the user data directory.
-# The files are included in the same order in which they appear in
-# the list. Options specified in this defaults file always have
-# priority over the included ones.
-### defaults:
-### - defsA
-### - defsB
-
 standalone: true
 self-contained: false
-  
-resource-path:
-- .             # the working directory from which pandoc is run
-- ${USERDATA}   # the user data resources directory
 
 strip-empty-paragraphs: true
 
