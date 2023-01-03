@@ -101,6 +101,12 @@ Script {
     }
     
     function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
+        if(cmd[2] !== 0) {
+            script.log(callbackIdentifier + ": failed, result: " + resultSet + ", exit code: " + cmd[2]);
+            script.informationMessageBox("A step while exporting the note failed. Are the required binaries installed? See protocol for hints.");
+            return;
+        }
+
         if (callbackIdentifier == "pandocFinished") {
             script.log(callbackIdentifier + ": exported note file to odt, " + odtFile + ", result: " + resultSet);
             
