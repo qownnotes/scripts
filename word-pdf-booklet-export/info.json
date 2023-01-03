@@ -1,11 +1,11 @@
 {
-  "name": "Pandoc Export",
-  "identifier": "pandoc-export",
-  "script": "pandoc-export.qml",
-  "resources": ["defaults.yaml", "defaults_beamer.yaml"],
-  "authors": ["@student4life"],
+  "name": "Booklet Export",
+  "identifier": "word-pdf-booklet-export",
+  "script": "word-pdf-booklet-export.qml",
+  "resources": ["defaults.yaml", "template.odt"],
+  "authors": ["@student4life", "@letterus"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
-  "minAppVersion": "21.12.0",
-  "description" : "This script adds support for exporting the current note to various file formats using <a href=\"http://pandoc.org/installing.html\">Pandoc</a>. The output format is decided based on the file extension.\n\n Pandoc is run from the folder containing the current note file.\n\nA defaults.yaml file in the current note directory can be used to fine tune the export. YAML file examples are given along with this script."
+  "minAppVersion": "22.11.6",
+  "description" : "This script exports the current note to at least three file formats. First it creates a .docx/Word file using <a href=\"http://pandoc.org/installing.html\">Pandoc</a> and LibreOffice. Pandoc is run from the folder containing the current note file.\n\nA defaults.yaml file in the current note directory can be used to fine tune the export. YAML file examples are given along with this script."
 }

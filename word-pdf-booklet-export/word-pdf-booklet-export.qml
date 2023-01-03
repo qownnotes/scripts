@@ -9,6 +9,9 @@ Script {
     property string pandocPath;
     property string libreOfficePath;
     property string pdfbook2Path;
+    
+    property string outFile;
+    property string odtFile;
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -63,14 +66,14 @@ Script {
         var noteFileDir = note.fullNoteFileDirPath;
         var noteFolderDir = script.currentNoteFolderPath();
 
-        var outFile = script.getSaveFileName("Going to create files. Specify a base name and a location to save to…", noteFileDir + "/" + noteName, "(*.odt)");
+        outFile = script.getSaveFileName("Going to create files. Specify a base name and a location to save to…", noteFileDir + "/" + noteName, "(*.odt)");
 
         if (outFile === "") {
             script.log(identifier + ": cancelled note export");
             return;
         }
 
-        var odtFile = outFile + ".odt";
+        odtFile = outFile + ".odt";
 
         //variables for pandoc
         var defaultsFile = noteFileDir + "/defaults.yaml";
@@ -82,36 +85,49 @@ Script {
         // Uncomment for enabling Pandoc logging
         // var log = "--log=" + noteFileDir + "/" + noteName + "_log.json";
         // pandocArgs.push(log);
-
-        // TODO make of all of the following a detached process
+        // script.log(pandocArgs);
+        // script.log(scriptDirPath);
 
         // Create ODT file
-        script.log(pandocArgs);
-        script.log(scriptDirPath);
-        var resultPandoc = script.startSynchronousProcess(pandocPath, pandocArgs, "", noteFileDir);
-        script.log(identifier + ": exported note file - " + odtFile + ", result: " + resultPandoc);
+        var resultPandoc = script.startDetachedProcess(pandocPath, pandocArgs, "pandocFinished");
+        if(resultPandoc)
+            script.informationMessageBox("Started export process. This may take some seconds. You will be notified upon completion.");
+        else
+            script.informationMessageBox("Export process could not be started. Check protocol for output, please.");
+    }
+    
+    function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
+        if (callbackIdentifier == "pandocFinished") {
+            script.log(callbackIdentifier + ": exported note file to odt, " + odtFile + ", result: " + resultSet);
+            
+            // Convert ODT to DOCX
+            var libreOfficeArgs = ["--convert-to", "docx", odtFile];
+            script.startDetachedProcess(libreOfficePath, libreOfficeArgs, "libreOfficeDoxcFinished");
+            
+        } else if(callbackIdentifier == "libreOfficeDoxcFinished") {
+            script.log(callbackIdentifier + ": converted odt file to Word file, " + outFile + ".docx, result: " + resultSet);
+            
+            // Convert ODT to PDF
+            var libreOfficeArgsPdf = ["--convert-to", "pdf", odtFile];
+            script.startDetachedProcess(libreOfficePath, libreOfficeArgsPdf, "libreOfficePdfFinished");
+        } else if(callbackIdentifier == "libreOfficePdfFinished") {
+            script.log(callbackIdentifier + ": converted odt file to PDF file, " + outFile + ".pdf, result: " + resultSet);
+            
+            // Remove ODT file
+            // script.removeFile(outFile); // This is missing ;-)
+            if(script.platformIsLinux() || script.platformIsOSX()) {
+                var resultRm = script.startSynchronousProcess("rm", [odtFile]);
+                script.log(callbackIdentifier + ": removed file " + odtFile + ", result: " + resultRm);
+            }
+            
+            // Create booklet using pdfbook2   input.pdf
+            var pdfbook2Args = ["--paper=a4paper", "--short-edge", outFile + ".pdf"];
+            script.startDetachedProcess(pdfbook2Path, pdfbook2Args, "pdfbook2Finished");
 
-        // Convert ODT to DOCX
-        var libreOfficeArgs = ["--convert-to", "docx", odtFile];
-        var resultLibreOffice = script.startSynchronousProcess(libreOfficePath, libreOfficeArgs);
-        script.log(identifier + ": converted odt file to Word file - " + odtFile + ", result: " + resultLibreOffice);
-
-        // Convert ODT to PDF
-        var libreOfficeArgsPdf = ["--convert-to", "pdf", odtFile];
-        var resultLibreOfficePdf = script.startSynchronousProcess(libreOfficePath, libreOfficeArgsPdf);
-        script.log(identifier + ": converted odt file to PDF file - " + odtFile + ", result: " + resultLibreOfficePdf);
-
-        // Remove ODT file
-        // script.removeFile(outFile); // This is missing ;-)
-        var resultRm = script.startSynchronousProcess("rm", [odtFile]);
-        script.log(identifier + ": removed file " + odtFile + ", result: " + resultRm);
-
-        // Create booklet using pdfbook2   input.pdf
-        var pdfbook2Args = ["--paper=a4paper", "--short-edge", outFile + ".pdf"];
-        var resultPdfbook2 = script.startSynchronousProcess(pdfbook2Path, pdfbook2Args);
-        script.log(identifier + ": created bookled from PDF file - " + outFile + ".pdf" + ", result: " + resultPdfbook2);
-
-        script.informationMessageBox("Exported note file to Word and PDF files.");
+        } else if(callbackIdentifier == "pdfbook2Finished") {
+            script.log(callbackIdentifier + ": created bookled from PDF file, result: " + resultSet);
+            
+            script.informationMessageBox("Exported note file to Word and PDF files.");
+        }
     }
 }
-
