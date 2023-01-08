@@ -11,6 +11,7 @@ Script {
     property string pdfbook2Path;
     
     property string outFile;
+    property string outDir;
     property string odtFile;
 
     // register your settings variables so the user can set them in the script settings
@@ -72,8 +73,9 @@ Script {
             script.log(identifier + ": cancelled note export");
             return;
         }
-
+        
         odtFile = outFile + ".odt";
+        outDir =  basePath(outFile);
 
         //variables for pandoc
         var defaultsFile = noteFileDir + "/defaults.yaml";
@@ -111,14 +113,14 @@ Script {
             script.log(callbackIdentifier + ": exported note file to odt, " + odtFile + ", result: " + resultSet);
             
             // Convert ODT to DOCX
-            var libreOfficeArgs = ["--convert-to", "docx", odtFile];
+            var libreOfficeArgs = ["--convert-to", "docx", "--outdir", outDir, odtFile];
             script.startDetachedProcess(libreOfficePath, libreOfficeArgs, "libreOfficeDoxcFinished");
             
         } else if(callbackIdentifier == "libreOfficeDoxcFinished") {
             script.log(callbackIdentifier + ": converted odt file to Word file, " + outFile + ".docx, result: " + resultSet);
             
             // Convert ODT to PDF
-            var libreOfficeArgsPdf = ["--convert-to", "pdf", odtFile];
+            var libreOfficeArgsPdf = ["--convert-to", "pdf", "--outdir", outDir, odtFile];
             script.startDetachedProcess(libreOfficePath, libreOfficeArgsPdf, "libreOfficePdfFinished");
         } else if(callbackIdentifier == "libreOfficePdfFinished") {
             script.log(callbackIdentifier + ": converted odt file to PDF file, " + outFile + ".pdf, result: " + resultSet);
@@ -142,5 +144,9 @@ Script {
             
             script.informationMessageBox("Exported note file to Word and PDF files.");
         }
+    }
+    
+    function basePath(str) {
+        return (str.substring(0, str.lastIndexOf(script.dirSeparator())));
     }
 }

@@ -5,7 +5,7 @@
   "resources": ["defaults.yaml", "reference.odt"],
   "authors": ["@student4life", "@letterus"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.1",
+  "version": "0.1.1",
   "minAppVersion": "22.11.6",
   "description" : "This script exports the current note to at least three file formats. First it creates a .docx/Word file using <a href=\"http://pandoc.org/installing.html\">Pandoc</a> and <a href=\"https://libreoffice.org/download/download/\">LibreOffice. Finally <a href=\"https://ctan.org/pkg/pdfbook2l\">pdfbook2</a> is used to create a short-edge double-sided printable booklet for paper size A4.\n\nPandoc is run from the folder containing the current note file.\n\nA defaults.yaml and reference.odt files in the current note directory can be used to fine tune the export. Otherwise the configuration and template files provided within the directory of this script are used.\n\nThe odt file used for docx and pdf file creation is removed during the process. If you want to keep it comment out the corresponding lines of script."
 }
