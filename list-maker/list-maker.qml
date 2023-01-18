@@ -90,7 +90,7 @@ Script {
         var newText = text.replace(/^(\s*)[+\*\-] (.*)$/gm, "$1$2");
 
         // Add checkbox list items
-        return newText.replace(/^(\s*)(.*)$/gm, "$1- [ ] $2");
+        return newText.replace(/^(\s*)(.+)$/gm, "$1- [ ] $2");
     }
     
     function customActionInvoked(action) {
