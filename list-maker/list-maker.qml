@@ -86,7 +86,11 @@ Script {
     }
 
     function addCheckboxBrackets(text) {
-        return text.replace(/^(\s*)(.*)$/gm, "$1- [ ] $2");
+        // Remove normal list characters
+        var newText = text.replace(/^(\s*)[+\*\-] (.*)$/gm, "$1$2");
+
+        // Add checkbox list items
+        return newText.replace(/^(\s*)(.*)$/gm, "$1- [ ] $2");
     }
     
     function customActionInvoked(action) {
