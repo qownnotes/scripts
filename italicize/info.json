@@ -1,0 +1,9 @@
+{
+  "name": "Italicize",
+  "identifier": "italicize",
+  "script": "italicize.qml",
+  "authors": ["@dohliam"],
+  "version": "1.0",
+  "minAppVersion": "20.4.16",
+  "description" : "This script creates a custom action to italicize selected text using single underscores (e.g.: _this is italic text_)."
+}

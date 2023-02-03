@@ -48,6 +48,7 @@ Script {
                 script.registerCustomAction("list " + markers[n], markers[n] + " list", markers[n])
         }
         script.registerCustomAction("list " + markers[0], "%1 list".arg(markers[0]), "", "", true, true)
+        script.registerCustomAction("list checkbox", "Create checkbox list", "", "", true, true)
         script.registerCustomAction("list clear", "Clear list formatting", "X", "", true)
     }
     
@@ -83,8 +84,23 @@ Script {
         }
         return line
     }
+
+    function addCheckboxBrackets(text) {
+        // Remove normal list characters
+        var newText = text.replace(/^(\s*)[+\*\-] (.*)$/gm, "$1$2");
+
+        // Add checkbox list items
+        return newText.replace(/^(\s*)(.+)$/gm, "$1- [ ] $2");
+    }
     
-    function customActionInvoked(action) {        
+    function customActionInvoked(action) {
+        if (action === 'list checkbox') {
+            var lines = script.noteTextEditSelectedText()
+            lines = addCheckboxBrackets(lines)
+            script.noteTextEditWrite(lines)
+            return
+        }
+
         if (action.substring(0, 5) == "list ") {
             
             var type = getListType(script.noteTextEditSelectedText())

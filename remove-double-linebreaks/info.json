@@ -1,0 +1,10 @@
+{
+  "name": "Remove double linebreaks",
+  "identifier": "remove-double-linebreaks",
+  "script": "remove-double-linebreaks.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "1.0.0",
+  "minAppVersion": "19.03.2",
+  "description" : "Toolbar button and context menu item to remove double linebreaks."
+}

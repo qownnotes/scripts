@@ -1,3 +1,4 @@
 .directory
 *.qmlc
 *.jsc
+.idea

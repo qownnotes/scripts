@@ -6,9 +6,34 @@ import com.qownnotes.noteapi 1.0
  * This script exports all notes as HTML files
  */
 Script {
+    property string exportStyleSelection;
+    property string defaultExportFolder;
+    property string defaultExportPath;
     property bool useAbsolutePaths;
 
     property variant settingsVariables: [
+        {
+            "identifier": "exportStyleSelection",
+            "name": "File export selection",
+            "description": "This determines whether the files are exported into a central folder (in notebook named subfolders) or inside notebook folders. To keep the old default behavior, leave this as 'Save files in each notebook'.",
+            "type":"selection",
+            "default": "opt1",
+            "items": {"opt1": "Save files in each notebook (original behavior).", "opt2": "Save files in central location."}
+        },
+        {
+            "identifier": "defaultExportFolder",
+            "name": "Set export folder name",
+            "description" : "If the 'Save files in each notebook' is selected, this is the name of the eport folder. Default is export. If 'Save files in central location is selected, this field has no effect. If this field is left blank, the default of 'export' is used.",
+            "type": "string",
+            "default" : "export"
+        },        
+        {
+            "identifier": "defaultExportPath",
+            "name": "Set base folder for website export",
+            "description": "If the 'Save files in subfolder in central location' is used, this is the folder path for the save. Each website will be saved in a subfolder named after the notebook name. If 'Save files in each notebook' is selected, this property has no effect. If this setting is blank, the old behavior occurs.",
+            "type":"directory",
+            "default": ""
+        },
         {
             "identifier": "useAbsolutePaths",
             "name": "Use absolute paths for links",
@@ -26,12 +51,28 @@ Script {
             "", "applications-internet", false, true, true);
     }
 
-    function getSubFolder(note, path) {
+    function getSubFolderInLinux(note, path) {
         var fileName = note.fullNoteFilePath;
         var sep = script.dirSeparator();
         var pathRe = new RegExp(path + sep + "((.*)" + sep + ")*.*");
         var subfolderName = fileName.replace(pathRe, "$2");
         return subfolderName;
+    }
+    
+    function getSubFolderInWindows(note, path) {
+        var fileName = note.fullNoteFilePath;
+        var sep = '\/';
+        var pathRe = new RegExp(path + sep + "((.*)" + sep + ")*.*");
+        var subfolderName = fileName.replace(pathRe, "$2");
+        return subfolderName;        
+    }
+    
+    function mkDirInLinux(path) {
+        script.startSynchronousProcess("mkdir", ["-p", exportFolder]);
+    }
+    
+    function mkDirInWindows(path) {
+        script.startSynchronousProcess('cmd', ['/c','mkdir',path]);
     }
 
     /**
@@ -44,18 +85,41 @@ Script {
         if (identifier != "exportWebsite") {
             return;
         }
+	
+	var isWin = script.platformIsWindows();
+        var sep = script.dirSeparator();
+        var exportBasePath = "";
+        var exportBaseFolder = "";
+
+	var exportOption = (exportStyleSelection == "opt2" && defaultExportPath == "") ? "opt1" : exportStyleSelection;
+        switch(exportOption) {
+            case "opt1":
+                exportBasePath = script.toNativeDirSeparators(script.currentNoteFolderPath());
+                exportBaseFolder = (defaultExportFolder == "") ? "export" : defaultExportFolder;
+                break;
+            case "opt2":
+                exportBasePath = script.toNativeDirSeparators(defaultExportPath);
+                var p = script.currentNoteFolderPath().split('/')
+                exportBaseFolder = p[p.length-1];
+                break;
+            default:
+                return;
+		}
+        
+        isWin ? mkDirInWindows(exportBasePath + sep + exportBaseFolder) : mkDirInLinux(exportBasePath + sep + exportBaseFolder);
 
         var noteIds = script.fetchNoteIdsByNoteTextPart("");
 
         noteIds.forEach(function (noteId) {
             var note = script.fetchNoteById(noteId);
             var path = script.currentNoteFolderPath();
-            var subFolder = getSubFolder(note, path);
+            var subFolder = isWin ? getSubFolderInWindows(note, path) : getSubFolderInLinux(note, path);
             var noteName = note.name;
             var sep = script.dirSeparator();
-            var exportFolder = path + sep + "export" + sep + subFolder;
-            script.startSynchronousProcess("mkdir", ["-p", exportFolder]);
+            var exportFolder = script.toNativeDirSeparators(exportBasePath + sep + exportBaseFolder + sep + subFolder);
+            isWin ? mkDirInWindows(exportFolder) : mkDirInLinux(exportFolder);
             var exportPath = exportFolder + sep + noteName + ".html";
+            
             var noteHtml = note.toMarkdownHtml();
             var titleMatch = noteHtml.match(/<h1>(.*)<\/h1>/);
             var noteTitle = noteName;
