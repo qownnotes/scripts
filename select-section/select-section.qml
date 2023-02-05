@@ -18,7 +18,6 @@ QtObject {
 
         // Get positions (cursor and beginning of current line)
         var currentPos = script.noteTextEditCursorPosition();
-        //script.log("pos "+currentPos);
         var noteText = script.currentNote().noteText;
 
         var startOfLine = -1;
@@ -60,7 +59,6 @@ QtObject {
             // so get to proper position EOF
             var nextSectionOffset = noteText.length
 
-        //script.log("next :" + nextSectionOffset);
         // Select the text of the current section
         script.noteTextEditSetSelection(startOfLine,nextSectionOffset);
 
