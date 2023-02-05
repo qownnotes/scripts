@@ -1,7 +1,7 @@
 {
   "name": "Select Current Section",
-  "identifier": "select_section",
-  "script": "select_section.qml",
+  "identifier": "select-section",
+  "script": "select-section.qml",
   "authors": ["@Beurt"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
