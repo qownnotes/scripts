@@ -68,6 +68,9 @@ QtObject {
             return;
         }
 
+        let noteTextEditSelectionStart = script.noteTextEditSelectionStart();
+        let noteTextEditSelectionEnd = script.noteTextEditSelectionEnd();
+
         // Get selected lines.
         var text = script.noteTextEditSelectedText();
 
@@ -155,5 +158,8 @@ QtObject {
         // TODO: select the inserted content (for true 'cycling'):
         //  - [x] single line
         //  - [ ] multiple line: how?
+
+        // Restore selection
+        script.noteTextEditSetSelection(noteTextEditSelectionStart, noteTextEditSelectionEnd);
     }
 }
