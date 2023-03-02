@@ -2,9 +2,9 @@
   "name": "Text Highlights",
   "identifier": "text-highlights",
   "script": "text-highlights.qml",
-  "authors": ["@mleo2003", "@ryliejamesthomas"],
+  "authors": ["@mleo2003", "@ryliejamesthomas", "@Beurt"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.4",
-  "minAppVersion": "20.6.0",
-  "description" : "Provide a way to highlight text in markdown and render it as some other markdown viewers do. Uses ==text== syntax, and the color shown is configurable."
+  "version": "0.0.5",
+  "minAppVersion": "22.4.1",
+  "description" : "Provide a way to highlight text in markdown and render it as some other markdown viewers do. Uses ==text== syntax, and the color shown in the preview, and the style in the editor are configurable."
 }
