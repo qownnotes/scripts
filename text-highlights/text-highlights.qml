@@ -83,9 +83,9 @@ QtObject {
 	function init() {
 		script.registerCustomAction("addHighlights", "Add Highlight Marks", "Add Highlights", "text-wrap");
 		if (styleInEditor) {
-			script.addHighlightingRule("(==)([^=]*)?==", "", 24, 1, -1);
-			script.addHighlightingRule("==([^=]*)?(==)", "", 24, 2, -1);
-			script.addHighlightingRule("==([^=]*)?==", "", parseInt(styleForEditor), 1, -1);
+			script.addHighlightingRule("(==)([^=]+)==", "",24, 1, -1);
+			script.addHighlightingRule("==([^=]+)(==)", "",24, 2, -1);
+			script.addHighlightingRule("==([^=]+)==", "", parseInt(styleForEditor), 1, -1);
 		}
 	}
 
