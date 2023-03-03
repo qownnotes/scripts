@@ -1,0 +1,10 @@
+{
+  "name": "Frontmatter Headline Note Template",
+  "identifier": "frontmatter-headline-note-template",
+  "script": "frontmatter-headline-note-template.qml",
+  "authors": ["@Beurt"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "23.3.0",
+  "description" : "New notes will be created with a frontmatter containing the note title/name as headline instead of Markdown tile (with `#` or `===`. More about Frontmatters: https://daily-dev-tips.com/posts/what-exactly-is-frontmatter/)"
+}
