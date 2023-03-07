@@ -47,24 +47,24 @@ QtObject {
 			},
 		{
 			"identifier": "styleForTagName",
-			"name": "Highlight style for HTML tags names",
-			"description": "Please select a style for the highlight for the HTML tags names",
+			"name": "Highlight style for HTML tag names",
+			"description": "Please select a style for the highlight for the HTML tag names",
 			"type": "selection",
 			"default": "11",
 			"items": qownStyles
 		},
 		{
 			"identifier": "styleForAttrName",
-			"name": "Highlight style for HTML attributes names",
-			"description": "Please select a style for the highlight for the HTML attributes names",
+			"name": "Highlight style for HTML attribute names",
+			"description": "Please select a style for the highlight for the HTML attribute names",
 			"type": "selection",
 			"default": "7",
 			"items": qownStyles
 		},
 		{
 			"identifier": "styleForAttr",
-			"name": "Highlight style for HTML attributes values",
-			"description": "Please select a style for the highlight for the HTML attributes values",
+			"name": "Highlight style for HTML attribute values",
+			"description": "Please select a style for the highlight for the HTML attribute values",
 			"type": "selection",
 			"default": "11",
 			"items": qownStyles
