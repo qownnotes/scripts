@@ -1,7 +1,7 @@
 {
   "name": "Highlight specific characters in the editor",
-  "identifier": "characters-highlights",
-  "script": "characters-highlights.qml",
+  "identifier": "characters-highlight",
+  "script": "characters-highlight.qml",
   "authors": ["@Beurt"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
