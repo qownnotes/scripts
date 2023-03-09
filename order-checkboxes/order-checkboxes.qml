@@ -2,7 +2,7 @@ import QtQml 2.0
 import com.qownnotes.noteapi 1.0
 
 // TODO:
-// - make it work without the need to start with a toplevel element
+// - make work with \r\n as well as \n
 // - make the order configurable
 // - add more checkbox types
 
@@ -88,18 +88,23 @@ QtObject {
             return;
         }
 
+        // Get values for restoration of selection later.
         const noteTextEditSelectionStart = script.noteTextEditSelectionStart();
         const noteTextEditSelectionEnd = script.noteTextEditSelectionEnd();
 
         // Text -> structured.
         let structured = [];
-        input
-            .split('\n')
-            .forEach((row) => {
-                if (row.trim() !== '') {
-                    addItemToLevel(structured, row);
-                }
-            });
+        const rows = input.split('\n').filter((row) => row.trim() !== '');
+        if (rows.length < 1) return;
+
+        // Support ordering just sublevel checkbox lists.
+        const toplevelIndentation = rows[0].substring(0, rows[0].indexOf('-'));
+
+        rows.forEach((row) => {
+            // Remove toplevelIndentation from each row before further processing.
+            row = row.replace(toplevelIndentation, '');
+            addItemToLevel(structured, row);
+        });
 
         // Sort structured.
         let structured_sorted = sortLevel(structured);
@@ -174,7 +179,9 @@ QtObject {
 
         function unfold(out, prefix) {
             out.forEach((item) => {
-                text_sorted = text_sorted + prefix + item.txt + '\n';
+                // Create output text by adding toplevelIndentation and the level of indentation needed for this level.
+                text_sorted = text_sorted + toplevelIndentation + prefix + item.txt + '\n';
+
                 // In case of a sublevel, add indent and recurse.
                 if (item.hasOwnProperty('sub')) {
                     unfold(item.sub, prefix + singleIndentation);
