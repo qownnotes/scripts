@@ -2,7 +2,6 @@ import QtQml 2.0
 import com.qownnotes.noteapi 1.0
 
 // TODO:
-// - make work with \r\n as well as \n
 // - make the order configurable
 // - add more checkbox types
 
@@ -18,6 +17,7 @@ QtObject {
     property bool qonSettingEditorUseTabIndent;
     property int qonSettingEditorIndentSize;
     property string singleIndentation;
+    property string lineEnding;
 
     property variant settingsVariables: [
         {
@@ -49,6 +49,13 @@ QtObject {
             false, /* hideButtonInToolbar */
             false /* useInNoteListContextMenu */
         );
+
+        // Determine line ending.
+        if (script.platformIsWindows() && !script.getApplicationSettingsVariable("useUNIXNewline")) {
+            lineEnding = '\r\n';
+        } else {
+            lineEnding = '\n';
+        }
 
         // Get the indentation setting.
         qonSettingEditorUseTabIndent = script.getApplicationSettingsVariable("Editor/useTabIndent");
@@ -94,7 +101,7 @@ QtObject {
 
         // Text -> structured.
         let structured = [];
-        const rows = input.split('\n').filter((row) => row.trim() !== '');
+        const rows = input.split(lineEnding).filter((row) => row.trim() !== '');
         if (rows.length < 1) return;
 
         // Support ordering just sublevel checkbox lists.
@@ -180,7 +187,7 @@ QtObject {
         function unfold(out, prefix) {
             out.forEach((item) => {
                 // Create output text by adding toplevelIndentation and the level of indentation needed for this level.
-                text_sorted = text_sorted + toplevelIndentation + prefix + item.txt + '\n';
+                text_sorted = text_sorted + toplevelIndentation + prefix + item.txt + lineEnding;
 
                 // In case of a sublevel, add indent and recurse.
                 if (item.hasOwnProperty('sub')) {
