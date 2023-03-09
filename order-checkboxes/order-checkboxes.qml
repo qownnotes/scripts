@@ -3,9 +3,8 @@ import com.qownnotes.noteapi 1.0
 
 // TODO:
 // - make it work without the need to start with a toplevel element
-// - make it work with different types of indentation styles (spaces)
 // - make the order configurable
-// - add more checkbox tyes
+// - add more checkbox types
 
 /**
  * This script creates a menu item and a button to order checkboxes.
@@ -16,6 +15,9 @@ import com.qownnotes.noteapi 1.0
 QtObject {
     property bool reverseOrder;
     property bool keepSelection;
+    property bool qonSettingEditorUseTabIndent;
+    property int qonSettingEditorIndentSize;
+    property string singleIndentation;
 
     property variant settingsVariables: [
         {
@@ -47,6 +49,21 @@ QtObject {
             false, /* hideButtonInToolbar */
             false /* useInNoteListContextMenu */
         );
+
+        // Get the indentation setting.
+        qonSettingEditorUseTabIndent = script.getApplicationSettingsVariable("Editor/useTabIndent");
+        qonSettingEditorIndentSize = script.getApplicationSettingsVariable("Editor/indentSize");
+
+        // Determine the single indentation char(s).
+        if (qonSettingEditorUseTabIndent) {
+            singleIndentation = '\t';
+        } else {
+            singleIndentation = ' '.repeat(qonSettingEditorIndentSize);
+        }
+
+        script.log('order-checkboxes.init() qonSettingEditorUseTabIndent: ' + qonSettingEditorUseTabIndent);
+        script.log('order-checkboxes.init() qonSettingEditorIndentSize: ' + qonSettingEditorIndentSize);
+        script.log('order-checkboxes.init() singleIndentation.length: ' + singleIndentation.length.toString());
     }
 
     /**
@@ -111,12 +128,12 @@ QtObject {
                 }
 
                 // Remove the first indentation and recurse.
-                row = row.replace('\t', '');
+                row = row.replace(singleIndentation, '');
                 addItemToLevel(last(level).sub, row);
             }
 
             function isTopLevel(row) {
-                return !(row.startsWith(' ') || row.startsWith('\t'));
+                return !row.startsWith(singleIndentation);
             }
 
             function last(level) {
@@ -160,7 +177,7 @@ QtObject {
                 text_sorted = text_sorted + prefix + item.txt + '\n';
                 // In case of a sublevel, add indent and recurse.
                 if (item.hasOwnProperty('sub')) {
-                    unfold(item.sub, prefix + '\t');
+                    unfold(item.sub, prefix + singleIndentation);
                 }
             });
         }
