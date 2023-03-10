@@ -2,10 +2,8 @@ import QtQml 2.0
 import com.qownnotes.noteapi 1.0
 
 // TODO:
-// - make it work without the need to start with a toplevel element
-// - make it work with different types of indentation styles (spaces)
 // - make the order configurable
-// - add more checkbox tyes
+// - add more checkbox types
 
 /**
  * This script creates a menu item and a button to order checkboxes.
@@ -16,6 +14,10 @@ import com.qownnotes.noteapi 1.0
 QtObject {
     property bool reverseOrder;
     property bool keepSelection;
+    property bool qonSettingEditorUseTabIndent;
+    property int qonSettingEditorIndentSize;
+    property string singleIndentation;
+    property string lineEnding;
 
     property variant settingsVariables: [
         {
@@ -47,6 +49,28 @@ QtObject {
             false, /* hideButtonInToolbar */
             false /* useInNoteListContextMenu */
         );
+
+        // Determine line ending.
+        if (script.platformIsWindows() && !script.getApplicationSettingsVariable("useUNIXNewline")) {
+            lineEnding = '\r\n';
+        } else {
+            lineEnding = '\n';
+        }
+
+        // Get the indentation setting.
+        qonSettingEditorUseTabIndent = script.getApplicationSettingsVariable("Editor/useTabIndent");
+        qonSettingEditorIndentSize = script.getApplicationSettingsVariable("Editor/indentSize");
+
+        // Determine the single indentation char(s).
+        if (qonSettingEditorUseTabIndent) {
+            singleIndentation = '\t';
+        } else {
+            singleIndentation = ' '.repeat(qonSettingEditorIndentSize);
+        }
+
+        script.log('order-checkboxes.init() qonSettingEditorUseTabIndent: ' + qonSettingEditorUseTabIndent);
+        script.log('order-checkboxes.init() qonSettingEditorIndentSize: ' + qonSettingEditorIndentSize);
+        script.log('order-checkboxes.init() singleIndentation.length: ' + singleIndentation.length.toString());
     }
 
     /**
@@ -71,18 +95,23 @@ QtObject {
             return;
         }
 
+        // Get values for restoration of selection later.
         const noteTextEditSelectionStart = script.noteTextEditSelectionStart();
         const noteTextEditSelectionEnd = script.noteTextEditSelectionEnd();
 
         // Text -> structured.
         let structured = [];
-        input
-            .split('\n')
-            .forEach((row) => {
-                if (row.trim() !== '') {
-                    addItemToLevel(structured, row);
-                }
-            });
+        const rows = input.split(lineEnding).filter((row) => row.trim() !== '');
+        if (rows.length < 1) return;
+
+        // Support ordering just sublevel checkbox lists.
+        const toplevelIndentation = rows[0].substring(0, rows[0].indexOf('-'));
+
+        rows.forEach((row) => {
+            // Remove toplevelIndentation from each row before further processing.
+            row = row.replace(toplevelIndentation, '');
+            addItemToLevel(structured, row);
+        });
 
         // Sort structured.
         let structured_sorted = sortLevel(structured);
@@ -111,12 +140,12 @@ QtObject {
                 }
 
                 // Remove the first indentation and recurse.
-                row = row.replace('\t', '');
+                row = row.replace(singleIndentation, '');
                 addItemToLevel(last(level).sub, row);
             }
 
             function isTopLevel(row) {
-                return !(row.startsWith(' ') || row.startsWith('\t'));
+                return !row.startsWith(singleIndentation);
             }
 
             function last(level) {
@@ -157,10 +186,12 @@ QtObject {
 
         function unfold(out, prefix) {
             out.forEach((item) => {
-                text_sorted = text_sorted + prefix + item.txt + '\n';
+                // Create output text by adding toplevelIndentation and the level of indentation needed for this level.
+                text_sorted = text_sorted + toplevelIndentation + prefix + item.txt + lineEnding;
+
                 // In case of a sublevel, add indent and recurse.
                 if (item.hasOwnProperty('sub')) {
-                    unfold(item.sub, prefix + '\t');
+                    unfold(item.sub, prefix + singleIndentation);
                 }
             });
         }
