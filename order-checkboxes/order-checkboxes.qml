@@ -14,7 +14,6 @@ import com.qownnotes.noteapi 1.0
 QtObject {
     property bool reverseOrder;
     property bool keepSelection;
-    property bool qonSettingEditorUseTabIndent;
     property int qonSettingEditorIndentSize;
     property string singleIndentation;
     property string lineEnding;
@@ -58,7 +57,7 @@ QtObject {
         }
 
         // Get the indentation setting.
-        qonSettingEditorUseTabIndent = script.getApplicationSettingsVariable("Editor/useTabIndent");
+        let qonSettingEditorUseTabIndent = script.getApplicationSettingsVariable("Editor/useTabIndent");
         qonSettingEditorIndentSize = script.getApplicationSettingsVariable("Editor/indentSize");
 
         // Determine the single indentation char(s).
