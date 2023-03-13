@@ -2,7 +2,7 @@
   "name": "Order checkboxes",
   "identifier": "order-checkboxes",
   "script": "order-checkboxes.qml",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "minAppVersion": "19.3.2",
   "authors": ["@sanderboom"],
   "description" : "This script creates a menu item and a button to order checkboxes. Selected lines containing checkboxes will be ordered as follows: <code>[x]</code> checked -> <code>[-]</code> disabled -> <code>[ ]</code> unchecked. Pro tip: assign a shortcut.<br><br>Note: currently only works with <code>tab</code> as indentation character."
