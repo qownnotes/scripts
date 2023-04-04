@@ -1,0 +1,9 @@
+{
+  "name": "Support for Zotero",
+  "identifier": "zotero",
+  "script": "zotero.qml",
+  "authors": ["@Beurt"],
+  "version": "0.0.1",
+  "minAppVersion": "23.4.0",
+  "description" : "Very rudimentary script meant to insert Zotero citations in Markdown.\n\nCitations use the Pandoc format (e.g. `<i>[@something1971]</i>`). So, the Citations will be properly converted with the rest of the Markdown thanks to Pandoc.\n\nThe script has dependencies:\n\n- <a href=\"https://www.zotero.org\">Zotero</a> must be installed and running with the <a href=\"https://retorque.re/zotero-better-bibtex/\">Better Bibtex Extension</a>\n- <a href=\"https://curl.se/\">Curl</a> must be available in the path (it should be the case is you are using a Unix OS)\n\nIf you need more options, you can open an issue on <a href=\"https://github.com/qownnotes/scripts/issues\">QOwnNotes Scripts Forge</a>"
+}
