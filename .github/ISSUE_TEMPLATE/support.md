@@ -1,3 +1,12 @@
+---
+name: Question / Support
+about: What do you want to ask?
+title: "[SUPPORT] "
+labels: 'Type: Support'
+assignees: ''
+
+---
+
 <!--
 If you are able to open the application the best way gather all needed
 information and post questions, feature requests or issues is to use
@@ -16,16 +25,12 @@ You will find the authors in the *Script repository*.
 
 #### Script authors
 
-#### Expected behaviour
-
-#### Actual behaviour
-
-#### Steps to reproduce
+#### Question
 
 #### Output from the debug section in the settings dialog
 
 #### Relevant log output in the Log panel
 
-<!-- You have to enable enable the Log panel in the Windows menu! -->
+<!-- You have to enable the Log panel in the Windows menu! -->
 <!-- Please also enable debug output in the options of panel. -->
 <!-- Alternatively you can also turn on a log file in the settings. -->

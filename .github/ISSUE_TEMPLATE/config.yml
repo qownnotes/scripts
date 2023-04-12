@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: QOwnNotes issues or feature requests
+    url: https://github.com/pbek/QOwnNotes/issues
+    about: If your request is not about a script itself, but about QOwnNotes, please use this link.
+  - name: QOwnNotes website
+    url: https://www.qownnotes.org/
+    about: Click on the "Contact" link on the website for all the ways to get in touch.
