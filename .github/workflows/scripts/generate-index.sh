@@ -3,6 +3,8 @@
 # Generate index of all script metadata
 #
 
+set -euo pipefail
+
 TMP_FILE_NAME=/tmp/temp.json
 RESULT_FILE_NAME=index.json
 
