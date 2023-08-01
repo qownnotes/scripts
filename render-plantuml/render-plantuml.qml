@@ -39,7 +39,7 @@ QtObject {
             "identifier": "workDir",
             "name": "Working directory",
             "description": "Please enter a path to be used as working directory i.e. temporary directory for file creation:",
-            "type": "file",
+            "type": "directory",
             "default": ""
         },
         {
