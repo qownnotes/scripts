@@ -39,7 +39,7 @@ QtObject {
             "identifier": "workDir",
             "name": "Working directory",
             "description": "Please enter a path to be used as working directory i.e. temporary directory for file creation:",
-            "type": "file",
+            "type": "directory",
             "default": ""
         },
         {
@@ -58,10 +58,11 @@ QtObject {
         },
         {
             "identifier": "svgOrPng",
-            "name": "SVG output format (default: PNG)",
-            "description": "Enable if you want to use SVG as output format instead of the default PNG format",
-            "type": "boolean",
-            "default": false
+            "name": "Image output format (default: PNG)",
+            "description": "Please select a format:",
+            "type": "selection",
+            "default": "png",
+            "items": {"png": "png", "svg": "svg"},
         },
         {
             "identifier": "additionalParams",
@@ -71,7 +72,7 @@ QtObject {
             "default": ""
         }
     ];
-    
+
 	function init() {
 		script.registerCustomAction("insertPumlDiagram", "PUML: insert Diagram", "", "",1);
 		script.registerCustomAction("insertPumlGraphviz", "PUML: insert Graphviz Diagram", "", "",1);
@@ -142,7 +143,7 @@ QtObject {
 			break;
 		}
 	}
-	
+
     function extractPlantUmlText(html, plantumlSectionRegex, note) {
         var plantumlFiles = [];
         var diagramsToGenerate = [];
@@ -199,7 +200,7 @@ QtObject {
         var params = [
                 "-jar", plantumlJarPath,
                 "-o", script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir")),
-                "-t" + script.getPersistentVariable("renderPlantUML/svgOrPng"),
+                "-t" + svgOrPng,
                 additionalParams
                 ].concat(plantumlFiles);
         var result = script.startDetachedProcess(
@@ -215,7 +216,7 @@ QtObject {
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
         var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
-            var imgElement = "<div><img src=\"file:///" + plantumlFiles[index++] + "." + script.getPersistentVariable("renderPlantUML/svgOrPng") + "?t=" + +(new Date()) + "\" alt=\"Generated Diagram\"/></div>";
+            var imgElement = "<div><img src=\"file:///" + plantumlFiles[index++] + "." + svgOrPng + "?t=" + +(new Date()) + "\" alt=\"Generated Diagram\"/></div>";
 
             if (hideMarkup == "true") {
                 return imgElement;
@@ -231,7 +232,7 @@ QtObject {
     // and verify if it is the same
     function isCached(filePath,newContent) {
         var cached = "notCached";
-        if(script.fileExists(filePath) && script.fileExists(filePath + "." + script.getPersistentVariable("renderPlantUML/svgOrPng"))){
+        if(script.fileExists(filePath) && script.fileExists(filePath + "." + svgOrPng)){
             var oldContent = script.readFromFile(filePath);
             if (Qt.md5(oldContent) == Qt.md5(newContent))
                 cached = "cached";
@@ -276,7 +277,6 @@ QtObject {
 
         var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
         script.setPersistentVariable("renderPlantUML/workDir", workDir ? workDir: script.cacheDir("render-plantuml"));
-        script.setPersistentVariable("renderPlantUML/svgOrPng", svgOrPng ? "svg":"png");
         script.setPersistentVariable("renderPlantUML/noteId", note.id);
 
         var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
