@@ -147,10 +147,15 @@ QtObject {
             script.createNote(headline + "\n====================\n\n" + noteBodyTemplate);
             const currentNote = script.currentNote();
 
-            // rename the note file if needed
+            // Rename the note file if needed
             if (currentNote.allowDifferentFileName()) {
                 currentNote.renameNoteFile(headline);
+
+                // Reload note list
                 mainWindow.buildNotesIndexAndLoadNoteDirectoryList(false, true);
+                
+                // Reload window title
+                mainWindow.reloadCurrentNoteByNoteId();
             }
 
             // Default tags.
