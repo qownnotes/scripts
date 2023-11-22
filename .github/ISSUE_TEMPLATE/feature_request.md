@@ -15,6 +15,7 @@ the issue assistant in the "Help menu"!
 The menu entry is named "Post questions, feature requests or issues".
 
 Please mention the name and author(s) of the script, so they are able to respond.
+Don't forget to use the `@` symbol in-front of the names, like `@pbek`, so they get notified!
 You will find the authors in the *Script repository*.
 -->
 
