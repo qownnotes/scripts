@@ -120,29 +120,29 @@ QtObject {
             if (multipleLinesMethod === 'synchronizeChecked' && mixedStatesPresent) {
                 lines[i] = lines[i].replace(/- \[( |x|X)\] /, checkboxCharacter);
             }
-            // Default: cylce-all-lines-mode.
+            // Default: cycle-all-lines-mode.
             else {
                 script.log('Scenario: cycle-all-lines');
 
                 // Toggle unchecked to checked.
-                if (lines[i].match(/- \[ \] /)) {
+                if (lines[i].match(/^- \[ \] /)) {
                     script.log('Convert unchecked to checked');
                     lines[i] = lines[i].replace(/- \[ \] /, CHECKED);
                 }
                 // Toggle checked to disabled.
-                else if (lines[i].match(/- \[(x|X)\] /)) {
+                else if (lines[i].match(/^- \[(x|X)\] /)) {
                     script.log('Convert checked to disabled');
                     lines[i] = lines[i].replace(/- \[(x|X)\] /, DISABLED);
                 }
                 // Toggle disabled to unchecked.
-                else if (lines[i].match(/- \[-\] /)) {
+                else if (lines[i].match(/^- \[-\] /)) {
                     script.log('Convert disabled to unchecked');
                     lines[i] = lines[i].replace(/- \[-\] /, UNCHECKED);
                 }
                 // Convert plain list lines (-, *, +) to unchecked checkboxes lines.
-                else if (!onlyTouchCheckboxes && lines[i].match(/(-|\*|\+) /)) {
+                else if (!onlyTouchCheckboxes && lines[i].match(/^(-|\*|\+) /)) {
                     script.log('Convert plain list to unchecked');
-                    lines[i] = lines[i].replace(/(-|\*|\+) /, UNCHECKED);
+                    lines[i] = lines[i].replace(/^(-|\*|\+) /, UNCHECKED);
                 }
                 // Add checkboxes when unpresent (empty lines are skipped).
                 else if (!onlyTouchCheckboxes) {
