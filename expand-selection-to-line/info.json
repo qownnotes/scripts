@@ -1,0 +1,10 @@
+{
+  "name": "Expand selection to line",
+  "identifier": "expand-selection-to-line",
+  "script": "expand-selection-to-line.qml",
+  "authors": ["@eduardo-architect"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "17.05.8",
+  "description" : "Minimal script, that expands selection to the current line."
+} 
