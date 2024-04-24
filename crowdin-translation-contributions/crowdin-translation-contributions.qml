@@ -69,7 +69,7 @@ QtObject {
 //                 script.log(allLanguages);
 
                 if (allNames.length > 0) {
-                    var message = '- Added more ' + allLanguages.join(', ') + ' translation (thank you ' + allNames.join(', ') + ')\n';
+                    var message = '- Added more ' + allLanguages.join(', ') + ' translation (thank you, ' + allNames.join(', ') + ')\n';
                     script.log(message);
                     script.noteTextEditWrite(message);
                 }
