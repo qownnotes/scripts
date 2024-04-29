@@ -53,7 +53,7 @@ QtObject {
             for (var i = 0; i < backlinks.length; i++) {
                 var backlinkPath = backlinks[i]["p"];
                 var backlinkTitle = backlinks[i]["t"];
-                out += "    <li><a href=\"file://" + backlinkPath + "\">" + backlinkTitle + "</a></li>\n";
+                out += "    <li><a href=\"file://" + backlinkPath + "\" title=\"" + backlinkPath + "\">" + backlinkTitle + "</a></li>\n";
             }
             out += "</ul>\n";
         }
