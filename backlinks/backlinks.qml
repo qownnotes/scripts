@@ -6,6 +6,7 @@ QtObject {
     property string backlinksHtml
     property bool triggerOnPreview
     property string dirSep
+    property bool useAtxHeadings;
 
     property variant settingsVariables: [
         {
@@ -15,6 +16,13 @@ QtObject {
             "type": "boolean",
             "default": false,
         },
+        {
+            "identifier": "useAtxHeadings",
+            "name": "Use ATX headings",
+            "description": "Use ATX-style Markdown headings (uncheck if using Setext-style)",
+            "type": "boolean",
+            "default": true,
+        }
     ];
 
     function getSubFolder(note, path) {
@@ -83,10 +91,9 @@ QtObject {
                 }
                 if (isBacklink == true) {
                     var fullPath = pageObj.fullNoteFilePath;
-                    var title = "";
-                    var titleMatch = text.match(/^# (.*)/);
-                    if (titleMatch) {
-                        title = titleMatch[1];
+                    var title = text.split("\n")[0];
+                    if (useAtxHeadings) {
+                        title = title.replace(/^# /, "");
                     }
                     var backlinkObj = {"p":fullPath, "t":title};
                     backlinks.push(backlinkObj);
