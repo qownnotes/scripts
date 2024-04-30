@@ -6,5 +6,5 @@
   "platforms": ["windows"],
   "version": "0.0.1",
   "minAppVersion": "24.3.4",
-  "description" : "This script replaces a selected CSV block in your note with corresponding Markdown.\nSelected CSV text block can have any delimiter char or string.\nSelected CSV text block can start with a header row or not."
+  "description" : "This script replaces a selected CSV block in your note with corresponding Markdown.\nAfter selecting the CSV text and activating the custom menu action a dialog requesting the delimiter character appears.\nUser can select ',' (comma), ';' (semicolon), 'TAB' (tabulation character) or 'Other'.\nIf 'Other' is selected on this dialog, another dialog appears asking to input a custom string.\nAfter the delimiter selection another dialog pops up asking if the first row contains headers or if the table starts directly with data.\n## Limitations of version 0.1\n- User input is not sanitized in the custom delimiter dialog, so use it properly and at your own risk.\n- Quoting is ignored, so if you have your data surrounded by quotes it will show as it is."
 }
