@@ -1,0 +1,10 @@
+{
+  "name": "Replace CSV with MD Table",
+  "identifier": "csv-2-md",
+  "script": "csv-2-md.qml",
+  "authors": ["@77nnit"],
+  "platforms": ["windows"],
+  "version": "0.0.1",
+  "minAppVersion": "24.3.4",
+  "description" : "This script replaces a selected CSV block in your note with corresponding Markdown.\nSelected CSV text block can have any delimiter char or string.\nSelected CSV text block can start with a header row or not."
+}
