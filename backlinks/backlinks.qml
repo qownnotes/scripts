@@ -25,13 +25,6 @@ QtObject {
         }
     ];
 
-    function getSubFolder(note, path) {
-        var fileName = note.fullNoteFilePath;
-        var pathRe = new RegExp(path + dirSep + "((.*)" + dirSep + ")*.*");
-        var subfolderName = fileName.replace(pathRe, "$2");
-        return subfolderName;
-    }
-
     function normalizeText(text) {
         return text.toLowerCase().replace(/[\-\s_]/g, "").replace(/\[\[([^\]]+)\|[^\]]+\]\]/g, "[[$1]]");
     }
@@ -52,6 +45,9 @@ QtObject {
             out += "<h2>Backlinks</h2>\n\n<ul>\n";
             for (var i = 0; i < backlinks.length; i++) {
                 var backlinkPath = backlinks[i]["p"];
+                if (script.platformIsWindows()) {
+                    backlinkPath = "/" + backlinkPath;
+                }
                 var backlinkTitle = backlinks[i]["t"];
                 out += "    <li><a href=\"file://" + backlinkPath + "\" title=\"" + backlinkPath + "\">" + backlinkTitle + "</a></li>\n";
             }
@@ -62,9 +58,12 @@ QtObject {
 
     function getBacklinks(note) {
         var noteName = note.name;
-        var path = script.currentNoteFolderPath();
-        var subfolderName = getSubFolder(note, path);
+        var subfolderName = note.relativeNoteFileDirPath;
         var nameNormalized = normalizeText(noteName);
+        /* Does not work on Windows
+        dirSep = script.dirSeparator();
+        */
+        dirSep = "\/";
 
         var noteIds = script.fetchNoteIdsByNoteTextPart("");
         var backlinks = [];
@@ -72,7 +71,7 @@ QtObject {
         noteIds.forEach(function (pageId){
             var pageObj = script.fetchNoteById(pageId);
             var basename = pageObj.name;
-            var pageGroup = getSubFolder(pageObj, path);
+            var pageGroup = pageObj.relativeNoteFileDirPath;
             var text = pageObj.noteText;
             if (/\[\[.*\]\]/.test(text)) {
                 var normalizedText = normalizeText(text);
