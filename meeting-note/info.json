@@ -3,7 +3,7 @@
   "identifier": "meeting-note",
   "script": "meeting-note.qml",
   "authors": ["@pbek", "@sanderboom", "@wiktor2200"],
-  "version": "1.4.1",
+  "version": "1.4.2",
   "minAppVersion": "20.4.16",
-  "description" : "This script creates a menu item and a button to create or jump to the current date's meeting note."
+  "description": "This script creates a menu item and a button to create or jump to the current date's meeting note."
 }
