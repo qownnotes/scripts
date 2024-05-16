@@ -93,7 +93,10 @@ QtObject {
                 "Date string", "Please enter the date string", dateString);
         }
 
-        var headline = headlinePrefix + " " + dateString;
+        var headline = dateString
+        if (headlinePrefix != '') {
+            headline = headlinePrefix + " " + headline;
+        }
 
         if (timeInNoteName) {
             headline = headline + "T" + ("0" + m.getHours()).slice(-2) + "." + ("0" + m.getMinutes()).slice(-2);
@@ -153,7 +156,7 @@ QtObject {
 
                 // Reload note list
                 mainWindow.buildNotesIndexAndLoadNoteDirectoryList(false, true);
-                
+
                 // Reload window title
                 mainWindow.reloadCurrentNoteByNoteId();
             }
