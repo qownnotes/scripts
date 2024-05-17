@@ -1,7 +1,7 @@
 {
-  "name": "AI Autocomplete",
-  "identifier": "ai-autocomplete",
-  "script": "ai-autocomplete.qml",
+  "name": "AI Autocompletion",
+  "identifier": "ai-autocompletion",
+  "script": "ai-autocompletion.qml",
   "authors": ["@pbek"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
