@@ -1,0 +1,10 @@
+{
+  "name": "AI Text Tool",
+  "identifier": "ai-text-tool",
+  "script": "ai-text-tool.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "24.5.3",
+  "description" : "This script allows some options to use the AI completer to replace the selected text."
+}
