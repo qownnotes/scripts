@@ -24,9 +24,8 @@ Script {
         }
 
         const options = ["Translate selection to English", "Summarize selected text to 3 sentences", "Fix typos in selection"];
-        const dialogResult = script.inputDialogGetItem(
+        let dialogResult = script.inputDialogGetItem(
             "AI Text Tool", "Please select an action", options, 0, false);
-        script.log(dialogResult);
         let aiPrompt = "";
 
         const text = script.noteTextEditSelectedText();
@@ -38,13 +37,21 @@ Script {
                 aiPrompt = "Summarize text to 3 sentences";
                 break;
             case options[2]:
-                aiPrompt = "Fix typos and correct grammatical errors for a polished script";
+                aiPrompt = "Fix typos and correct grammatical errors, only return the corrected text";
                 break;
             default:
                 return;
         }
 
-        const aiResult = script.aiComplete(aiPrompt + ": " + text);
+        const aiResult = script.aiComplete(aiPrompt + ":\n\n" + text);
+
+        dialogResult = script.inputDialogGetItem(
+            "AI Text Tool", "Resulting text", [aiResult], 0, true);
+
+        if (dialogResult === '') {
+            return;
+        }
+
         script.noteTextEditWrite(aiResult);
     }
 }
