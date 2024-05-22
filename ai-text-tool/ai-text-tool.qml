@@ -45,7 +45,7 @@ Script {
 
         const aiResult = script.aiComplete(aiPrompt + ":\n\n" + text);
 
-        dialogResult = script.inputDialogGetText("AI Text Tool", "Resulting text", aiResult);
+        dialogResult = script.inputDialogGetMultiLineText("AI Text Tool", "Resulting text", aiResult);
 
         if (dialogResult === '') {
             return;
