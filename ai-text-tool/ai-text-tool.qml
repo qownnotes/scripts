@@ -52,6 +52,6 @@ Script {
             return;
         }
 
-        script.noteTextEditWrite(aiResult);
+        script.noteTextEditWrite(dialogResult);
     }
 }
