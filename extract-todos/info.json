@@ -4,8 +4,8 @@
   "script": "extract-todos.qml",
   "authors": ["@jaschop-1k5o"],
   "platforms": ["linux"],
-  "version": "1.0",
+  "version": "1.1",
   "minAppVersion": "24.5.1",
-  "description" : "Continuously scan your note folder for open TODOs, and display them in the scripting panel.\n\nTODOs are identified according to Markdown syntax, by lines starting with `- [ ]`\nScanning can be restricted to a subfolder.\n(Note: Script uses `find` and `grep` in the background.)"
+  "description" : "Continuously scan your note folder for open TODOs, and display them in the scripting panel.\n\nTODOs are identified according to Markdown syntax, by lines starting with `- [ ]`\nScanning can be restricted to a subfolder.\n(Note: Script uses `find` and `cat` in the background.)"
 }
 
