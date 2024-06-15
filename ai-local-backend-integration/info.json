@@ -1,0 +1,9 @@
+{
+  "name": "Local AI backend integration",
+  "identifier": "ai-local-backend-integration",
+  "script": "ai-local-backend-integration.qml",
+  "version": "0.0.2",
+  "minAppVersion": "24.6.2",
+  "authors": ["@pbek"],
+  "description" : "This script provides integration for an OpenAI-compatible local AI backend like <a href=\"https://github.com/ollama/ollama\">Ollama</a> or <a href=\"https://github.com/ggerganov/llama.cpp\">llama-cpp</a>."
+}

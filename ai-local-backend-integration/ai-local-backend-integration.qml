@@ -2,9 +2,11 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 /**
- * This script provides integration for a local Ollama backend
+ * This script provides integration for a local AI backend
  * See: https://github.com/ollama/ollama
+ *      https://github.com/ggerganov/llama.cpp
  * List of models: https://github.com/ollama/ollama?tab=readme-ov-file#model-library
+ *                 https://github.com/ggerganov/llama.cpp#description
  * OpenAPI endpoint: https://ollama.com/blog/openai-compatibility or https://github.com/ollama/ollama/blob/main/docs/openai.md
  */
 Script {
@@ -16,9 +18,9 @@ Script {
         {
             "identifier": "baseUrl",
             "name": "API base URL",
-            "description": "The chat base URL of the Ollama API.",
+            "description": "The base URL of the local server.",
             "type": "string",
-            "default": "http://127.0.0.1:11434/v1/chat/completions",
+            "default": "http://127.0.0.1:11434",
         },
         {
             "identifier": "models",
@@ -36,10 +38,10 @@ Script {
     function openAiBackendsHook() {
         return [
             {
-                "id": "ollama",
-                "name": "Ollama",
-                "baseUrl": baseUrl,
-                "apiKey": "ollama",
+                "id": "local-ai",
+                "name": "Local AI",
+                "baseUrl": baseUrl + "/v1/chat/completions",
+                "apiKey": "local-ai",
                 "models": models.split(",")
             },
         ];
