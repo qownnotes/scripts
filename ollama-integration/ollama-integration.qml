@@ -5,7 +5,7 @@ import QOwnNotesTypes 1.0
  * This script provides integration for a local Ollama backend
  * See: https://github.com/ollama/ollama
  * List of models: https://github.com/ollama/ollama?tab=readme-ov-file#model-library
- * OpenAPI endpoint: https://ollama.com/blog/openai-compatibility
+ * OpenAPI endpoint: https://ollama.com/blog/openai-compatibility or https://github.com/ollama/ollama/blob/main/docs/openai.md
  */
 Script {
     property string baseUrl;
