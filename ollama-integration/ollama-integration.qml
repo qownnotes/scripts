@@ -5,6 +5,7 @@ import QOwnNotesTypes 1.0
  * This script provides integration for a local Ollama backend
  * See: https://github.com/ollama/ollama
  * List of models: https://github.com/ollama/ollama?tab=readme-ov-file#model-library
+ * OpenAPI endpoint: https://ollama.com/blog/openai-compatibility
  */
 Script {
     property string baseUrl;
@@ -17,7 +18,7 @@ Script {
             "name": "API base URL",
             "description": "The chat base URL of the Ollama API.",
             "type": "string",
-            "default": "http://127.0.0.1:11434/api/chat",
+            "default": "http://127.0.0.1:11434/v1/chat/completions",
         },
         {
             "identifier": "models",
