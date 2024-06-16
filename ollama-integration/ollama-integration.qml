@@ -39,7 +39,6 @@ Script {
                 "id": "ollama",
                 "name": "Ollama",
                 "baseUrl": baseUrl,
-                "apiKey": "ollama",
                 "models": models.split(",")
             },
         ];

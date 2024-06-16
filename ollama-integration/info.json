@@ -2,8 +2,8 @@
   "name": "Ollama integration",
   "identifier": "ollama-integration",
   "script": "ollama-integration.qml",
-  "version": "0.0.2",
-  "minAppVersion": "24.6.2",
+  "version": "0.0.3",
+  "minAppVersion": "24.6.3",
   "authors": ["@pbek"],
   "description" : "This script provides integration for a local <a href=\"https://github.com/ollama/ollama\">Ollama</a> AI backend."
 }

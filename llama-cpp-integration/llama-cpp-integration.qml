@@ -39,7 +39,6 @@ Script {
                 "id": "llama-cpp",
                 "name": "llama.cpp",
                 "baseUrl": baseUrl,
-                "apiKey": "llama-cpp",
                 "models": models.split(",")
             },
         ];
