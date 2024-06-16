@@ -1,5 +1,5 @@
 {
-  "name": "llama.cpp integration",
+  "name": "llama.cpp AI integration",
   "identifier": "llama-cpp-integration",
   "script": "llama-cpp-integration.qml",
   "version": "0.0.2",

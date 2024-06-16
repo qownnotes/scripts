@@ -1,5 +1,5 @@
 {
-  "name": "Ollama integration",
+  "name": "Ollama AI integration",
   "identifier": "ollama-integration",
   "script": "ollama-integration.qml",
   "version": "0.0.3",
