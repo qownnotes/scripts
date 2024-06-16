@@ -1,9 +1,9 @@
 {
-  "name": "llama-cpp integration",
+  "name": "llama.cpp integration",
   "identifier": "llama-cpp-integration",
   "script": "llama-cpp-integration.qml",
   "version": "0.0.1",
   "minAppVersion": "24.6.2",
   "authors": ["@pbek"],
-  "description" : "This script provides integration for a local <a href=\"https://github.com/ggerganov/llama.cpp\">llama-cpp</a> AI backend."
+  "description" : "This script provides integration for a local <a href=\"https://github.com/ggerganov/llama.cpp\">llama.cpp</a> AI backend."
 }

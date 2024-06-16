@@ -2,7 +2,7 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 /**
- * This script provides integration for a local llama-cpp backend
+ * This script provides integration for a local llama.cpp backend
  * See: https://github.com/ggerganov/llama.cpp
  * List of models: https://github.com/ggerganov/llama.cpp#description
  * OpenAPI endpoint: https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md#result-json-1
@@ -16,7 +16,7 @@ Script {
         {
             "identifier": "baseUrl",
             "name": "API base URL",
-            "description": "The chat base URL of the llama-cpp API.",
+            "description": "The chat base URL of the llama.cpp API.",
             "type": "string",
             "default": "http://127.0.0.1:8080/v1/chat/completions",
         },
@@ -37,7 +37,7 @@ Script {
         return [
             {
                 "id": "llama-cpp",
-                "name": "llama-cpp",
+                "name": "llama.cpp",
                 "baseUrl": baseUrl,
                 "apiKey": "llama-cpp",
                 "models": models.split(",")
