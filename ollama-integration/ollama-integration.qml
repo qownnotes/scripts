@@ -36,7 +36,7 @@ Script {
             return;
         }
 
-        const dataJson = JSON.parse();
+        const dataJson = JSON.parse(data);
         const modelNames = dataJson.models.map(model => model.model);
 
         if (modelNames.length > 0) {
