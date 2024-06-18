@@ -30,8 +30,14 @@ Script {
     ];
 
     function init() {
-        const data = JSON.parse(script.downloadUrlToString(this.apiBaseUrl + '/api/tags'));
-        const modelNames = data.models.map(model => model.model);
+        const data = script.downloadUrlToString(this.apiBaseUrl + '/api/tags')
+
+        if (data === '') {
+            return;
+        }
+
+        const dataJson = JSON.parse();
+        const modelNames = dataJson.models.map(model => model.model);
 
         if (modelNames.length > 0) {
             this.models = modelNames.join(',');
