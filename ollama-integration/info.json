@@ -2,8 +2,8 @@
   "name": "Ollama AI backend integration",
   "identifier": "ollama-integration",
   "script": "ollama-integration.qml",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "minAppVersion": "24.6.3",
   "authors": ["@pbek"],
-  "description" : "This script provides integration for a local <a href=\"https://github.com/ollama/ollama\">Ollama</a> AI backend."
+  "description" : "This script provides integration for a local <a href=\"https://github.com/ollama/ollama\">Ollama</a> AI backend. If the Ollama service is up, the installed models will be fetched automatically every time the scripting engine is reloaded."
 }
