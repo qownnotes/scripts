@@ -30,7 +30,7 @@ Script {
     ];
 
     function init() {
-        const data = script.downloadUrlToString(this.apiBaseUrl + '/api/tags')
+        const data = script.downloadUrlToString(apiBaseUrl + '/api/tags')
 
         if (data === '') {
             return;
@@ -40,7 +40,7 @@ Script {
         const modelNames = dataJson.models.map(model => model.model);
 
         if (modelNames.length > 0) {
-            this.models = modelNames.join(',');
+            models = modelNames.join(',');
         }
     }
 
@@ -49,7 +49,7 @@ Script {
      * It returns a list of objects with config parameters for new OpenAI backends
      */
     function openAiBackendsHook() {
-        const baseUrl = this.apiBaseUrl + '/v1/chat/completions';
+        const baseUrl = apiBaseUrl + '/v1/chat/completions';
 
         return [
             {
