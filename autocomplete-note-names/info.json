@@ -1,5 +1,5 @@
 {
-  "name": "Autocomplete Note Names"
+  "name": "Autocomplete Note Names",
   "identifier": "autocomplete-note-names",
   "script": "autocomplete-note-names.qml",
   "authors": ["@pi55man"],
