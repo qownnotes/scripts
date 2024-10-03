@@ -1,0 +1,10 @@
+{
+  "name": "Autocomplete Note Names",
+  "identifier": "autocomplete-note-names",
+  "script": "autocomplete-note-names.qml",
+  "authors": ["@pi55man"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "1.0.0",
+  "minAppVersion": "17.06.2",
+  "description" : "This script provides autocompletion for note names in QOwnNotes."
+}
