@@ -31,7 +31,7 @@ QtObject {
         {
             "identifier": "noteTitleFormat",
             "name": "Title Format",
-            "description": "How the journal title should be formatted, use date format placeholders inside curly braces. YYYY: for the year, MM: for the month, DD: for the day, WW: for the week. For example \"Journal {YYYYMMDD}\" will return \"Journal 20240928\". You can have monthly or weekly journals instead of daily by formatting the date to the week or monthly level.",
+            "description": "How the journal title should be formatted, use date format placeholders inside curly braces. YYYY: year, MM: month, DD: day, WW: week, HH: hours, mm: minutes, ss: seconds. For example \"Journal {YYYYMMDD}\" will return \"Journal 20240928\". You can have monthly or weekly journals instead of daily by formatting the date to the week or monthly level, or one journal file per entry by including the hour, minutes and seconds.",
             "type": "string",
             "default": "Journal {YYYYMMDD}",
         },
@@ -94,17 +94,26 @@ QtObject {
         let month = date.getMonth() + 1; //getMonth() returns 0-11 so we must add 1
         let week = getWeekNumber(date);
         let year = date.getFullYear();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
 
         // If day and month are less than 10, add a leading zero
         day = (day < 10) ? '0' + day : day;
         month = (month < 10) ? '0' + month : month;
         week = (week < 10) ? '0' + week : week;
+        hours = (hours < 10) ? '0' + hours : hours;
+        minutes = (minutes < 10) ? '0' + minutes : minutes;
+        seconds = (seconds < 10) ? '0' + seconds : seconds;
 
         // Replace format placeholders by actual values
         format = format.replace('WW', week);
         format = format.replace('MM', month);
         format = format.replace('DD', day);
         format = format.replace('YYYY', year);
+        format = format.replace('HH', hours);
+        format = format.replace('mm', minutes);
+        format = format.replace('ss', seconds);
 
         return format;
     }
