@@ -3,13 +3,14 @@ import com.qownnotes.noteapi 1.0
 
 /**
  * This script creates a menu item and a button to create or jump to the current date's journal entry
+ * based on a pre-defined format
  */
 QtObject {
     id: journalEntry
     property string defaultFolder;
     property string defaultTags;
-    property bool singleJournalPerDay;
     property string noteBodyTemplate;
+    property string noteTitleFormat;
     property var dialog;
 
     property variant settingsVariables: [
@@ -28,11 +29,11 @@ QtObject {
             "default": "journal",
         },
         {
-            "identifier": "singleJournalPerDay",
-            "name": "Single journal per day",
-            "description": "Create a single journal per day instead of always adding a new journal.",
-            "type": "boolean",
-            "default": "true",
+            "identifier": "noteTitleFormat",
+            "name": "Title Format",
+            "description": "How the journal title should be formatted, use date format placeholders inside curly braces. YYYY: for the year, MM: for the month, DD: for the day, WW: for the week. For example \"Journal {YYYYMMDD}\" will return \"Journal 20240928\". You can have monthly or weekly journals instead of daily by formatting the date to the week or monthly level.",
+            "type": "string",
+            "default": "Journal {YYYYMMDD}",
         },
         {
             "identifier": "noteBodyTemplate",
@@ -47,11 +48,7 @@ QtObject {
      * Initializes the custom action
      */
     function init() {
-        if (singleJournalPerDay) {
-            script.registerCustomAction("journalEntry", "Create or open a journal entry for today", "Journal", "document-new");
-        } else {
-            script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");
-        }
+        script.registerCustomAction("journalEntry", "Create a journal entry", "Journal", "document-new");
 
         // Create custom action for 'Create or open journal entry for tomorrow'.
         script.registerCustomAction("journalEntryTomorrow", "Create or open a journal entry for tomorrow", "Journal tomorrow", "document-multiple")
@@ -83,14 +80,46 @@ QtObject {
         }
     }
 
-    function createOrJumpToJournalEntry(m, identifier) {
-        var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
+    function getWeekNumber(d) {
+        // Copy date so don't modify original
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+        var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+        return weekNo;
+    }
 
-        // When the configuration option "singleJournalPerDay" is not selected, and we are not creating a journal entry
-        // for tomorrow, create journal entry including time.
-        if (!singleJournalPerDay && identifier != "journalEntryTomorrow") {
-            headline = headline + "T"+ ("0" + m.getHours()).slice(-2) + ("0" + m.getMinutes()).slice(-2) + ("0" + m.getSeconds()).slice(-2);
+    function formatDate(date, format) {
+        let day = date.getDate();
+        let month = date.getMonth() + 1; //getMonth() returns 0-11 so we must add 1
+        let week = getWeekNumber(date);
+        let year = date.getFullYear();
+
+        // If day and month are less than 10, add a leading zero
+        day = (day < 10) ? '0' + day : day;
+        month = (month < 10) ? '0' + month : month;
+        week = (week < 10) ? '0' + week : week;
+
+        // Replace format placeholders by actual values
+        format = format.replace('WW', week);
+        format = format.replace('MM', month);
+        format = format.replace('DD', day);
+        format = format.replace('YYYY', year);
+
+        return format;
+    }
+
+    function createOrJumpToJournalEntry(m, identifier) {
+        var headline;
+        if (!noteTitleFormat || noteTitleFormat.length == 0) {
+            headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
+        } else {
+            headline = noteTitleFormat.replace(/{[^}]*}/g, function(match) { 
+                return formatDate(m, match.slice(1, -1)); 
+            });
         }
+
+        // var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
 
         var fileName = headline + ".md";
 
