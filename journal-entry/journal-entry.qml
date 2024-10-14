@@ -128,8 +128,6 @@ QtObject {
             });
         }
 
-        // var headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
-
         var fileName = headline + ".md";
 
         // Check if we already have the requested journal entry.
@@ -167,7 +165,7 @@ QtObject {
             }
 
             // Create the new journal note.
-            script.createNote(headline + "\n================\n\n" + noteBodyTemplate);
+            script.createNote(headline + "\n" + '='.repeat(Math.max(4, headline.length)) + "\n\n" + noteBodyTemplate);
             
             const currentNote = script.currentNote();
 
