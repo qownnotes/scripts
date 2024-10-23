@@ -68,7 +68,7 @@ Script {
     }
     
     function mkDirInLinux(path) {
-        script.startSynchronousProcess("mkdir", ["-p", exportFolder]);
+        script.startSynchronousProcess("mkdir", ["-p", path]);
     }
     
     function mkDirInWindows(path) {
