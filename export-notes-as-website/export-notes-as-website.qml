@@ -72,7 +72,7 @@ Script {
     }
     
     function mkDirInWindows(path) {
-        script.startSynchronousProcess('cmd', ['/c','mkdir',path]);
+        script.startSynchronousProcess('cmd', ['/c','mkdir', path]);
     }
 
     /**
