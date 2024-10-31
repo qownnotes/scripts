@@ -11,7 +11,7 @@ Script {
 
     function customActionInvoked(identifier) {
       switch (identifier) {
-        case "asciiTree": { 
+        case "ascii-tree-factory": { 
           var selection = script.noteTextEditSelectedText();
           // break selection strings at line ends
           var lines = selection.split("\n");
