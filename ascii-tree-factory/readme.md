@@ -50,6 +50,12 @@ root
 
 If you have suggestions or improvements, feel free to fork the repository and submit a pull request.
 
+## ToDo
+
+- [ ] Generalize settings such as item separator (default is `/`)
+- [ ] Provide aesthetic options to the tree generation
+- [ ] Look for libraries that can render good looking and customizable tree structures (any idea???)
+
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
