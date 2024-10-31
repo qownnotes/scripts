@@ -1,0 +1,10 @@
+{
+  "name": "ASCII Tree Factory",
+  "identifier": "ascii-Tree-Factory",
+  "script": "ASCII-Tree-Factory.qml",
+  "authors": ["@77nnit"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.1.0",
+  "minAppVersion": "24.10.5",
+  "description" : "This script converts forward-slashes-separated lines to an ASCII tree representation, replacing the selected text."
+}
