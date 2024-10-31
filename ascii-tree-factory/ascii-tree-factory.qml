@@ -6,7 +6,7 @@ Script {
         * Sarà eseguito quando il motore di scripting parte
         */
     function init() {
-        script.registerCustomAction("ASCII-Tree-Factory", "Generate ASCII tree from path"); 
+        script.registerCustomAction("ascii-tree-factory", "Generate ASCII tree from path"); 
     }
 
     function customActionInvoked(identifier) {
