@@ -1,6 +1,6 @@
 {
   "name": "ASCII Tree Factory",
-  "identifier": "ascii-Tree-Factory",
+  "identifier": "ASCII-Tree-Factory",
   "script": "ASCII-Tree-Factory.qml",
   "authors": ["@77nnit"],
   "platforms": ["linux", "macos", "windows"],
