@@ -5,7 +5,7 @@ The ASCII Tree Factory plugin for QOwnNotes allows users to generate an ASCII tr
 
 ## Installation
 
-1. **Download the Plugin**: Save the `ASCII-Tree-Factory.qm`  file to your local machine.
+1. **Download the Plugin**: Save the `ASCII-Tree-Factory.qml`  file to your local machine.
 2. **Add to QOwnNotes**:
    - Open QOwnNotes.
    - Navigate to `Settings` > `Scripting`.
@@ -13,7 +13,7 @@ The ASCII Tree Factory plugin for QOwnNotes allows users to generate an ASCII tr
    - Select the  `ASCII-Tree-Factory.qm` file in the script folder.
 3. **Activate the Plugin**:
    - Go back to QOwnNotes.
-   - In the `Scripting` settings, ensure that  `ASCII-Tree-Factory.qm` is listed and checked.
+   - In the `Scripting` settings, ensure that  `ASCII-Tree-Factory.qml` is listed and checked.
 
 ## Usage
 
