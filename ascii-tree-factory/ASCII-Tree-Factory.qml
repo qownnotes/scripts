@@ -2,16 +2,14 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 Script {
-    /**
-        * Sarà eseguito quando il motore di scripting parte
-        */
+
     function init() {
-        script.registerCustomAction("ASCII-Tree-Factory", "Generate ASCII tree from path"); 
+        script.registerCustomAction("ascii-tree-factory", "Generate ASCII tree from path"); 
     }
 
     function customActionInvoked(identifier) {
       switch (identifier) {
-        case "asciiTree": { 
+        case "ascii-tree-factory": { 
           var selection = script.noteTextEditSelectedText();
           // break selection strings at line ends
           var lines = selection.split("\n");
@@ -43,18 +41,21 @@ Script {
           function printTree(tree, level){
             lastLevel.push(false);
             let keys =  Object.keys(tree);
-            for (var k=0;  k < keys.length; k++){
-              if (k == keys.length - 1){
+            for (var k = 0;  k < keys.length; k++){
+              if (k == (keys.length - 1)){
                 lastLevel[level]=true;
+              } else {
+                lastLevel[level]=false;
               }
               // preparing the string that will be printed before the current key
               let previousLevelsRendering = "";
-              for (var l=0; l<level; l++){
+              for (var l = 0; l < level; l++){
+                script.log ("current level: " + level + " key: " + keys[k] + " islastlevel? " + lastLevel[level]);
                 // for each previous level print a "│ " if it's not the last key at that level
                 previousLevelsRendering += lastLevel[l] ? "  " : "│ ";
               }
               // put together the string to be printed accounting for first level and last key at that level
-              codeBlockTree += `${(level==0) ? keys[k] : previousLevelsRendering +(lastLevel[level]?"└─" :"├─" )+keys[k]}\n`;
+              codeBlockTree += `${(level==0) ? keys[k] : previousLevelsRendering + (lastLevel[level]? "└─" : "├─" ) + keys[k]}\n`;
               printTree(tree[keys[k]], level + 1);
             }
           }
