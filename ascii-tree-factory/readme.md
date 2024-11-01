@@ -5,15 +5,22 @@ The ASCII Tree Factory plugin for QOwnNotes allows users to generate an ASCII tr
 
 ## Manual Installation
 
-1. **Download the Plugin**: Save the `ASCII-Tree-Factory.qml`  file to your local machine.
+1. **Download the Plugin**: Save the `ascii-tree-factory.qml`  file to your local machine.
 2. **Add to QOwnNotes**:
    - Open QOwnNotes.
    - Navigate to `Settings` > `Scripting`.
    - Click on `Add script... > Add local script`.
-   - Select the  `ASCII-Tree-Factory.qml` file in the script folder.
+   - Select the  `ascii-tree-factory.qml` file in the script folder.
 3. **Activate the Plugin**:
    - Go back to QOwnNotes.
-   - In the `Scripting` settings, ensure that  `ASCII-Tree-Factory.qml` is listed and checked.
+   - In the `Scripting` settings, ensure that  `ascii-tree-factory.qml` is listed and checked.
+
+## Settings
+
+Two settings are available in the Script configuration:
+
+- **Path separator**: lets the user select one of the available separators;
+- **Tree style**: lets the user choose from 4 ASCII tree styles;
 
 ## Usage
 
@@ -37,13 +44,13 @@ root/folder2/subfolder1/file3.txt
 ### Output
 
 ```
-root
-  ├─folder1
-  │ └─file1.txt
-  └─folder2
-    └─file2.txt
-    └─subfolder1
-      └─file3.txt
+─── root
+   ├── folder1
+   │  └── file1.txt
+   └── folder2
+      ├── file2.txt
+      └── subfolder1
+         └── file3.txt
 ```
 
 ## Contributing
@@ -52,8 +59,8 @@ If you have suggestions or improvements, feel free to fork the repository and su
 
 ## ToDo
 
-- [ ] Generalize settings such as item separator (default is `/`)
-- [ ] Provide aesthetic options to the tree generation
+- [x] Generalize settings such as item separator (default is `/`)
+- [x] Provide aesthetic options to the tree generation
 - [ ] Look for libraries that can render good looking and customizable tree structures (any idea???)
 
 ## License
