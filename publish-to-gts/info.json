@@ -1,0 +1,10 @@
+{
+  "name": "Publish to GtS",
+  "identifier": "publish-to-gts",
+  "script": "publish-to-gts.qml",
+  "authors": ["@77nnit"],
+  "platforms": ["linux"],
+  "version": "0.1.0",
+  "minAppVersion": "24.10.5",
+  "description" : "Publish To GtS lets you publish your notes to your GoToSocial account."
+}
