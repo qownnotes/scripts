@@ -22,7 +22,7 @@ Script {
         "identifier": "authCode",
         "name": "Authentication Code",
         "description": "Code returned by GtS after performing a successful authentication, if you paste it here you won't need to authenticate again until expiry",
-        "type": "string",
+        "type": "string-secret",
         "default": "",
         },
         {
@@ -81,7 +81,6 @@ Script {
     function init() {
         script.registerCustomAction("publish", "Publish current note to GtS","",true,true,false);
         script.registerCustomAction("newPost", "New post for GtS","",true,true,false);
-        script.registerCustomAction("downloadPosts", "Download posts","",false,true,false);
 
         //validate server instance
         if (!(script.getPersistentVariable("publishToGts/"+serverInstance))){

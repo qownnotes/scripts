@@ -1,6 +1,6 @@
 ## Overview
 
-The "Publish To GtS" script for QOwnNotes allows users to publish markdown notes directly to their GoToSocial activitypub instance.
+The **Publish To GoToSocial** script for QOwnNotes allows users to publish markdown notes directly to their GoToSocial activitypub instance.
 Future versions will be also able to download posts, to keep them as notes or to use other script for publishing them as standalone websites.
 
 ## Manual Installation
@@ -75,11 +75,6 @@ If you have suggestions or improvements, feel free to fork the repository and su
 ## Needed testers on MacOS!
 
 ## ToDo
-
-- [x] ~Create a publishing dialog with post options~ Options added to script settings, some confirmation dialogs added;
-- [x] Add custom tags to posts with post header section and to those that have already been published, in order to avoid reposting;
-- [ ] Wait for the post editing feature in GtS (not yet available) to enable the published post editing on QON;
-- [ ] Download posts features (single? range? with replies or not?...) open to discussion!
 
 ## License
 
