@@ -4,6 +4,7 @@ import QOwnNotesTypes 1.0
 Script {
     property string serverInstance;
     property string authCode;
+    property string mySignature;
     property string visibility;
     property bool local_only;
     property bool sensitive;
@@ -20,10 +21,17 @@ Script {
         },
         {
         "identifier": "authCode",
-        "name": "Authentication Code",
-        "description": "Code returned by GtS after performing a successful authentication, if you paste it here you won't need to authenticate again until expiry",
+        "name": "Authorization Code",
+        "description": "Code returned after performing a successful authentication, if you paste it here you won't need to authenticate again until expiry",
         "type": "string-secret",
         "default": "",
+        },
+        {
+        "identifier": "mySignature",
+        "name": "Post signature",
+        "description": "This is a signature that will be appended to your GtS posts.",
+        "type": "text",
+        "default": "Sent from #QOwnNotes using #P2F",
         },
         {
         "identifier": "visibility",
@@ -31,12 +39,12 @@ Script {
         "description": "Default visibility for published posts",
         "type": "selection",
         "default": "public",
-        "items": {"public": "Public", "unlisted": "Unlisted", "private": "Private", "mutuals_only": "Mutuals", "direct": "Direct Message"},
+        "items": {"public": "Public", "unlisted": "Unlisted", "private": "Private", "mutuals_only": "Mutuals (not supported by Mastodon)", "direct": "Direct Message"},
         },
         {
         "identifier": "local_only",
         "name": "Local only",
-        "description": "If the post is local only, it will not be seen from federated instances",
+        "description": "If the post is local only, it will not be seen from federated instances. Not supported by Mastodon",
         "text": "Yes, let it be Local Only",
         "type": "boolean",
         "default": false,
@@ -54,7 +62,7 @@ Script {
         "name": "Content Warning text",
         "description": "Text to show as a content warning for senstitive posts",
         "type": "string",
-        "default": "Sensible content ahead!",
+        "default": "",
         },
         {
         "identifier": "language",
@@ -79,13 +87,15 @@ Script {
     }
 
     function init() {
-        script.registerCustomAction("publish", "Publish current note to GtS","",true,true,false);
-        script.registerCustomAction("newPost", "New post for GtS","",true,true,false);
+        script.registerCustomAction("publish", "Publish to Fediverse","",true,true,false);
+        script.registerCustomAction("newPost", "New post for Fediverse","",true,true,false);
 
         //validate server instance
-        if (!(script.getPersistentVariable("publishToGts/"+serverInstance))){
+        if (!(script.getPersistentVariable("publishToFedi/"+serverInstance))){
             serverInstance = serverInstance.match(/(?!(\w+:\/\/))(\w+.)*(\w+)/g)[0];   
         }
+
+        
     }
 
     // This function returns a true or a false or a string that doesn't match true or false
@@ -99,22 +109,22 @@ Script {
 
     // This function generates a Post Header with comments and default parameter values for the current note.
     // if includeAdditional = true adds additional attributes (like created_at for already published notes)
-    function generatePostHeader(includeAdditional){        
-        let postHeader = "";
-        postHeader += "***Publish to GtS - Post Header***\n";
-        postHeader += "\n";
-        postHeader += "#Edit the values to adjust the post settings.\n";
-        postHeader += "#Missing properties will be defaulted as per script settings.\n";
-        postHeader += "#Confirmation will be asked before publishing.\n";
-        postHeader += "#This section will not be published.\n";
-        postHeader += "\n";
+    function generateFrontmatter(includeAdditional){        
+        let frontMatter = "";
+        frontMatter += "***Publish to Fediverse - frontmatter***\n";
+        frontMatter += "\n";
+        frontMatter += "#Edit the values to adjust the post settings.\n";
+        frontMatter += "#Missing properties will be defaulted as per script settings.\n";
+        frontMatter += "#Confirmation will be asked before publishing.\n";
+        frontMatter += "#This section will not be published.\n";
+        frontMatter += "\n";
         // checking all post parameters in currentParams against user settings params
         Object.keys(currentParams).forEach(function(key){
             // using .every to break out the cycle
             settingsVariables.every(function(varObj){
                 if (key == varObj.identifier){
                     // the eval used here is safe, as the variable it evaluates contains always a string value.
-                    postHeader += `${key}: ${eval(varObj.identifier)}${"\n"}`;
+                    frontMatter += `${key}: ${eval(varObj.identifier)}${"\n"}`;
                     return false;
                 } else {
                     return true;
@@ -123,32 +133,32 @@ Script {
         });
         if (includeAdditional){
             Object.keys(additionalParams).forEach(function(key){
-                postHeader += `${key}: ${additionalParams[key]}${"\n"}`;
+                frontMatter += `${key}: ${additionalParams[key]}${"\n"}`;
             });
         }
-        return postHeader;
+        return frontMatter;
     }
 
-    function updatePostHeader(){
+    function updateFrontmatter(){
         let current = script.currentNote()
         let sections = current.noteText.split("---"); 
-        script.tagCurrentNote("Pub2GtS");
+        script.tagCurrentNote("P2F");
         if (sections && sections[1]){
             script.triggerMenuAction("actionAllow_note_editing", 1);
             mainWindow.focusNoteTextEdit();
             script.noteTextEditSetCursorPosition(0);
             script.noteTextEditSelectAll();
-            script.noteTextEditWrite([sections[0], ("---\n" + generatePostHeader(true) + "\n---")].concat(sections.slice(2)).join(""));
+            script.noteTextEditWrite([sections[0], ("---\n" + generateFrontmatter(true) + "\n---")].concat(sections.slice(2)).join(""));
         }
     }
 
-    // function that reads a Post Header section and populate the currentParams object
-    function decodePostHeader(){ 
+    // function that reads a Frontmatter section and populate the currentParams object
+    function decodeFrontmatter(){ 
         let current = script.currentNote(); // current note    
         let postParams = {};
-        let postHeader = current.noteText.split("---");
-        if  (postHeader[1]){
-            postHeader[1].split("\n").forEach(function(param){
+        let sections = current.noteText.split("---");
+        if  (sections && sections[1]){
+            sections[1].split("\n").forEach(function(param){
                 if (! param.startsWith("#")){
                     let thisParam = param.split(":");
                     if (thisParam[0] && thisParam[1]){
@@ -159,7 +169,7 @@ Script {
             currentParams = postParams;
             return true;
         } else {
-            script.log("Publish to GtS: Current note does not have a valid Post Header.");
+            script.log("P2F: Current note does not have a valid frontmatter.");
             return false;
         }
     }
@@ -173,22 +183,22 @@ Script {
         msgText += "</ul>";
         msgText += `Press "<b>Ok</b>" to confirm and post the note with the above settings;`
         msgText += `Press "<b>Cancel</b>" to continue editing your note.`;
-        return (script.questionMessageBox(msgText, "Publish to GtS: confirm action", 0x00000400|0x00400000) == 1024);
+        return (script.questionMessageBox(msgText, "P2F: confirm publishing", 0x00000400|0x00400000) == 1024);
     }
 
     // This function ask user confirmation to generate a postHeader for the current post
-    function confirmPostHeader(){
-        let msgText = `The current note does not appear to have a valid Post Header for publishing. You can:<ul>`;
+    function confirmFrontmatter(){
+        let msgText = `The current note does not appear to have a valid frontmatter for publishing. You can:<ul>`;
         msgText += `<li>Press "<b>OK</b>" to publish the note with default settings</li>`;
-        msgText += `<li>Press "<b>Apply</b>" to cancel the publishing and generate a Post Header for your note</li>`;
-        msgText += `<li>Press "<b>Cancel</b>" to cancel the publishing and add a Post Header manually</li></ul>`;
-        msgText += `<b>Note:</b>Generating a Post Header will add the header <i>above</i> the title, if present.`; 
-        return script.questionMessageBox(msgText, "Publish to GtS: missing Post Header", 0x00000400|0x02000000|0x00400000);
+        msgText += `<li>Press "<b>Apply</b>" to cancel the publishing and generate a frontmatter for your note</li>`;
+        msgText += `<li>Press "<b>Cancel</b>" to cancel the publishing</li></ul>`;
+        msgText += `<b>Note:</b>Generating a frontmatter will add it on top of the note.`; 
+        return script.questionMessageBox(msgText, "P2F: missing frontmatter", 0x00000400|0x02000000|0x00400000);
     }
 
     function confirmDuplicatePost(){
         let msgText = `The current note Post Header contains "created_at" property. This may indicate that the note was already published. Are you sure you want to publish the note <b>again</b>?`;
-        return (script.questionMessageBox(msgText, "Publish to GtS: publish duplicate note", 0x00000400|0x00400000)==1024);
+        return (script.questionMessageBox(msgText, "P2F: publish duplicate note", 0x00000400|0x00400000)==1024);
     }
 
     // This function performs all API endpoint requests and returns text responses
@@ -217,9 +227,9 @@ Script {
             return xhr.response;
         // If the request is nor completed with a success code 200, write to che console the error and return null
         } else {
-            script.log ("Publish to GtS: Error: " + serverInstance + endpoint + " returned code " + xhr.status + " - " + xhr.statusText);
-            script.log (JSON.stringify(xhr.response));
-            script.log (xhr.getAllResponseHeaders());
+            script.log ("P2F: Error: " + serverInstance + endpoint + " returned code " + xhr.status + " - " + xhr.statusText);
+            //script.log (JSON.stringify(xhr.response));
+            //script.log (xhr.getAllResponseHeaders());
             return null;
         }  
     }
@@ -237,50 +247,54 @@ Script {
         if (identifier == "newPost"){
             let date = new Date();
             let headline = "Note " + date.toISOString();
-            script.createNote("# " + headline + "\n\n---\n\n" + generatePostHeader() + "\n\n---\n\n");
+            script.createNote("# " + headline + "\n\n---\n\n" + generateFrontmatter() + "\n\n---\n\n");
             let currentNote = script.currentNote();
             script.triggerMenuAction("actionAllow_note_editing", 1);
             currentNote.renameNoteFile(headline);
             mainWindow.focusNoteTextEdit();
-            script.tagCurrentNote("Pub2GtS");
+            script.tagCurrentNote("P2F");
             return;
         }
 
         // handler for publish command
         if (identifier == "publish") {
             // local variables init
-            let clientName = "QONPublishToGts";
-            let clientMode = "Read+Write";
+            let clientName = "QONP2F";
+            let clientMode = "Read Write Profile";
             let clientId = "";
             let clientSecret = "";
+            let oobCode = "";
+            let accessToken = authCode;
             let credentialsVerified = false;
             let current = script.currentNote(); // current note
-            let currentPost = ""; //current part of note that represents a post when post header stripped
-
-            if (!decodePostHeader()){
+            let currentPost = ""; //current part of note that represents a post when frontmatter is stripped
+            let instanceInfo = {};
+            let maxCharsPerPost = 500; //default for Mastodon instances
+            script.log("mysignature: " + mySignature);
+            if (!decodeFrontmatter()){
                 let exitCondition = true;
-                let confirmResult = confirmPostHeader();
+                let confirmResult = confirmFrontmatter();
                 switch (confirmResult){
                     case 1024:{
-                        script.log("Publish to GtS: default posting settings confirmed.");
+                        script.log("P2F: default posting settings confirmed.");
                         exitCondition = false;
                         break;
                     }
                     case 33554432:{
-                        script.log("Publish to GtS: generating default Post Header.");
+                        script.log("P2F: generating default frontmatter.");
                         // attach Post Header at the beginning of post
                         script.triggerMenuAction("actionAllow_note_editing", 1);
                         mainWindow.focusNoteTextEdit();
                         script.noteTextEditSetCursorPosition(0);
                         let date = new Date();
                         let headline = "Note " + date.toISOString();
-                        script.noteTextEditWrite("# " + headline + "\n\n---\n\n" + generatePostHeader() + "\n\n---\n\n");
-                        script.tagCurrentNote("Pub2GtS");
+                        script.noteTextEditWrite("# " + headline + "\n\n---\n\n" + generateFrontmatter() + "\n\n---\n\n");
+                        script.tagCurrentNote("P2F");
                         exitCondition = true;
                         break;
                     }
                     default:{
-                        script.log("Publish to GtS: publishing with current settings canceled.");
+                        script.log("P2F: publishing with current settings canceled.");
                         exitCondition = true;
                         break;
                     }
@@ -288,26 +302,25 @@ Script {
                 if (exitCondition) return;
             }
             if (currentParams.created_at){
-                    script.log("Publish to Gts: actual note may have already been published.");
+                    script.log("P2F: actual note may have already been published.");
                     if (!confirmDuplicatePost()){
                         return;
                     }
                 }
             if (confirmPublish()){
-                script.log("Publish to GtS: note publishing confirmed.");
-                script.tagCurrentNote("Pub2GtS");
+                script.log("P2F: note publishing confirmed.");
+                script.tagCurrentNote("P2F");
             } else {
-                script.log("Publish to GtS: note publishing canceled.");
+                script.log("P2F: note publishing canceled.");
                 return;
              }
 
-            // recover accessToken from persistent variables, if present
-            let accessToken = script.getPersistentVariable("publishToGts/"+authCode);
-            // check if accessToken was found on the persistent variables
+            // If authCode (accessToken) is stored on user settings, recover and authenticate with it
             if (accessToken && accessToken.length > 0){
-                // access token was found, verifying credentials
+                // authorization conde was found, verifying credentials
                 credentialsVerified = verifyCredentials(accessToken);
             } else {
+                // start oob registering process
                 let registerResponse = request("POST", "/api/v1/apps", "", {"client_name":clientName,"redirect_uris":"urn:ietf:wg:oauth:2.0:oob","scopes":clientMode});
                 if (!registerResponse){
                     return;
@@ -317,43 +330,55 @@ Script {
                 
                 // need to show a window with a http link for the user to click
                 let authAddress = `https://${serverInstance}/oauth/authorize?client_id=${clientId}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&scope=${clientMode}`;
-                let popupTitle = "GoToSocial Authentication";
-                let popupText = `<ol><li>Visit <a href="${authAddress}">this link</a></li><li>Paste your code below once authenticated</li></ol>`;
+                let popupTitle = "Out-of-band Authentication";
+                let popupText = `<ol><li>Visit <a href="${authAddress}">this link</a></li><li>Paste your OOB authentication code below once authenticated</li></ol>`;
                 //waiting for user to insert the authorzation code
-                authCode = script.inputDialogGetText(popupTitle, popupText, "Authorization code here");
-                if (!authCode){
-                    script.log("No authorization code entered.");
+                oobCode = script.inputDialogGetText(popupTitle, popupText, "OOB Authentication code here");
+                if (!oobCode || oobCode.length == 0){
+                    script.log("P2F: No OOB Authentication code entered.");
                     return;
                 }
-                script.log("authorization code inserted: " + authCode);
                 // exchanging for token
-                let tokenRequest = request("POST", "/oauth/token", "", {"redirect_uri": "urn:ietf:wg:oauth:2.0:oob","client_id": clientId, "client_secret": clientSecret,"grant_type": "authorization_code","code": authCode});
-                script.log(tokenRequest);
+                let tokenRequest = request("POST", "/oauth/token", "", {"redirect_uri": "urn:ietf:wg:oauth:2.0:oob","client_id": clientId, "client_secret": clientSecret,"grant_type": "authorization_code","code": oobCode});
                 if (!tokenRequest){
-                    script.log("Unable to get access Token.");
+                    script.log("P2F: Unable to get access Token.");
                     return;
                 } else {
                     accessToken = JSON.parse(tokenRequest).access_token;
                     credentialsVerified = verifyCredentials(accessToken);
+                    script.informationMessageBox(`<p>You can copy and paste this Authorization code to the script user settings to avoid authenticating again:</p><h2>${accessToken}</h2>`, "Publish to Fediverse: Copy Authorization code");
                 }
             }
             if (credentialsVerified){
-                script.log("Credentials verified!");
-                //saving accessToken in a persistent variable called with the same name as the authCode
-                script.setPersistentVariable("publishToGts/"+authCode, accessToken);
+                script.log("P2F: Credentials verified!");
+                //saving accessToken in a persistent variable called with the same name as the accessToken
+                instanceInfo = JSON.parse(request("GET", "/api/v2/instance", accessToken));
+                if (instanceInfo && instanceInfo.configuration.statuses["max_characters"]){
+                    maxCharsPerPost = instanceInfo.configuration.statuses["max_characters"];
+                }
+
             } else {
-                script.log("Credentials verification failed. Check the server or the internet connection and retry!");
+                script.log("P2F: Credentials verification failed. Check the server or the internet connection and retry!");
                 return;
             }
             // We can proceed with posting the actual note
             // Getting the current note markdown
             
-            let noteSections = current.noteText.split("---");
-            // posting only if text is present, excluding the Post Header, delimited by ---
-            if (noteSections.length > 2 && /./gm.test(noteSections[2])){
-                currentPost = noteSections[2];
+            let sections = current.noteText.split("---");
+            // posting only if text is present, excluding the Frontmatter, delimited by ---
+            if (sections.length > 2 && (/./gm.test(sections[2]))){
+                currentPost = sections[2];
+                // adding signature to the post
+                if (mySignature && mySignature.length > 0){
+                    currentPost += "\n\n" + mySignature;
+                }
             } else {
-                script.log("Publish to GtS: Current note does not have a text to be published.")
+                script.log("P2F: Current note does not have a text to be published.")
+                return;
+            }
+            if (currentPost.length > maxCharsPerPost){
+                script.log("P2F: Current note text is too long to be published.");
+                script.informationMessageBox("Your note exceeds the maximum post length set by your instance server. Plaese shorten the note.", "Publish to Fediverse: length limit exceeded");
                 return;
             }
             //populating the status object with status and post parameters
@@ -364,13 +389,18 @@ Script {
             Object.keys(currentParams).forEach(function(param){
                 status[param] = parseBool(currentParams[param]);
             });
+
+            status.application = {
+                name: "P2F script for QOwnNotes",
+                website: "https://codeberg.org/77nn/QOwnNotes-personal-scripts"
+            };
         
             let statusResult = JSON.parse(request ("POST", "/api/v1/statuses", accessToken, status));
             if (statusResult && statusResult["created_at"]){
                 additionalParams["created_at"] = statusResult["created_at"];
                 additionalParams["id"] = statusResult["id"];
                 additionalParams["url"] = statusResult["url"];
-                updatePostHeader();
+                updateFrontmatter();
                 script.tagCurrentNote("Published");
             }       
             return;
