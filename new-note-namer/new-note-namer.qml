@@ -49,7 +49,7 @@ QtObject {
     script.log(note.fileCreated)
     script.log(note.fileLastModified)
 
-    if (underlineHeading){
+    if (underlineHeading) {
           return newName + "\n" + "=".repeat(newName.length);
     } else {
           return "# " + newName;
@@ -77,10 +77,9 @@ QtObject {
               return ""
           }
 
-          if (extraDialogForFileName){
+          if (extraDialogForFileName) {
               return newNamer("New note", "New file name", "File name")
-          }
-          else{
+          } else {
               return noteTitle
           }
       }
