@@ -2,7 +2,7 @@
   "name": "New note namer",
   "identifier": "new-note-namer",
   "script": "new-note-namer.qml",
-  "authors": ["@diegovskytl,@Mystechry"],
+  "authors": ["@diegovskytl", "@Mystechry"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.2",
   "minAppVersion": "17.06.2",
