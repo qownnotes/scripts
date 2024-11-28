@@ -2,9 +2,9 @@
   "name": "New note namer",
   "identifier": "new-note-namer",
   "script": "new-note-namer.qml",
-  "authors": ["@diegovskytl"],
+  "authors": ["@diegovskytl", "@Mystechry"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minAppVersion": "17.06.2",
   "description": "Enables a dialog window (or two) so the user can choose the note title and file name at the moment of creation. <br> Specially useful when the 'Allow note file name to be different to note title. \n No more cumbersome renaming :)"
 }
