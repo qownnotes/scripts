@@ -50,7 +50,7 @@ QtObject {
     script.log(note.fileLastModified)
 
     if (underlineHeading){
-          return newName + "\n========================"
+          return newName + "\n" + "=".repeat(newName.length);
     } else {
           return "# " + newName;
     }
@@ -64,7 +64,10 @@ QtObject {
 
           var noteLines = note.noteText.split("\n");
           var firstLine = noteLines[0];
-          var noteTitle = firstLine.slice(2)
+          var noteTitle = firstLine.slice(2) // Remove the preceding "# "
+          if (underlineHeading){             // Underlined headings use the entire first line
+              noteTitle = firstLine;
+          }
 
           script.log("note title: " + noteTitle)
 
@@ -75,7 +78,7 @@ QtObject {
           }
 
           if (extraDialogForFileName){
-            return newNamer("New note", "New file name", "File name")
+              return newNamer("New note", "New file name", "File name")
           }
           else{
               return noteTitle
