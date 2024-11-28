@@ -8,11 +8,19 @@ import QOwnNotesTypes 1.0
  */
 QtObject {
     property bool extraDialogForFileName;
+    property bool underlineHeading;
     property variant settingsVariables: [
             {
                 'identifier': 'extraDialogForFileName',
                 'name': 'Extra dialog for note title',
                 'description': 'Show an additional dialog window so user can write a file name different to the note title.',
+                'type': 'boolean',
+                'default': 'false',
+            },
+            {
+                'identifier': 'underlineHeading',
+                'name': 'Underline heading',
+                'description': 'Highlight the first line by underlining it with =, if not checked, use a preceding # instead.',
                 'type': 'boolean',
                 'default': 'false',
             },
@@ -41,7 +49,11 @@ QtObject {
     script.log(note.fileCreated)
     script.log(note.fileLastModified)
 
-    return "# " + newName;
+    if (underlineHeading){
+          return newName + "\n========================"
+    } else {
+          return "# " + newName;
+    }
   }
 
   function handleNoteTextFileNameHook(note) {
