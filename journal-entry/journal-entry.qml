@@ -123,8 +123,8 @@ QtObject {
         if (!noteTitleFormat || noteTitleFormat.length == 0) {
             headline = "Journal " + m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2);
         } else {
-            headline = noteTitleFormat.replace(/{[^}]*}/g, function(match) { 
-                return formatDate(m, match.slice(1, -1)); 
+            headline = noteTitleFormat.replace(/{[^}]*}/g, function(match) {
+                return formatDate(m, match.slice(1, -1));
             });
         }
 
@@ -165,8 +165,31 @@ QtObject {
             }
 
             // Create the new journal note.
-            script.createNote(headline + "\n" + '='.repeat(Math.max(4, headline.length)) + "\n\n" + noteBodyTemplate);
-            
+            // Create the new journal note without the filename and empty line.
+            // Create the new journal note with only the body template content - code line shortened by ChatGPT.
+            script.createNote(noteBodyTemplate);
+
+            // Wait for the note to be created and then rename it - new code lines to line 191 by ChatGPT.
+            function renameNoteWhenReady() {
+                const currentNote = script.currentNote();
+
+                if (currentNote) {
+                    // Rename the note immediately
+                    if (currentNote.allowDifferentFileName()) {
+                        currentNote.renameNoteFile(headline);
+                        // Force a refresh to ensure the filename update is reflected
+                        mainWindow.buildNotesIndexAndLoadNoteDirectoryList(false, true);
+                        script.setCurrentNote(currentNote); // Ensure focus stays on the newly created note
+                    }
+                } else {
+                    // If the note isn't ready yet, try again after a small delay
+                    setTimeout(renameNoteWhenReady, 100);
+                }
+            }
+
+            // Call the renaming function after note creation
+            renameNoteWhenReady();
+
             const currentNote = script.currentNote();
 
             // rename the note file if needed
