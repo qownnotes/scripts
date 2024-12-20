@@ -2,7 +2,7 @@
   "name": "Outline Numbering",
   "identifier": "outline-numbering",
   "script": "outline-numbering.qml",
-  "authors": ["@jerksen"],
+  "authors": ["@jerksen", "@DutchPete"],
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.1",
   "minAppVersion": "20.5.6",
