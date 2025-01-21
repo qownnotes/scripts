@@ -26,8 +26,13 @@ QtObject {
             // script.log(output);
 
             // parse the headline
-            var re2 = /<bdi class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/bdi>/im
+            var re2 = /<bdi class="[^"]+markdown-title"[^>]*>\s*(.+?)\s*<\/bdi>/im
             var result2 = re2.exec(output);
+
+            if (result2 == null) {
+                var re2 = /<bdi class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/bdi>/im
+                var result2 = re2.exec(output);
+            }
 
             if (result2 == null) {
                 re2 = /<span class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/span>/im

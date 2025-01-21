@@ -2,7 +2,7 @@
   "name": "GitHub Headline",
   "identifier": "github-headline",
   "script": "github-headline.qml",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "minAppVersion": "17.05.6",
   "authors": ["@pbek"],
   "description" : "Inserts a headline and a link to the <a href='https://github.com/'>GitHub</a> issue or pull request from an url in the clipboard into the current note when you paste the link with <i>Ctrl + Shift + V</i>."
