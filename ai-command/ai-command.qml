@@ -23,12 +23,23 @@ Script {
             return;
         }
 
-        let command = script.inputDialogGetText("AI Command", "Please enter a command");
+        let pastCommands = JSON.parse(script.getPersistentVariable('aiCommand/pastCommands', '[]'));
+        let command = script.inputDialogGetItem("AI Command", "Please enter a command", pastCommands, 0, true);
 
         if (command === '') {
             return;
         }
 
+        // Remove any existing occurrences of command
+        pastCommands = pastCommands.filter(cmd => cmd !== command);
+
+        // Add command to the beginning
+        pastCommands.unshift(command);
+
+        // Trim the array to the last 15 entries
+        pastCommands = pastCommands.slice(0, 15);
+
+        script.setPersistentVariable('aiCommand/pastCommands', JSON.stringify(pastCommands));
         const text = script.noteTextEditSelectedText();
         const aiResult = script.aiComplete(
             "Execute the following command on the Markdown text afterwards, just output the result. " +

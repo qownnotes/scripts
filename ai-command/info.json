@@ -4,7 +4,7 @@
   "script": "ai-command.qml",
   "authors": ["@pbek"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "24.11.4",
   "description" : "This script allows just send a written command  to the AI completer to replace the selected text, but showing the differences first."
 }
