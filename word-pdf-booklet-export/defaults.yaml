@@ -4,8 +4,6 @@ to: odt
 standalone: true
 self-contained: false
 
-strip-empty-paragraphs: true
-
 # lf, crlf, or native
 eol: lf
 
