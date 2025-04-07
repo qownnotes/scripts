@@ -9,6 +9,10 @@ default:
 
 transferDir := `if [ -d "$HOME/NextcloudPrivate/Transfer" ]; then echo "$HOME/NextcloudPrivate/Transfer"; else echo "$HOME/Nextcloud/Transfer"; fi`
 
+# Aliases
+
+alias fmt := format
+
 # Apply the patch to the qownnotes-scripts repository
 [group('patch')]
 git-apply-patch:
@@ -35,3 +39,8 @@ just-format:
         echo "Formatting $file"
         just --fmt --unstable -f "$file"
     done
+
+# Format all files
+[group('linter')]
+format args='':
+    nix-shell -p treefmt nodePackages.prettier shfmt nixfmt-rfc-style statix taplo kdePackages.qtdeclarative --run "treefmt {{ args }}"
