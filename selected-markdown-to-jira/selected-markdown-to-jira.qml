@@ -3,16 +3,16 @@ import QtQml 2.0
 /**
  * This script creates a menu item and a button that converts the selected Markdown
  * text to Jira code in the clipboard
- * 
+ *
     * Dependencies:
     * Node.js: https://nodejs.org/en/download/
     * https://github.com/kylefarris/J2M
-    * 
+    *
     * first you have to install jira2md:
     * npm install jira2md
  */
 QtObject {
-    property string nodejsExecutablePath;
+    property string nodejsExecutablePath
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -21,21 +21,14 @@ QtObject {
             "name": "Node.js path",
             "description": "Please select the path to your Node.js executable:",
             "type": "file",
-            "default": "nodejs",
+            "default": "nodejs"
         }
-    ];
-
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        script.registerCustomAction("markdownToJira", "Markdown to Jira", "Jira", "edit-copy", true, true);
-    }
+    ]
 
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
-     * 
+     *
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
@@ -62,5 +55,12 @@ QtObject {
 
         // put the result into the clipboard
         script.setClipboardText(result);
+    }
+
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("markdownToJira", "Markdown to Jira", "Jira", "edit-copy", true, true);
     }
 }

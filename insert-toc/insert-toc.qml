@@ -5,74 +5,24 @@ import QOwnNotesTypes 1.0
 /// it into the note.
 
 Script {
-    property string tocTitle
-    property bool tocLinks
-
     property variant settingsVariables: [
         {
             "identifier": "tocTitle",
             "name": "Title of the table of contents",
             "description": "",
             "type": "string",
-            "default": "Table of Contents",
+            "default": "Table of Contents"
         },
         {
             "identifier": "tocLinks",
             "name": "Generate links to sections",
             "description": "",
             "type": "boolean",
-            "default": false,
+            "default": false
         },
     ]
-
-    function init() {
-        script.registerCustomAction("insertToc", "Insert TOC", "TOC", "", true)
-    }
-
-    function extractTOC(lines) {
-        var toc = [];
-        for (var n = 0; n < lines.length; n++) {
-            var match = lines[n].match(/^(#+)\s+(.*)$/)
-            if (match) {
-                toc.push({
-                    "depth": match[1].length,
-                    "title": match[2].trim(),
-                    "link": extractLink(match[2].trim())
-                });
-            }
-        }
-        return toc;
-    }
-
-    function extractLink(title) {
-        var lowercase = title.toLowerCase()
-        var spaceReplaced = lowercase.replace(/ /g, "-")
-        var invalidCharsRemoved = spaceReplaced.replace(/[^0-9A-Za-zÀ-ÿ-_]/g, "")
-        return invalidCharsRemoved;
-    }
-
-    function normalizeDepths(toc) {
-        var min = -1;
-        for (var n = 0; n < toc.length; n++) {
-            var depth = toc[n].depth;
-            if (min < 0 || depth < min) {
-                min = depth;
-            }
-        }
-        for (var n = 0; n < toc.length; n++) {
-            toc[n].depth -= min;
-        }
-
-        return toc;
-    }
-
-    function indent(depth) {
-        var s = "";
-        for (var i = 0; i < depth; i++) {
-            s += "    ";
-        }
-        return s;
-    }
+    property bool tocLinks
+    property string tocTitle
 
     function customActionInvoked(action) {
         if (action == "insertToc") {
@@ -104,5 +54,49 @@ Script {
                 }
             }
         }
+    }
+    function extractLink(title) {
+        var lowercase = title.toLowerCase();
+        var spaceReplaced = lowercase.replace(/ /g, "-");
+        var invalidCharsRemoved = spaceReplaced.replace(/[^0-9A-Za-zÀ-ÿ-_]/g, "");
+        return invalidCharsRemoved;
+    }
+    function extractTOC(lines) {
+        var toc = [];
+        for (var n = 0; n < lines.length; n++) {
+            var match = lines[n].match(/^(#+)\s+(.*)$/);
+            if (match) {
+                toc.push({
+                    "depth": match[1].length,
+                    "title": match[2].trim(),
+                    "link": extractLink(match[2].trim())
+                });
+            }
+        }
+        return toc;
+    }
+    function indent(depth) {
+        var s = "";
+        for (var i = 0; i < depth; i++) {
+            s += "    ";
+        }
+        return s;
+    }
+    function init() {
+        script.registerCustomAction("insertToc", "Insert TOC", "TOC", "", true);
+    }
+    function normalizeDepths(toc) {
+        var min = -1;
+        for (var n = 0; n < toc.length; n++) {
+            var depth = toc[n].depth;
+            if (min < 0 || depth < min) {
+                min = depth;
+            }
+        }
+        for (var n = 0; n < toc.length; n++) {
+            toc[n].depth -= min;
+        }
+
+        return toc;
     }
 }

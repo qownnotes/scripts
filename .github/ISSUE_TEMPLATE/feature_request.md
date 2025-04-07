@@ -2,9 +2,8 @@
 name: Feature request
 about: Suggest an idea for a script.
 title: "[FEATURE] "
-labels: 'Type: Support'
-assignees: ''
-
+labels: "Type: Support"
+assignees: ""
 ---
 
 <!--
@@ -18,9 +17,6 @@ Please mention the name and author(s) of the script, so they are able to respond
 Don't forget to use the `@` symbol in-front of the names, like `@pbek`, so they get notified!
 You will find the authors in the *Script repository*.
 -->
-
-
-
 
 #### Script name
 

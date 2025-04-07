@@ -6,18 +6,11 @@ import QOwnNotesTypes 1.0
  * to the clipboard and tries to extract and paste text from it
  */
 QtObject {
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        // create a menu entry with a button and a freedesktop theme icon
-        script.registerCustomAction("pasteFromSkypeHistory", "Paste text from Skype history", "Paste Skype Text", "edit-paste");
-    }
 
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
-     * 
+     *
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
@@ -27,13 +20,20 @@ QtObject {
         // get the text that is currently in the clipboard
         var html = script.clipboard(true);
 
-//        script.log(html);
+        //        script.log(html);
 
         var textRegExp = /<p.*?>(.+?)<\/p>/gim;
         var match;
-        
+
         while ((match = textRegExp.exec(html)) !== null) {
             script.noteTextEditWrite(match[1].replace(/<.+?>/gim, "") + "\n");
         }
+    }
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        // create a menu entry with a button and a freedesktop theme icon
+        script.registerCustomAction("pasteFromSkypeHistory", "Paste text from Skype history", "Paste Skype Text", "edit-paste");
     }
 }

@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "25.4.1",
-  "description" : "Short commands to help with repetive and/or annoying things to write frequently such as timestamps.\n\nEach command starts with a backslash (\\) and a single word for the command. Select the autocomplete option you desire and the command text will be replace.\n\nDefault commands are: today, tomorrow, yesterday, now, week.\n\nCustom commands can also be specified but are limited to simple text replacement."
+  "description": "Short commands to help with repetive and/or annoying things to write frequently such as timestamps.\n\nEach command starts with a backslash (\\) and a single word for the command. Select the autocomplete option you desire and the command text will be replace.\n\nDefault commands are: today, tomorrow, yesterday, now, week.\n\nCustom commands can also be specified but are limited to simple text replacement."
 }

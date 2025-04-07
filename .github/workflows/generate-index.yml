@@ -2,17 +2,17 @@ name: Generate script metadata index
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Generate index
-      run: ./.github/workflows/scripts/generate-index.sh
-    - name: Upload index.json
-      run: |
-        gh release upload metadata-index index.json --clobber --repo "$GITHUB_REPOSITORY"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Generate index
+        run: ./.github/workflows/scripts/generate-index.sh
+      - name: Upload index.json
+        run: |
+          gh release upload metadata-index index.json --clobber --repo "$GITHUB_REPOSITORY"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

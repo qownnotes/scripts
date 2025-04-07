@@ -2,14 +2,14 @@ name: Run tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run tests
-      run: php ./.github/workflows/scripts/run-tests.php
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: php ./.github/workflows/scripts/run-tests.php

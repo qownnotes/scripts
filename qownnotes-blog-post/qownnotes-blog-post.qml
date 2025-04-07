@@ -5,7 +5,7 @@ import com.qownnotes.noteapi 1.0
  * This script creates new QOwnNotes blog posts
  */
 QtObject {
-    property string defaultFolder;
+    property string defaultFolder
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -14,16 +14,9 @@ QtObject {
             "name": "Default folder",
             "description": "The default folder where the newly created blog post should be placed.",
             "type": "string",
-            "default": "",
+            "default": ""
         },
-    ];
-
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        script.registerCustomAction("qownnotesBlogPost", "Create a QOwnNotes Blog Post", "QON Blog Post", "document-new");
-    }
+    ]
 
     /**
      * This function is invoked when a custom action is triggered
@@ -38,11 +31,10 @@ QtObject {
 
         // get the date headline
         var m = new Date();
-        var dateString = m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2)
-        var order = m.getFullYear() + ("0" + (m.getMonth()+1)).slice(-2) + ("0" + m.getDate()).slice(-2) + "000000"
+        var dateString = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+        var order = m.getFullYear() + ("0" + (m.getMonth() + 1)).slice(-2) + ("0" + m.getDate()).slice(-2) + "000000";
 
-        var headline = script.inputDialogGetText(
-            "Title", "Please enter blog post title", "New blog post");
+        var headline = script.inputDialogGetText("Title", "Please enter blog post title", "New blog post");
 
         var fileName = dateString + "-" + headline.replace(/\s/g, "-");
 
@@ -83,8 +75,7 @@ QtObject {
             }
 
             // Create the new blog post.
-            script.createNote("---\ntitle: " + headline + "\ndescription: \nimage: /assets/img/my-image.jpg\ndate: " + dateString + "\norder: " + order + "\n---\n\n# " + headline + "\n\n" +
-                "<BlogDate v-bind:fm=\"$frontmatter\" />\n\n\n![image title](./media/my-image.jpg)");
+            script.createNote("---\ntitle: " + headline + "\ndescription: \nimage: /assets/img/my-image.jpg\ndate: " + dateString + "\norder: " + order + "\n---\n\n# " + headline + "\n\n" + "<BlogDate v-bind:fm=\"$frontmatter\" />\n\n\n![image title](./media/my-image.jpg)");
             const currentNote = script.currentNote();
 
             // rename the note file if needed
@@ -96,5 +87,12 @@ QtObject {
                 mainWindow.reloadCurrentNoteByNoteId();
             }
         }
+    }
+
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("qownnotesBlogPost", "Create a QOwnNotes Blog Post", "QON Blog Post", "document-new");
     }
 }

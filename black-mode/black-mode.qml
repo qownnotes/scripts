@@ -4,7 +4,7 @@ import QtQml 2.0
  * This script makes the dark mode even darker
  */
 QtObject {
-    property string customStylesheet;
+    property string customStylesheet
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -13,9 +13,9 @@ QtObject {
             "name": "Custom stylesheet",
             "description": "Please enter your custom stylesheet:",
             "type": "text",
-            "default": "",
+            "default": ""
         },
-    ];
+    ]
 
     /**
      * Adds custom styles

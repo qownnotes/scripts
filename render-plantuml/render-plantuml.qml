@@ -11,13 +11,11 @@ import QtQml 2.0
     *
  */
 QtObject {
-    property string javaExePath;
-    property string plantumlJarPath;
-    property string workDir;
-    property string hideMarkup;
-    property string noStartUml;
-    property string svgOrPng;
-    property string additionalParams;
+    property string additionalParams
+    property string hideMarkup
+    property string javaExePath
+    property string noStartUml
+    property string plantumlJarPath
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -62,7 +60,10 @@ QtObject {
             "description": "Please select a format:",
             "type": "selection",
             "default": "png",
-            "items": {"png": "png", "svg": "svg"},
+            "items": {
+                "png": "png",
+                "svg": "svg"
+            }
         },
         {
             "identifier": "additionalParams",
@@ -71,79 +72,70 @@ QtObject {
             "type": "string",
             "default": ""
         }
-    ];
+    ]
+    property string svgOrPng
+    property string workDir
 
-	function init() {
-		script.registerCustomAction("insertPumlDiagram", "PUML: insert Diagram", "", "",1);
-		script.registerCustomAction("insertPumlGraphviz", "PUML: insert Graphviz Diagram", "", "",1);
-		script.registerCustomAction("insertPumlJSON", "PUML: insert JSON Diagram", "", "",1);
-		script.registerCustomAction("insertPumlYAML", "PUML: insert YAML Diagram", "", "",1);
-		script.registerCustomAction("insertPumlSalt", "PUML: insert Wireframe (Salt) Diagram", "", "",1);
-		script.registerCustomAction("insertPumlGantt", "PUML: insert Gantt Diagram", "", "",1);
-		script.registerCustomAction("insertPumlMindMap", "PUML: insert MindMap Diagram", "", "",1);
-		script.registerCustomAction("insertPumlWBS", "PUML: insert WBS Diagram", "", "",1);
-	}
     function customActionInvoked(identifier) {
-		switch (identifier) {
-			case "insertPumlDiagram":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startuml\n\t" + script.noteTextEditSelectedText() + "\n@enduml\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-12);
-			break;
-			case "insertPumlGraphviz":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startuml\ndigraph Diagram {\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-14);
-			break;
-			case "insertPumlJSON":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startjson\n\t" + script.noteTextEditSelectedText() + "\n@endjson\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-13);
-			break;
-			case "insertPumlYAML":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startyaml\n\t" + script.noteTextEditSelectedText() + "\n@endyaml\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-13);
-			break;
-			case "insertPumlSalt":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startsalt\n{\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-14);
-			break;
-			case "insertPumlGantt":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startgantt\n" + script.noteTextEditSelectedText() + "\n@endgantt\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-14);
-			break;
-			case "insertPumlMindMap":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startmindmap\n" + script.noteTextEditSelectedText() + "\n@endmindmap\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-16);
-			break;
-			case "insertPumlWBS":
-				// getting selected text from the note text edit
-				var text = "```plantuml\n@startwbs\n" + script.noteTextEditSelectedText() + "\n@endwbs\n```";
-				// put the result to the current cursor position in the note text edit
-				script.noteTextEditWrite(text);
-                script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition()-12);
-			break;
-		}
-	}
-
+        switch (identifier) {
+        case "insertPumlDiagram":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startuml\n\t" + script.noteTextEditSelectedText() + "\n@enduml\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 12);
+            break;
+        case "insertPumlGraphviz":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startuml\ndigraph Diagram {\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 14);
+            break;
+        case "insertPumlJSON":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startjson\n\t" + script.noteTextEditSelectedText() + "\n@endjson\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 13);
+            break;
+        case "insertPumlYAML":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startyaml\n\t" + script.noteTextEditSelectedText() + "\n@endyaml\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 13);
+            break;
+        case "insertPumlSalt":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startsalt\n{\n\t" + script.noteTextEditSelectedText() + "\n}\n@enduml\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 14);
+            break;
+        case "insertPumlGantt":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startgantt\n" + script.noteTextEditSelectedText() + "\n@endgantt\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 14);
+            break;
+        case "insertPumlMindMap":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startmindmap\n" + script.noteTextEditSelectedText() + "\n@endmindmap\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 16);
+            break;
+        case "insertPumlWBS":
+            // getting selected text from the note text edit
+            var text = "```plantuml\n@startwbs\n" + script.noteTextEditSelectedText() + "\n@endwbs\n```";
+            // put the result to the current cursor position in the note text edit
+            script.noteTextEditWrite(text);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - 12);
+            break;
+        }
+    }
     function extractPlantUmlText(html, plantumlSectionRegex, note) {
         var plantumlFiles = [];
         var diagramsToGenerate = [];
@@ -152,30 +144,29 @@ QtObject {
         var match = plantumlSectionRegex.exec(html);
         while (match != null) {
             var filePath = script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir") + "/" + note.id + "_" + (++index));
-			//escape the \n into \|n
+            //escape the \n into \|n
             var matchedUml = match[1].replace(/\\n/gm, "\\|n");
-			//Unescape HTML entities because some special char are used by PlantUML
-			matchedUml = unescape(matchedUml);
-			// unescape \|n to a real escaped line break \n (cf. https://stackoverflow.com/questions/27363399/how-to-escape-line-break-already-present-in-a-string/27363443#27363443)
-			matchedUml = matchedUml.replace(/(\\)\|n/gm, "\\n");
-
+            //Unescape HTML entities because some special char are used by PlantUML
+            matchedUml = unescape(matchedUml);
+            // unescape \|n to a real escaped line break \n (cf. https://stackoverflow.com/questions/27363399/how-to-escape-line-break-already-present-in-a-string/27363443#27363443)
+            matchedUml = matchedUml.replace(/(\\)\|n/gm, "\\n");
 
             if (noStartUml == "true") {
-				// Transforms back tagged start/end keywords to @startkeyword/@endkeyword
+                // Transforms back tagged start/end keywords to @startkeyword/@endkeyword
                 matchedUml = matchedUml.replace(/^<b><font color=\"\w+\">(start\w+)<\/font><\/b>\\n/gi, "@$1\\n").replace(/<b><font color=\"\w+\">(end\w+)<\/font><\/b>\\n$/gi, "@$1\\n");
 
                 //If needed adds @startuml/@enduml
                 if (!(matchedUml.match(/^\n?@start\w+(\n|\\n)/gi)))
-					matchedUml = "@startuml\n" + matchedUml;
+                    matchedUml = "@startuml\n" + matchedUml;
                 if (!(matchedUml.match(/(\n|\\n)@end\w+\n?$/gi)))
-					matchedUml = matchedUml + "\n@enduml\n";
+                    matchedUml = matchedUml + "\n@enduml\n";
             }
 
-            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g,"'").replace(/&#47;/g,"\/").replace(/&#40;/g,"\(").replace(/&#41;/g,"\)");
+            matchedUml = matchedUml.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/"/g, "\"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&#47;/g, "\/").replace(/&#40;/g, "\(").replace(/&#41;/g, "\)");
 
             // script.log(`${filePath}`);
 
-            var cached = isCached(filePath,matchedUml);
+            var cached = isCached(filePath, matchedUml);
             // script.log(cached);
             if (cached == "notCached") {
                 script.writeToFile(filePath, matchedUml);
@@ -191,31 +182,29 @@ QtObject {
 
         return plantumlFiles;
     }
-
     function generateUmlDiagrams(html, plantumlFiles) {
         const d = new Date();
         var noteId = script.getPersistentVariable("renderPlantUML/noteId");
         script.setPersistentVariable("renderPlantUML/currentTimeStamp", d.getTime());
         var timeStamp = script.getPersistentVariable("renderPlantUML/currentTimeStamp");
-        var params = [
-                "-jar", plantumlJarPath,
-                "-o", script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir")),
-                "-t" + svgOrPng,
-                additionalParams
-                ].concat(plantumlFiles);
-        var result = script.startDetachedProcess(
-                javaExePath,
-                params,
-                "plantuml-callback-" + noteId + "-" + timeStamp,
-                0,
-                html);
-        script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "running")
-        //script.log("launching PUML: " + noteId + "-" + timeStamp);
+        var params = ["-jar", plantumlJarPath, "-o", script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir")), "-t" + svgOrPng, additionalParams].concat(plantumlFiles);
+        var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback-" + noteId + "-" + timeStamp, 0, html);
+        script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "running");
+    //script.log("launching PUML: " + noteId + "-" + timeStamp);
     }
-
+    function init() {
+        script.registerCustomAction("insertPumlDiagram", "PUML: insert Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlGraphviz", "PUML: insert Graphviz Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlJSON", "PUML: insert JSON Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlYAML", "PUML: insert YAML Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlSalt", "PUML: insert Wireframe (Salt) Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlGantt", "PUML: insert Gantt Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlMindMap", "PUML: insert MindMap Diagram", "", "", 1);
+        script.registerCustomAction("insertPumlWBS", "PUML: insert WBS Diagram", "", "", 1);
+    }
     function injectDiagrams(html, plantumlSectionRegex, plantumlFiles) {
         var index = 0;
-        var updatedHtml = html.replace(plantumlSectionRegex, function(matchedStr, g1) {
+        var updatedHtml = html.replace(plantumlSectionRegex, function (matchedStr, g1) {
             var imgElement = "<div><img src=\"file:///" + plantumlFiles[index++] + "." + svgOrPng + "?t=" + +(new Date()) + "\" alt=\"Generated Diagram\"/></div>";
 
             if (hideMarkup == "true") {
@@ -230,33 +219,14 @@ QtObject {
     // Check if the same plantUML content has already been saved
     // if an image was generated
     // and verify if it is the same
-    function isCached(filePath,newContent) {
+    function isCached(filePath, newContent) {
         var cached = "notCached";
-        if(script.fileExists(filePath) && script.fileExists(filePath + "." + svgOrPng)){
+        if (script.fileExists(filePath) && script.fileExists(filePath + "." + svgOrPng)) {
             var oldContent = script.readFromFile(filePath);
             if (Qt.md5(oldContent) == Qt.md5(newContent))
                 cached = "cached";
         }
         return cached;
-    }
-
-    function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
-        var noteId = script.getPersistentVariable("renderPlantUML/noteId");
-        if (callbackIdentifier
-                ==
-                "plantuml-callback-" + noteId + "-" + script.getPersistentVariable("renderPlantUML/currentTimeStamp")
-            ) {
-            //script.log("entering callback: " + noteId + "-" + script.getPersistentVariable("renderPlantUML/currentTimeStamp"));
-            // If the flag is not set to done, then refresh
-            if (script.getPersistentVariable("renderPlantUML/pumlRunning/" + noteId) != "done") {
-                script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "done");
-                script.regenerateNotePreview();
-                //script.log(`refresh`);
-            } else {
-                // else, reset the flag for the next modification
-                script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "");
-            }
-        }
     }
     /**
      * This function is called when the markdown html of a note is generated
@@ -271,12 +241,12 @@ QtObject {
      * @param {string} forExport - the html is used for an export, false for the preview
      * @return {string} the modified html or an empty string if nothing should be modified
      */
-     function noteToMarkdownHtmlHook(note, html, forExport) {
+    function noteToMarkdownHtmlHook(note, html, forExport) {
         //script.log("launch");
         //script.log("flag is: " + script.getPersistentVariable("renderPlantUML/pumlRunning/" + note.id));
 
         var plantumlSectionRegex = /<pre><code class=\"language-plantuml\"\>([\s\S]*?)(<\/code>)?<\/pre>/gmi;
-        script.setPersistentVariable("renderPlantUML/workDir", workDir ? workDir: script.cacheDir("render-plantuml"));
+        script.setPersistentVariable("renderPlantUML/workDir", workDir ? workDir : script.cacheDir("render-plantuml"));
         script.setPersistentVariable("renderPlantUML/noteId", note.id);
 
         var plantumlFiles = extractPlantUmlText(html, plantumlSectionRegex, note);
@@ -286,5 +256,20 @@ QtObject {
         }
 
         return html;
+    }
+    function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
+        var noteId = script.getPersistentVariable("renderPlantUML/noteId");
+        if (callbackIdentifier == "plantuml-callback-" + noteId + "-" + script.getPersistentVariable("renderPlantUML/currentTimeStamp")) {
+            //script.log("entering callback: " + noteId + "-" + script.getPersistentVariable("renderPlantUML/currentTimeStamp"));
+            // If the flag is not set to done, then refresh
+            if (script.getPersistentVariable("renderPlantUML/pumlRunning/" + noteId) != "done") {
+                script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "done");
+                script.regenerateNotePreview();
+                //script.log(`refresh`);
+            } else {
+                // else, reset the flag for the next modification
+                script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "");
+            }
+        }
     }
 }

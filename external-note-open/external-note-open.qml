@@ -6,7 +6,7 @@ import QOwnNotesTypes 1.0
  * a note when it is double clicked in the note list
  */
 Script {
-    property string executablePath;
+    property string executablePath
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -15,9 +15,9 @@ Script {
             "name": "Path of external editor",
             "description": "Please select the path to the executable:",
             "type": "file",
-            "default": "kate",
+            "default": "kate"
         }
-    ];
+    ]
 
     /**
      * This function is called after a note was double clicked

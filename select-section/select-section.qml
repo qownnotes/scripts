@@ -1,18 +1,13 @@
 import QtQml 2.0
 
 /**
- * This script allows to select or cut 
+ * This script allows to select or cut
  * the current section (i.e. at the current cursor position)
  *
  */
 QtObject {
-    // creating icons and menu entries
-	function init() {
-		script.registerCustomAction("selectCurrentSection", "Select current section", "Select current section", "edit-select-all",true);
-		script.registerCustomAction("cutCurrentSection", "Cut current section", "cut current section", "edit-cut",true);
-	}
-	// Setting the actions
-	function customActionInvoked(identifier) {
+    // Setting the actions
+    function customActionInvoked(identifier) {
         if (identifier != "selectCurrentSection" && identifier != "cutCurrentSection")
             return;
 
@@ -21,10 +16,10 @@ QtObject {
         var noteText = script.currentNote().noteText;
 
         var startOfLine = -1;
-        var regForHeaders =  /\n(#+) ./g ;
+        var regForHeaders = /\n(#+) ./g;
         var match;
         var currentHeadings;
-        
+
         // Searching for headers before cursor pos:
         // get all headers
         while (match = regForHeaders.exec(noteText)) {
@@ -45,10 +40,10 @@ QtObject {
 
         // a regexp to look for the next header
         // of the same level of lower → end of the section
-        var regForNextHeader = new RegExp("\n(#{1," + currentHeadingsLevel + "}) .","g");
+        var regForNextHeader = new RegExp("\n(#{1," + currentHeadingsLevel + "}) .", "g");
         // we seach in the text from the current offset to the end
         match = regForNextHeader.exec(noteText.substr(startOfLine));
-        
+
         // Set position of the next section
         if (match)
             // we found a match
@@ -57,10 +52,10 @@ QtObject {
         else
             // No match means no headings left
             // so get to proper position EOF
-            var nextSectionOffset = noteText.length
+            var nextSectionOffset = noteText.length;
 
         // Select the text of the current section
-        script.noteTextEditSetSelection(startOfLine,nextSectionOffset);
+        script.noteTextEditSetSelection(startOfLine, nextSectionOffset);
 
         // If a cut was asked
         if (identifier == "cutCurrentSection" && nextSectionOffset > 0) {
@@ -68,14 +63,19 @@ QtObject {
             script.setClipboardText("\n" + script.noteTextEditSelectedText());
 
             // set the new notetext without the current section
-            var modifiedNoteText = noteText.substr(0,startOfLine-1) + noteText.substr(nextSectionOffset);
+            var modifiedNoteText = noteText.substr(0, startOfLine - 1) + noteText.substr(nextSectionOffset);
 
             // Put the new text to the editor
             script.noteTextEditSetCursorPosition(0);
             script.noteTextEditWrite(modifiedNoteText);
-            script.noteTextEditSetCursorPosition(startOfLine-1);
+            script.noteTextEditSetCursorPosition(startOfLine - 1);
         }
 
         return;
-	}
+    }
+    // creating icons and menu entries
+    function init() {
+        script.registerCustomAction("selectCurrentSection", "Select current section", "Select current section", "edit-select-all", true);
+        script.registerCustomAction("cutCurrentSection", "Cut current section", "cut current section", "edit-cut", true);
+    }
 }

@@ -12,10 +12,10 @@ from: markdown+emoji+autolink_bare_uris+lists_without_preceding_blankline
 
 standalone: true
 self-contained: false
-  
+
 resource-path:
-- .             # the working directory from which pandoc is run
-- ${USERDATA}   # the user data resources directory
+  - . # the working directory from which pandoc is run
+  - ${USERDATA} # the user data resources directory
 
 # turn on built-in citation processing.  Note that if you need
 # control over when the citeproc processing is done relative
@@ -135,5 +135,4 @@ slide-level: 3
 
 # A list of two-element lists used when accessing https links inside the document
 request-headers:
-- ["User-Agent", "Mozilla/5.0"]
-
+  - ["User-Agent", "Mozilla/5.0"]

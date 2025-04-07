@@ -15,17 +15,16 @@ import QOwnNotesTypes 1.0
  */
 
 Script {
-    property bool useDashesForClosing
-
     property variant settingsVariables: [
         {
             "identifier": "useDashesForClosing",
             "name": "",
             "description": "Use three dashes as YAML closer for front matter created by the script",
             "type": "boolean",
-            "default": "false",
+            "default": "false"
         },
     ]
+    property bool useDashesForClosing
 
     /**
      * Handles note tagging for a note
@@ -41,132 +40,122 @@ Script {
      */
 
     function noteTaggingHook(note, action, tagName, newTagName) {
-        const noteText = note.noteText
-        var noteYaml = null
-        var tagLine = null
-        var yamlTags = []
+        const noteText = note.noteText;
+        var noteYaml = null;
+        var tagLine = null;
+        var yamlTags = [];
 
         if (noteText.substring(0, 4) == '---\n') {
-            var yamlEndIndex = noteText.indexOf('\n...\n')
+            var yamlEndIndex = noteText.indexOf('\n...\n');
 
             // If there's no proper "..." YAML ending "---" is recognized as one
             if (yamlEndIndex == -1)
-                yamlEndIndex = noteText.indexOf('\n---\n')
+                yamlEndIndex = noteText.indexOf('\n---\n');
 
             if (yamlEndIndex != -1) {
-                noteYaml = noteText.substring(0, yamlEndIndex)
+                noteYaml = noteText.substring(0, yamlEndIndex);
 
-                const tagLineMatch = noteYaml.match(/^tags:(.*)/m)
+                const tagLineMatch = noteYaml.match(/^tags:(.*)/m);
 
                 if (tagLineMatch != null) {
-                    const tagLineStartIndex = tagLineMatch.index
-                    const tagLineEndIndex = tagLineStartIndex + tagLineMatch[0].length
-                    tagLine = tagLineMatch[0]
-                    yamlTags = tagLineMatch[1].trim().split(' ')
+                    const tagLineStartIndex = tagLineMatch.index;
+                    const tagLineEndIndex = tagLineStartIndex + tagLineMatch[0].length;
+                    tagLine = tagLineMatch[0];
+                    yamlTags = tagLineMatch[1].trim().split(' ');
                 }
             }
         }
 
         switch (action) {
-            // adds the tag "tagName" to the note
-            // the new note text has to be returned so that the note can be updated
-            // returning an empty string indicates that nothing has to be changed
-            case 'add':
-                tagName = tagName.trim()
-                tagName = tagName.replace(/ /g, '_')
+        // adds the tag "tagName" to the note
+        // the new note text has to be returned so that the note can be updated
+        // returning an empty string indicates that nothing has to be changed
+        case 'add':
+            tagName = tagName.trim();
+            tagName = tagName.replace(/ /g, '_');
 
-                if (yamlTags.indexOf(tagName) != -1)
-                    return
+            if (yamlTags.indexOf(tagName) != -1)
+                return;
 
-                // For some reason newly created JS/QML arrays contain an empty item
-                if (yamlTags[0] == '')
-                    yamlTags.shift()
+            // For some reason newly created JS/QML arrays contain an empty item
+            if (yamlTags[0] == '')
+                yamlTags.shift();
 
-                yamlTags.push(tagName)
-                yamlTags.sort()
+            yamlTags.push(tagName);
+            yamlTags.sort();
 
-                if (useDashesForClosing)
-                    var yamlCloser = '\n---\n\n'
-                else
-                    var yamlCloser = '\n...\n\n'
+            if (useDashesForClosing)
+                var yamlCloser = '\n---\n\n';
+            else
+                var yamlCloser = '\n...\n\n';
 
-                if (noteYaml == null)
-                    return '---\ntags: ' + tagName + yamlCloser + noteText
-                else if (tagLine == null)
-                    return noteText.substring(0, 4) + 'tags: ' + tagName + '\n' + noteText.substring(4)
-                else
-                    return noteText.substring(0, tagLineStartIndex) +
-                           'tags: ' + yamlTags.join(' ') +  noteText.substring(tagLineEndIndex)
-            ;
+            if (noteYaml == null)
+                return '---\ntags: ' + tagName + yamlCloser + noteText;
+            else if (tagLine == null)
+                return noteText.substring(0, 4) + 'tags: ' + tagName + '\n' + noteText.substring(4);
+            else
+                return noteText.substring(0, tagLineStartIndex) + 'tags: ' + yamlTags.join(' ') + noteText.substring(tagLineEndIndex);
 
-            // removes the tag "tagName" from the note
-            // the new note text has to be returned so that the note can be updated
-            // returning an empty string indicates that nothing has to be changed
-            case 'remove':
-                tagName = tagName.replace(/ /g, '_')
+        // removes the tag "tagName" from the note
+        // the new note text has to be returned so that the note can be updated
+        // returning an empty string indicates that nothing has to be changed
+        case 'remove':
+            tagName = tagName.replace(/ /g, '_');
 
-                if (yamlTags.indexOf(tagName) == -1)
-                    return
+            if (yamlTags.indexOf(tagName) == -1)
+                return;
+            yamlTags.splice(yamlTags.indexOf(tagName), 1);
 
-                yamlTags.splice(yamlTags.indexOf(tagName), 1)
+            return noteText.substring(0, tagLineStartIndex) + 'tags: ' + yamlTags.join(' ') + noteText.substring(tagLineEndIndex);
 
-                return noteText.substring(0, tagLineStartIndex) +
-                       'tags: ' + yamlTags.join(' ') +  noteText.substring(tagLineEndIndex)
-            ;
+        // renames the tag "tagName" in the note to "newTagName"
+        // the new note text has to be returned so that the note can be updated
+        // returning an empty string indicates that nothing has to be changed
+        case 'rename':
+            tagName = tagName.replace(/ /g, '_');
+            newTagName = newTagName.replace(/ /g, '_');
 
-            // renames the tag "tagName" in the note to "newTagName"
-            // the new note text has to be returned so that the note can be updated
-            // returning an empty string indicates that nothing has to be changed
-            case 'rename':
-                tagName = tagName.replace(/ /g, '_')
-                newTagName = newTagName.replace(/ /g, '_')
+            if (yamlTags.indexOf(tagName) == -1)
+                return;
+            yamlTags.splice(yamlTags.indexOf(tagName), 1);
+            yamlTags.push(newTagName);
+            yamlTags.sort();
 
-                if (yamlTags.indexOf(tagName) == -1)
-                    return
+            return noteText.substring(0, tagLineStartIndex) + 'tags: ' + yamlTags.join(' ') + noteText.substring(tagLineEndIndex);
 
-                yamlTags.splice(yamlTags.indexOf(tagName), 1)
-                yamlTags.push(newTagName)
-                yamlTags.sort()
+        // returns a list of all tag names of the note
+        case 'list':
+            if (yamlTags != null) {
+                var tagNameList = [];
+                yamlTags.forEach(function (tagName, index, array) {
+                    tagName = tagName.replace(/_/g, ' ');
+                    if (tagName != '' && tagNameList.indexOf(tagName) == -1)
+                        tagNameList.push(tagName);
+                });
+            }
 
-                return noteText.substring(0, tagLineStartIndex) +
-                       'tags: ' + yamlTags.join(' ') +  noteText.substring(tagLineEndIndex)
-            ;
-
-            // returns a list of all tag names of the note
-            case 'list':
-                if (yamlTags != null) {
-                    var tagNameList = []
-                    yamlTags.forEach(function(tagName, index, array) {
-                        tagName = tagName.replace(/_/g, ' ')
-                        if (tagName != '' && tagNameList.indexOf(tagName) == -1)
-                            tagNameList.push(tagName)
-                        })
-                }
-
-                return tagNameList
-            ;
+            return tagNameList;
         }
 
-        return ''
+        return '';
     }
 
     // Exclude YAML from note preview
     function noteToMarkdownHtmlHook(note, html, forExport) {
-
         if (note.noteText.substring(0, 4) == '---\n') {
 
             // For ---/nYAML/n.../nNote text
-            var yamlEndIndex = html.indexOf('\n...\n')
+            var yamlEndIndex = html.indexOf('\n...\n');
 
             // For ---/nYAML/n.../n/nNote text
             if (yamlEndIndex == -1)
-                yamlEndIndex = html.indexOf('\n...</p>')
+                yamlEndIndex = html.indexOf('\n...</p>');
 
             if (yamlEndIndex != -1)
-                return html.substring(yamlEndIndex+4)
+                return html.substring(yamlEndIndex + 4);
 
             // For ---/nYAML/n---/nNote text
-            return html.replace(/\<hr\/\>(\n|.)*?\<h2 id=\"toc_0\"\>(\n|.)*?\<\/h2\>/, '')
+            return html.replace(/\<hr\/\>(\n|.)*?\<h2 id=\"toc_0\"\>(\n|.)*?\<\/h2\>/, '');
         }
     }
 }

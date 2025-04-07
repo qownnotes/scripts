@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.1",
   "minAppVersion": "20.5.6",
-  "description" : "This script will insert/update decimal outline numbers for all headings in the current note\n\nDecimal Outline numbering is assigning tiered numbers to the headings based on their level and will result in something like this:\n\n# 1 Introduction\n## 1.1 Background\n### 1.1.1 In the beginning\n##1.2 Purpose\n..."
+  "description": "This script will insert/update decimal outline numbers for all headings in the current note\n\nDecimal Outline numbering is assigning tiered numbers to the headings based on their level and will result in something like this:\n\n# 1 Introduction\n## 1.1 Background\n### 1.1.1 In the beginning\n##1.2 Purpose\n..."
 }

@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.2",
   "minAppVersion": "17.07.8",
-  "description" : "This script adds toolbar buttons to increase and decrease the depth of all #-style headlines in the selected text."
-} 
+  "description": "This script adds toolbar buttons to increase and decrease the depth of all #-style headlines in the selected text."
+}

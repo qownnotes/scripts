@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.0",
   "minAppVersion": "18.04.3",
-  "description" : "This script fixes numbers in ordered lists."
+  "description": "This script fixes numbers in ordered lists."
 }

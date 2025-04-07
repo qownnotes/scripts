@@ -8,24 +8,23 @@ import com.qownnotes.noteapi 1.0
  * Hint: assign a shortcut.
  */
 QtObject {
-    property bool checkboxCharacterUppercase;
-    property bool onlyTouchCheckboxes;
-    property string multipleLinesMethod;
-
+    property bool checkboxCharacterUppercase
+    property string multipleLinesMethod
+    property bool onlyTouchCheckboxes
     property variant settingsVariables: [
         {
             'identifier': 'checkboxCharacterUppercase',
             'name': 'Preferred checkbox-character',
             'description': 'Use - [X] instead of the default - [x] as checkbox-character.',
             'type': 'boolean',
-            'default': 'false',
+            'default': 'false'
         },
         {
             'identifier': 'onlyTouchCheckboxes',
             'name': 'Only touch checkboxes',
             'description': 'Don\'t touch normal list items or normal lines.',
             'type': 'boolean',
-            'default': 'false',
+            'default': 'false'
         },
         {
             'identifier': 'multipleLinesMethod',
@@ -35,27 +34,11 @@ QtObject {
             'default': 'cycleIndividually',
             'items': {
                 'cycleIndividually': 'Cycle all lines individually.',
-                'synchronizeChecked': 'Set all checkboxes to checked when the selection contains at least one checked checkbox. Otherwise cycle.',
+                'synchronizeChecked': 'Set all checkboxes to checked when the selection contains at least one checked checkbox. Otherwise cycle.'
                 // 'synchronizeFirst': 'Set all checkboxes to the value of the first checkox in the selection.',
-            },
+            }
         }
     ]
-
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        // See: http://docs.qownnotes.org/en/develop/scripting/README.html#id16
-        script.registerCustomAction(
-            'toggleCheckbox', /* identifier */
-            'Toggle checkbox(es)', /* menuText */
-            'Toggle checkbox(es)', /* buttonText */
-            '', /* icon, see: https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html */
-            true, /* useInNoteEditContextMenu */
-            false, /* hideButtonInToolbar */
-            false /* useInNoteListContextMenu */
-        );
-    }
 
     /**
      * This function is invoked when a custom action is triggered
@@ -88,9 +71,7 @@ QtObject {
         // TODO: support '* - [ ]', '+ - [ ]' as well?
         var checkboxCharacter = '';
         var UNCHECKED = '- [ ] ';
-        var CHECKED = (checkboxCharacterUppercase)
-            ? '- [X] '
-            : '- [x] ';
+        var CHECKED = (checkboxCharacterUppercase) ? '- [X] ' : '- [x] ';
         var DISABLED = '- [-] ';
 
         // Set up synchronizeChecked.
@@ -98,10 +79,7 @@ QtObject {
             var mixedStatesPresent = false;
 
             // Contains at least 1 checked and at least 1 unchecked checkbox?
-            if (
-                text.match(/- \[(x|X)\] /) &&
-                text.match(/- \[ \] /)
-            ) {
+            if (text.match(/- \[(x|X)\] /) && text.match(/- \[ \] /)) {
                 script.log('Scenario: at least 1 checked and at least 1 unchecked: set all lines to checked');
                 mixedStatesPresent = true;
                 checkboxCharacter = CHECKED;
@@ -119,33 +97,33 @@ QtObject {
             // checkboxCharacter is already correctly set.
             if (multipleLinesMethod === 'synchronizeChecked' && mixedStatesPresent) {
                 lines[i] = lines[i].replace(/(^\s*)- \[( |x|X)\] /, "$1" + checkboxCharacter);
-            }
+            } else
             // Default: cycle-all-lines-mode.
-            else {
+            {
                 script.log('Scenario: cycle-all-lines');
 
                 // Toggle unchecked to checked.
                 if (lines[i].match(/(^\s*)- \[ \] /)) {
                     script.log('Convert unchecked to checked');
                     lines[i] = lines[i].replace(/(^\s*)- \[ \] /, "$1" + CHECKED);
-                }
+                } else
                 // Toggle checked to disabled.
-                else if (lines[i].match(/(^\s*)- \[(x|X)\] /)) {
+                if (lines[i].match(/(^\s*)- \[(x|X)\] /)) {
                     script.log('Convert checked to disabled');
                     lines[i] = lines[i].replace(/(^\s*)- \[(x|X)\] /, "$1" + DISABLED);
-                }
+                } else
                 // Toggle disabled to unchecked.
-                else if (lines[i].match(/(^\s*)- \[-\] /)) {
+                if (lines[i].match(/(^\s*)- \[-\] /)) {
                     script.log('Convert disabled to unchecked');
                     lines[i] = lines[i].replace(/(^\s*)- \[-\] /, "$1" + UNCHECKED);
-                }
+                } else
                 // Convert plain list lines (-, *, +) to unchecked checkboxes lines.
-                else if (!onlyTouchCheckboxes && lines[i].match(/(^\s*)(-|\*|\+) /)) {
+                if (!onlyTouchCheckboxes && lines[i].match(/(^\s*)(-|\*|\+) /)) {
                     script.log('Convert plain list to unchecked');
                     lines[i] = lines[i].replace(/(^\s*)(-|\*|\+) /, "$1" + UNCHECKED);
-                }
+                } else
                 // Add checkboxes when unpresent (empty lines are skipped).
-                else if (!onlyTouchCheckboxes) {
+                if (!onlyTouchCheckboxes) {
                     // TODO block adding UNCHECKED mid sentence, how to detect?
                     script.log('Convert no list to unchecked');
                     lines[i] = UNCHECKED + lines[i];
@@ -161,5 +139,20 @@ QtObject {
 
         // Restore selection
         script.noteTextEditSetSelection(noteTextEditSelectionStart, noteTextEditSelectionEnd);
+    }
+
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        // See: http://docs.qownnotes.org/en/develop/scripting/README.html#id16
+        script.registerCustomAction('toggleCheckbox' /* identifier */
+        , 'Toggle checkbox(es)' /* menuText */
+        , 'Toggle checkbox(es)' /* buttonText */
+        , '' /* icon, see: https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html */
+        , true /* useInNoteEditContextMenu */
+        , false /* hideButtonInToolbar */
+        , false /* useInNoteListContextMenu */
+        );
     }
 }

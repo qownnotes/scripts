@@ -49,9 +49,6 @@ QtObject {
         // const rtl = '\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0870-\u089F\uFB50-\uFDFF\uFE70-\uFEFF\u0700-\u074F\u0860-\u086F\u0780-\u07BF\u07C0-\u07FF\u0840-\u085F\u0800-\u083F\u0590-\u05FF'  // TODO: beyond BMP
         // const nonletter = '\x00-\x40\x5B-\x60\x7B-\xA9\xAB-\xB9\xBB-\xBF\xD7\xF7'  // TODO
         // const rx = new RegExp(`<((?:p|li|td|th|h[1-6])\b[^>]*)>(?=[${nonletter}]*[${rtl}])`, 'g')
-        return html.replace(
-            /<((?:p|li|td|th|h[1-6])\b[^>]*)>(?=[\x00-\x40\x5B-\x60\x7B-\xA9\xAB-\xB9\xBB-\xBF\xD7\xF7]*[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0870-\u089F\uFB50-\uFDFF\uFE70-\uFEFF\u0700-\u074F\u0860-\u086F\u0780-\u07BF\u07C0-\u07FF\u0840-\u085F\u0800-\u083F\u0590-\u05FF])/g,
-            (_, tag) => `<${tag} dir="rtl">`)
+        return html.replace(/<((?:p|li|td|th|h[1-6])\b[^>]*)>(?=[\x00-\x40\x5B-\x60\x7B-\xA9\xAB-\xB9\xBB-\xBF\xD7\xF7]*[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0870-\u089F\uFB50-\uFDFF\uFE70-\uFEFF\u0700-\u074F\u0860-\u086F\u0780-\u07BF\u07C0-\u07FF\u0840-\u085F\u0800-\u083F\u0590-\u05FF])/g, (_, tag) => `<${tag} dir="rtl">`);
     }
-
 }

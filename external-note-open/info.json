@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.0",
   "minAppVersion": "18.05.4",
-  "description" : "This script allows you to configure an external editor (or an other application) that should open a note when it is double clicked in the note list."
+  "description": "This script allows you to configure an external editor (or an other application) that should open a note when it is double clicked in the note list."
 }

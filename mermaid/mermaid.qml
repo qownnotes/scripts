@@ -19,7 +19,7 @@ QtObject {
     */
     function preNoteToMarkdownHtmlHook(note, markdown, forExport) {
         var re = /```mermaid\n([\s\S]*?)\n```/gim;
-        markdown = markdown.replace(re, function(_, diag){
+        markdown = markdown.replace(re, function (_, diag) {
             var encodedData = Qt.btoa(diag);
             var ink = '![](https://mermaid.ink/img/' + encodedData + ')';
             return ink;

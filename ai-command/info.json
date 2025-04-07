@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.1.1",
   "minAppVersion": "24.11.4",
-  "description" : "This script allows you to write a command for the AI completer to replace the selected text."
+  "description": "This script allows you to write a command for the AI completer to replace the selected text."
 }

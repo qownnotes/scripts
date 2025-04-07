@@ -5,13 +5,6 @@ import com.qownnotes.noteapi 1.0
  * This script creates a custom action to italicize selected text using single underscores
  */
 QtObject {
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        script.registerCustomAction("italicize", "Italicize selected text using underscores", "Italicize text", "format-text-italic");
-    }
-
     function addItalics(text) {
         var italics = text.replace(/^(.*)$/, "_$1_");
         return italics;
@@ -32,5 +25,11 @@ QtObject {
         var text = script.noteTextEditSelectedText();
         // write text to the note text edit
         script.noteTextEditWrite(addItalics(text));
+    }
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("italicize", "Italicize selected text using underscores", "Italicize text", "format-text-italic");
     }
 }

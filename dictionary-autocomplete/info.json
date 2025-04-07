@@ -5,5 +5,5 @@
   "version": "0.0.3",
   "minAppVersion": "20.8.6",
   "authors": ["@pbek"],
-  "description" : "This script attempts to autocomplete the current word based on a dictionary file that contains a list of words, separated by a newline character. You can use the LibreOffice dictionary files, that can be downloaded in QOwnNotes as source (*.dic). You will get the dictionary path from the <i>Debug settings</i>."
+  "description": "This script attempts to autocomplete the current word based on a dictionary file that contains a list of words, separated by a newline character. You can use the LibreOffice dictionary files, that can be downloaded in QOwnNotes as source (*.dic). You will get the dictionary path from the <i>Debug settings</i>."
 }

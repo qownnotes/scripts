@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.1",
   "minAppVersion": "18.05.1",
-  "description" : "This script creates scripting menu item to generate a 10 character alphanumeric id for the current note and to allow to jump to the note by id."
+  "description": "This script creates scripting menu item to generate a 10 character alphanumeric id for the current note and to allow to jump to the note by id."
 }

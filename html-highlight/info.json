@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "22.4.1",
-  "description" : "If you are, sometimes, using plain HTML in your markdown, and want to see it highlighted in your editor, this script is for you. You will be able to configure the style for the whole HTML tags, the tag names, the attribute names, and the attribute values."
+  "description": "If you are, sometimes, using plain HTML in your markdown, and want to see it highlighted in your editor, this script is for you. You will be able to configure the style for the whole HTML tags, the tag names, the attribute names, and the attribute values."
 }

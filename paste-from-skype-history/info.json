@@ -5,5 +5,5 @@
   "authors": ["@pbek"],
   "version": "0.0.1",
   "minAppVersion": "17.05.6",
-  "description" : "This script creates a menu item and a button that parses the text that was copied from the Skype Electron client to the clipboard and tries to extract and paste text from it."
+  "description": "This script creates a menu item and a button that parses the text that was copied from the Skype Electron client to the clipboard and tries to extract and paste text from it."
 }

@@ -6,17 +6,11 @@ import QOwnNotesTypes 1.0
  * to Markdown-text that is better understood by Slack (https://slack.com) in the clipboard
  */
 Script {
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        script.registerCustomAction("markdownToSlack", "Markdown to Slack", "Slack", "edit-copy", true, true);
-    }
 
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
-     * 
+     *
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
@@ -28,14 +22,20 @@ Script {
         var text = script.noteTextEditSelectedText();
 
         // remove unordered lists
-//        text = text.replace(/^-/gm, "");
-//        text = text.replace(/\t-/gm, "");
-        
+        //        text = text.replace(/^-/gm, "");
+        //        text = text.replace(/\t-/gm, "");
+
         // change links
         text = text.replace(/<(http.+?)>/mg, "\$1");
         text = text.replace(/\[(.+?)\]\((http.+?)\)/mg, "\$1 (\$2)");
 
         // put the result into the clipboard
         script.setClipboardText(text);
+    }
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("markdownToSlack", "Markdown to Slack", "Slack", "edit-copy", true, true);
     }
 }

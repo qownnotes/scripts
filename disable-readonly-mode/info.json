@@ -5,5 +5,5 @@
   "authors": ["@pbek"],
   "version": "1.0.0",
   "minAppVersion": "18.08.1",
-  "description" : "This script will disable the read-only mode if a note is double clicked. The note text edit will also be focused afterwards."
+  "description": "This script will disable the read-only mode if a note is double clicked. The note text edit will also be focused afterwards."
 }

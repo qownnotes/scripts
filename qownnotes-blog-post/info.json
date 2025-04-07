@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.6",
   "minAppVersion": "20.10.10",
-  "description" : "This script creates new QOwnNotes blog posts in the current note folder (that needs to point to the \"webpage/src/blog\" directory in the QOwnNotes git repository). Don't forget to allow that the note filename can be different than the note headline for the current note folder!"
+  "description": "This script creates new QOwnNotes blog posts in the current note folder (that needs to point to the \"webpage/src/blog\" directory in the QOwnNotes git repository). Don't forget to allow that the note filename can be different than the note headline for the current note folder!"
 }

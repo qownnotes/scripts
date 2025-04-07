@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.2",
   "minAppVersion": "22.11.7",
-  "description" : "Automatically make any heading, paragraph, list item, or table cell that starts with an Arabic (or any right-to-left) letter render with the correct text direction."
+  "description": "Automatically make any heading, paragraph, list item, or table cell that starts with an Arabic (or any right-to-left) letter render with the correct text direction."
 }

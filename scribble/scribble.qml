@@ -4,16 +4,16 @@ import QOwnNotesTypes 1.0
 /**
  * This script adds a menu entry to the context menu of the note edit to insert a
  * scribble image to the media-folder, that will be edited by an external image editor
- * 
+ *
  * The path of the image editor and the image template can be selected in the script settings of the script
  */
 Script {
-    property string executablePath;
-    property string imagePath;
-    property bool executeInBackground;
+    property string executablePath
+    property bool executeInBackground
+    property string imagePath
 
     // the path to the script's directory will be set here
-    property string scriptDirPath;
+    property string scriptDirPath
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -22,14 +22,14 @@ Script {
             "name": "Path of external image editor",
             "description": "Please select the path of the executable:",
             "type": "file",
-            "default": "gimp",
+            "default": "gimp"
         },
         {
             "identifier": "imagePath",
             "name": "Path of template image",
             "description": "Please select the path of the template image:",
             "type": "file",
-            "default": scriptDirPath + "/scribble.png",
+            "default": scriptDirPath + "/scribble.png"
         },
         {
             "identifier": "executeInBackground",
@@ -37,21 +37,14 @@ Script {
             "description": "If the image editor is executed in the background you will be able to work with QOwnNotes while you are editing the scribble, but the note preview will not be refreshed automatically after you close the image editor.",
             "text": "Execute in background",
             "type": "boolean",
-            "default": false,
+            "default": false
         }
-    ];
-
-    /**
-     * Initializes the custom actions
-     */
-    function init() {
-        script.registerCustomAction("scribble", "Add scribble", "Scribble", "view-preview", true, false, false);
-    }
+    ]
 
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
-     * 
+     *
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
@@ -62,9 +55,7 @@ Script {
         // insert the scribble template image as media file
         var mediaFile = script.insertMediaFile(imagePath, true);
 
-        var mediaFilePath = script.getApplicationSettingsVariable("legacyLinking") != "false" ?
-            mediaFile.replace("file://media", script.currentNoteFolderPath() + "/media") :
-            script.currentNote().fullNoteFileDirPath + "/" + mediaFile;
+        var mediaFilePath = script.getApplicationSettingsVariable("legacyLinking") != "false" ? mediaFile.replace("file://media", script.currentNoteFolderPath() + "/media") : script.currentNote().fullNoteFileDirPath + "/" + mediaFile;
         mediaFilePath = script.toNativeDirSeparators(mediaFilePath);
 
         // write the scribble image to the note
@@ -79,5 +70,12 @@ Script {
             script.startSynchronousProcess(executablePath, params);
             script.regenerateNotePreview();
         }
+    }
+
+    /**
+     * Initializes the custom actions
+     */
+    function init() {
+        script.registerCustomAction("scribble", "Add scribble", "Scribble", "view-preview", true, false, false);
     }
 }

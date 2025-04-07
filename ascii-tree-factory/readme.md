@@ -1,19 +1,18 @@
-
 ## Overview
 
 The ASCII Tree Factory plugin for QOwnNotes allows users to generate an ASCII tree representation from a given path structure. This can be particularly useful for visualizing directory structures or any hierarchical data within your notes.
 
 ## Manual Installation
 
-1. **Download the Plugin**: Save the `ascii-tree-factory.qml`  file to your local machine.
+1. **Download the Plugin**: Save the `ascii-tree-factory.qml` file to your local machine.
 2. **Add to QOwnNotes**:
    - Open QOwnNotes.
    - Navigate to `Settings` > `Scripting`.
    - Click on `Add script... > Add local script`.
-   - Select the  `ascii-tree-factory.qml` file in the script folder.
+   - Select the `ascii-tree-factory.qml` file in the script folder.
 3. **Activate the Plugin**:
    - Go back to QOwnNotes.
-   - In the `Scripting` settings, ensure that  `ascii-tree-factory.qml` is listed and checked.
+   - In the `Scripting` settings, ensure that `ascii-tree-factory.qml` is listed and checked.
 
 ## Settings
 

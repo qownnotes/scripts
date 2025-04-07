@@ -5,5 +5,5 @@
   "authors": ["@pbek"],
   "version": "0.0.5",
   "minAppVersion": "20.6.0",
-  "description" : "With this script you can add custom stylesheets to the note preview. Please refer to the <a href='http://doc.qt.io/qt-5/richtext-html-subset.html'>Supported HTML Subset</a> documentation for a list of all supported css styles. These styles will also affect the PDF-export.<br><br>The <code>body</code> tag of the generated html of a note has a css class <code>preview</code> for the preview and and <code>export</code> for the export, so that you can more easily append different styles for the preview and export (e.g. <code>body.export img { width: 200px }</code> to resize images for the export)."
+  "description": "With this script you can add custom stylesheets to the note preview. Please refer to the <a href='http://doc.qt.io/qt-5/richtext-html-subset.html'>Supported HTML Subset</a> documentation for a list of all supported css styles. These styles will also affect the PDF-export.<br><br>The <code>body</code> tag of the generated html of a note has a css class <code>preview</code> for the preview and and <code>export</code> for the export, so that you can more easily append different styles for the preview and export (e.g. <code>body.export img { width: 200px }</code> to resize images for the export)."
 }

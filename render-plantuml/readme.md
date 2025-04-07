@@ -4,8 +4,6 @@ This script for [QOwnNotes](https://www.qownnotes.org/) renders text based diagr
 
 ![Example of diagram generated with the QownNotes and PlantUML](Demo.gif)
 
-
-
 ## Features
 
 - Backround diagram rendering
@@ -21,8 +19,8 @@ This script for [QOwnNotes](https://www.qownnotes.org/) renders text based diagr
 3. If not installed, [install QownNotes](https://www.qownnotes.org/installation/).
 4. In QOwnNotes, go to `Scripting`>`Find scripts in script repository` menu. And install `Support for PlantUML in notes`.
 5. In the script parameters configure JAVA and `plantuml.jar` paths.  
- ![Script Parameters Screenshot showing the JAVA and PlanUML paths](Params.png)
-7. Enjoy!
+   ![Script Parameters Screenshot showing the JAVA and PlanUML paths](Params.png)
+6. Enjoy!
 
 ## Developpement
 

@@ -8,14 +8,6 @@ import QOwnNotesTypes 1.0
 Script {
 
     /**
-     * Initializes the custom action
-     */
-    function init() {
-        // https://www.qownnotes.org/scripting/methods-and-objects.html#registering-a-custom-action
-        script.registerCustomAction("toggle-note-list-sort-order", "Toggle note list sort order", "", "", false, false, true);
-    }
-
-    /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
      *
@@ -26,9 +18,15 @@ Script {
             return;
         }
 
-        var isSortOrderAlphabetical =
-            script.getApplicationSettingsVariable("notesPanelSort", 1) == 0;
-        script.triggerMenuAction(isSortOrderAlphabetical ?
-            "actionBy_date" : "actionAlphabetical");
+        var isSortOrderAlphabetical = script.getApplicationSettingsVariable("notesPanelSort", 1) == 0;
+        script.triggerMenuAction(isSortOrderAlphabetical ? "actionBy_date" : "actionAlphabetical");
+    }
+
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        // https://www.qownnotes.org/scripting/methods-and-objects.html#registering-a-custom-action
+        script.registerCustomAction("toggle-note-list-sort-order", "Toggle note list sort order", "", "", false, false, true);
     }
 }

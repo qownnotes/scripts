@@ -20,14 +20,14 @@ QtObject {
         html = html.replace(/<\/style>/, "dt {font-weight: bold; font-style: italic;}</style>");
         var re = new RegExp("<p>(.*?\n: [^]*?)</p>", "g");
         if (re.test(html)) {
-            html = html.replace(re, function(_, dl) {
-                var output = "<dl>\n"
+            html = html.replace(re, function (_, dl) {
+                var output = "<dl>\n";
                 var dlArray = dl.split("\n");
                 for (var i = 0; i < dlArray.length; i++) {
                     var item = dlArray[i];
                     var entryText = "  <dt>" + item + "</dt>\n";
                     if (item.match(/^: /)) {
-                        var defText = item.replace(/^: /g, "")
+                        var defText = item.replace(/^: /g, "");
                         entryText = "  <dd>" + defText + "</dd>\n";
                     }
                     output += entryText;

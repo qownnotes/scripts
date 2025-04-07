@@ -1,20 +1,20 @@
 ## Overview
 
-The **Publish To Fediverse** script for QOwnNotes allows users to publish markdown notes directly to their Mastodon-*tish* activitypub servers. This means that this *should* work with servers that implemente the same APIs as Mastodon, like GoToSocial (the script project started from **publish-to-GoToSocial**). If you happen to test the script with other servers, let me know!
+The **Publish To Fediverse** script for QOwnNotes allows users to publish markdown notes directly to their Mastodon-_tish_ activitypub servers. This means that this _should_ work with servers that implemente the same APIs as Mastodon, like GoToSocial (the script project started from **publish-to-GoToSocial**). If you happen to test the script with other servers, let me know!
 
 Future versions will be also able to download and edit already published posts, to keep them as notes or to use other script for publishing them as standalone websites.
 
 ## Manual Installation
 
-1. **Download the Plugin**: Save the `publish-to-fediverse.qml`  file to your local machine.
+1. **Download the Plugin**: Save the `publish-to-fediverse.qml` file to your local machine.
 2. **Add to QOwnNotes**:
    - Open QOwnNotes.
    - Navigate to `Settings` > `Scripting`.
    - Click on `Add script... > Add local script`.
-   - Select the  `publish-to-fediverse.qml` file in the script folder.
+   - Select the `publish-to-fediverse.qml` file in the script folder.
 3. **Activate the Plugin**:
    - Go back to QOwnNotes.
-   - In the `Scripting` settings, ensure that  `publish-to-fediverse.qml` is listed and checked.
+   - In the `Scripting` settings, ensure that `publish-to-fediverse.qml` is listed and checked.
 
 ## Settings
 
@@ -29,7 +29,7 @@ Future versions will be also able to download and edit already published posts, 
   - Direct Message
 - **Local Only**: If the post is local only, it will not be seen from federated instances (not supported by Mastodon);
 - **Content Warning**: The post text will not be immediately visible, as it may be sensible to some audience;
-- **Content Warning text**: Text to show as a content warning for senstitive posts: this should be used **only** if the *Content Warning* is checked, _leave this field empty if yout wan an undisclosed post_;
+- **Content Warning text**: Text to show as a content warning for senstitive posts: this should be used **only** if the _Content Warning_ is checked, _leave this field empty if yout wan an undisclosed post_;
 - **Language code**: 2-chars laguage code as per https://www.loc.gov/standards/iso639-2/php/English_list.php.
 
 ## Usage
@@ -37,6 +37,7 @@ Future versions will be also able to download and edit already published posts, 
 After installation type the server instance name on the script settings and press Ok. Connection with your server will be established the first time you will publish a post.
 
 There are two implemented use cases:
+
 1. **Creation of a new note**
 2. **Note publishing**
 
@@ -44,37 +45,44 @@ There are two implemented use cases:
 
 1. Select `Custom actions > New Post for GtS` on the context menu **or** click on `Scripting > Custom actions > New post for Fediverse`;
 2. A new note with default Post Header will be created
-3. Write your post below the front matter, adjust the post settings as per your preferences. You can try to add other accepted parameters and they should work, but it's not a supported feature. Not sure for nested object parameters. 
+3. Write your post below the front matter, adjust the post settings as per your preferences. You can try to add other accepted parameters and they should work, but it's not a supported feature. Not sure for nested object parameters.
 
 ### Note publishing for first access
 
 Here the process splits, depending on the authentication mechanism your instance has in place.
+
 #### For Mastodon
+
 1. Head to the Settings page at your instance and look for `<> Development`
 2. Click on `New Application' and fill the form entering:
-  - Application name: `QONP2F`
-  - Redirect URI: ensure it is set to `urn:ietf:wg:oauth:2.0:oob`
-  - Scopes: check`Read`, `Write` and `Profile`
+
+- Application name: `QONP2F`
+- Redirect URI: ensure it is set to `urn:ietf:wg:oauth:2.0:oob`
+- Scopes: check`Read`, `Write` and `Profile`
+
 3. Confirm and save the changes
 4. Copy the freshly generated `Your access token` value and paste it in the Script setting `Authorization Code` on QON.
 
 #### For GoToSocial
+
 1. On the note to be published right click and select `Custom actions > Publish current note to Fediverse`
 2. A dialog pops out, summarizing the post settings and asking for confirmation. Press Ok.
 3. If this is the first note published an input dialog pops out: open the link referenced in the popup on your browser (you may need to copy and paste it depending on your OS settings). Keep the popup opened.
-4. Perform the authentication on your browser with the user you want to impersonate and click on *"Allow"* in the confirmation page
+4. Perform the authentication on your browser with the user you want to impersonate and click on _"Allow"_ in the confirmation page
 5. Copy the Authentication code from the web page, paste it back to the popup and press "Ok".
 6. Another popup will open asking to copy the Authorization code to your script settings pages, on the `Authorization Code` field.
-6. The post gets published with current settings.
+7. The post gets published with current settings.
 
 #### Other Note publishing details
 
 A published note gains extra information on the front matter:
+
 - a **created_at** datatime field, that is returned by your server
 - an **id** as the published post id
 - an **url** as the published post permalink
 
 A published note also gains 2 note tags:
+
 - a `P2F` tag to identify the post as managed and modified by the publish-to-gts script
 - a `Published` tag to identify a note that has been already published
 

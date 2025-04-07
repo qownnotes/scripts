@@ -8,8 +8,8 @@ import QOwnNotesTypes 1.0
  * OpenAPI endpoint: https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md#result-json-1
  */
 Script {
-    property string baseUrl;
-    property string models;
+    property string baseUrl
+    property string models
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -18,16 +18,16 @@ Script {
             "name": "API base URL",
             "description": "The chat base URL of the llama.cpp API.",
             "type": "string",
-            "default": "http://127.0.0.1:8080/v1/chat/completions",
+            "default": "http://127.0.0.1:8080/v1/chat/completions"
         },
         {
             "identifier": "models",
             "name": "Models",
             "description": "Comma separated list of models to use.",
             "type": "string",
-            "default": "llama3,gemma:2b",
+            "default": "llama3,gemma:2b"
         },
-    ];
+    ]
 
     /**
      * This function is called when the OpenAI service config is reloaded

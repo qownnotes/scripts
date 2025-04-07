@@ -5,5 +5,5 @@
   "version": "0.0.1",
   "minAppVersion": "17.07.8",
   "authors": ["@pbek"],
-  "description" : "This script adds a menu entry to the context menu of the note list to diff selected notes in an external diff program. The path of the diff program can be selected in the script settings of the script.\n\nThe script can for example be used to compare notes that had synchronization conflicts."
+  "description": "This script adds a menu entry to the context menu of the note list to diff selected notes in an external diff program. The path of the diff program can be selected in the script settings of the script.\n\nThe script can for example be used to compare notes that had synchronization conflicts."
 }

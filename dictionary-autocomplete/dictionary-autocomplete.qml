@@ -7,55 +7,39 @@ import QOwnNotesTypes 1.0
  *
  * You can use the Libre Office dictionary files, that can be downloaded in QOwnNotes as source (*.dic).
  * You will get the dictionary path from the Debug settings.
- * 
+ *
  * You can also download the dictionaries from https://github.com/qownnotes/dictionaries directly
  */
 
 Script {
-    property variant stringList
-    property int stringListLength
-
-    property string dictFile
     property string codec
+    property string dictFile
     property int maxResults
-
     property variant settingsVariables: [
         {
             "identifier": "dictFile",
             "name": "Dictionary file",
             "description": "Please select the dictionary file:",
             "type": "file",
-            "default": "",
+            "default": ""
         },
         {
             "identifier": "codec",
             "name": "Encoding of the dictionary file",
             "description": "Please enter a encoding:",
             "type": "string",
-            "default": "iso-8859-1",
+            "default": "iso-8859-1"
         },
         {
             "identifier": "maxResults",
             "name": "Maximum number of results",
             "description": "Please enter a number:",
             "type": "integer",
-            "default": 40,
+            "default": 40
         }
     ]
-
-
-    function init() {
-        if (dictFile == "") {
-            return;
-        }
-
-        if (script.fileExists(dictFile)) {
-            stringList = script.readFromFile(dictFile, codec).split("\n");
-            stringListLength = stringList.length;
-        } else {
-            console.error("Dictionary file " + dictFile + " doesn't exist!");
-        }
-    }
+    property variant stringList
+    property int stringListLength
 
     function autocompletionHook() {
         const currentWord = script.noteTextEditCurrentWord();
@@ -81,5 +65,17 @@ Script {
         }
 
         return resultList;
+    }
+    function init() {
+        if (dictFile == "") {
+            return;
+        }
+
+        if (script.fileExists(dictFile)) {
+            stringList = script.readFromFile(dictFile, codec).split("\n");
+            stringListLength = stringList.length;
+        } else {
+            console.error("Dictionary file " + dictFile + " doesn't exist!");
+        }
     }
 }

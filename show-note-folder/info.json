@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "22.3.4",
-  "description" : "A short simple script to display the folder of the currently-selected note in the scripting panel."
+  "description": "A short simple script to display the folder of the currently-selected note in the scripting panel."
 }

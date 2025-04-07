@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.0",
   "minAppVersion": "19.03.2",
-  "description" : "Toolbar buttons and context menu items to indent and unindent a text line."
-} 
+  "description": "Toolbar buttons and context menu items to indent and unindent a text line."
+}

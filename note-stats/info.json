@@ -5,5 +5,5 @@
   "version": "0.0.2",
   "minAppVersion": "17.06.3",
   "authors": ["@Maboroshy"],
-  "description" : "This script shows current note statistics in the <i>scripting widget</i>. The script won't work right after it's installed, jump to another note to start it. Check the script settings for enhanced functionality, like setting counter names and target numbers for characters, words or paragraphs for your note."
+  "description": "This script shows current note statistics in the <i>scripting widget</i>. The script won't work right after it's installed, jump to another note to start it. Check the script settings for enhanced functionality, like setting counter names and target numbers for characters, words or paragraphs for your note."
 }

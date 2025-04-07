@@ -6,33 +6,33 @@ import com.qownnotes.noteapi 1.0
  * Latex code in the clipboard
  */
 QtObject {
+
+    /**
+     * This function is invoked when a custom action is triggered
+     * in the menu or via button
+     *
+     * @param identifier string the identifier defined in registerCustomAction
+     */
+    function customActionInvoked(identifier) {
+        switch (identifier) {
+        case "pasteLatexImage":
+            // get the text that is currently in the clipboard
+            var text = script.clipboard();
+
+            // use the webservice to generate and download the image
+            var url = "http://latex.codecogs.com/gif.latex?" + text;
+            var markdown = script.downloadUrlToMedia(url);
+
+            // write the image markdown to the note
+            script.noteTextEditWrite(markdown);
+            break;
+        }
+    }
     /**
      * Initializes the custom action
      */
     function init() {
         // create a menu entry to paste Latex code as an image
         script.registerCustomAction("pasteLatexImage", "Paste Latex image", "Latex", "insert-image", true);
-    }
-
-    /**
-     * This function is invoked when a custom action is triggered
-     * in the menu or via button
-     * 
-     * @param identifier string the identifier defined in registerCustomAction
-     */
-    function customActionInvoked(identifier) {
-        switch (identifier) {
-            case "pasteLatexImage":
-                // get the text that is currently in the clipboard
-                var text = script.clipboard();
-
-                // use the webservice to generate and download the image
-                var url = "http://latex.codecogs.com/gif.latex?" + text;
-                var markdown = script.downloadUrlToMedia(url);
-                
-                // write the image markdown to the note
-                script.noteTextEditWrite(markdown);
-                break;
-        }
     }
 }

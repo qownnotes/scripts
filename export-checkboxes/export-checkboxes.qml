@@ -4,7 +4,7 @@ import QtQml 2.0
  * This is an example for custom styling of html in the note preview
  */
 QtObject {
-    
+
     /**
      * This function is called when the markdown html of a note is generated
      *

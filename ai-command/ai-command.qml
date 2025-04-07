@@ -5,12 +5,6 @@ import QOwnNotesTypes 1.0
  * This script allows just send a written command  to the AI completer to replace the selected text, but showing the differences first.
  */
 Script {
-    /**
-     * Initializes the custom actions
-     */
-    function init() {
-        script.registerCustomAction("run-ai-command", "AI Command", "", "network-server-database", true, true, false);
-    }
 
     /**
      * This function is invoked when a custom action is triggered
@@ -41,9 +35,7 @@ Script {
 
         script.setPersistentVariable('aiCommand/pastCommands', JSON.stringify(pastCommands));
         const text = script.noteTextEditSelectedText();
-        const aiResult = script.aiComplete(
-            "Execute the following command on the Markdown text afterwards, just output the result. " +
-            command + ":\n\n" + text);
+        const aiResult = script.aiComplete("Execute the following command on the Markdown text afterwards, just output the result. " + command + ":\n\n" + text);
         let dialogResult = script.textDiffDialog("AI Command", "Resulting text", text, aiResult);
 
         if (dialogResult === '') {
@@ -51,5 +43,11 @@ Script {
         }
 
         script.noteTextEditWrite(dialogResult);
+    }
+    /**
+     * Initializes the custom actions
+     */
+    function init() {
+        script.registerCustomAction("run-ai-command", "AI Command", "", "network-server-database", true, true, false);
     }
 }

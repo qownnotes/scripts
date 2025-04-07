@@ -12,41 +12,51 @@ import com.qownnotes.noteapi 1.0
  * Pro tip: assign a shortcut.
  */
 QtObject {
-    property bool reverseOrder;
-    property bool keepSelection;
-    property int qonSettingEditorIndentSize;
-    property string singleIndentation;
-    property string lineEnding;
-
+    property bool keepSelection
+    property string lineEnding
+    property int qonSettingEditorIndentSize
+    property bool reverseOrder
     property variant settingsVariables: [
         {
             'identifier': 'reverseOrder',
             'name': 'Reverse order',
             'description': 'Reverse the default order to: [ ] unchecked -> [-] disabled -> [x] checked.',
             'type': 'boolean',
-            'default': 'false',
+            'default': 'false'
         },
         {
             'identifier': 'keepSelection',
             'name': 'Keep selection',
             'description': 'Keep text selected after ordering.',
             'type': 'boolean',
-            'default': 'false',
+            'default': 'false'
         },
-    ];
+    ]
+    property string singleIndentation
+
+    /**
+     * This function is invoked when a custom action is triggered
+     * in the menu or via button
+     *
+     * @param identifier string the identifier defined in registerCustomAction
+     */
+    function customActionInvoked(identifier) {
+        if (identifier === 'orderCheckboxes') {
+            orderCheckboxes();
+        }
+    }
 
     /**
      * Initializes the custom action
      */
     function init() {
-        script.registerCustomAction(
-            'orderCheckboxes', /* identifier */
-            'Order checkboxes', /* menuText */
-            'Order checkboxes', /* buttonText */
-            '', /* icon, see: https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html */
-            true, /* useInNoteEditContextMenu */
-            false, /* hideButtonInToolbar */
-            false /* useInNoteListContextMenu */
+        script.registerCustomAction('orderCheckboxes' /* identifier */
+        , 'Order checkboxes' /* menuText */
+        , 'Order checkboxes' /* buttonText */
+        , '' /* icon, see: https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html */
+        , true /* useInNoteEditContextMenu */
+        , false /* hideButtonInToolbar */
+        , false /* useInNoteListContextMenu */
         );
 
         // Determine line ending.
@@ -71,19 +81,6 @@ QtObject {
         script.log('order-checkboxes.init() qonSettingEditorIndentSize: ' + qonSettingEditorIndentSize);
         script.log('order-checkboxes.init() singleIndentation.length: ' + singleIndentation.length.toString());
     }
-
-    /**
-     * This function is invoked when a custom action is triggered
-     * in the menu or via button
-     *
-     * @param identifier string the identifier defined in registerCustomAction
-     */
-    function customActionInvoked(identifier) {
-        if (identifier === 'orderCheckboxes') {
-            orderCheckboxes();
-        }
-    }
-
     function orderCheckboxes() {
         // Get selected lines.
         const input = script.noteTextEditSelectedText();
@@ -100,13 +97,14 @@ QtObject {
 
         // Text -> structured.
         let structured = [];
-        const rows = input.split(lineEnding).filter((row) => row.trim() !== '');
-        if (rows.length < 1) return;
+        const rows = input.split(lineEnding).filter(row => row.trim() !== '');
+        if (rows.length < 1)
+            return;
 
         // Support ordering just sublevel checkbox lists.
         const toplevelIndentation = rows[0].substring(0, rows[0].indexOf('-'));
 
-        rows.forEach((row) => {
+        rows.forEach(row => {
             // Remove toplevelIndentation from each row before further processing.
             row = row.replace(toplevelIndentation, '');
             addItemToLevel(structured, row);
@@ -154,7 +152,7 @@ QtObject {
 
         function sortLevel(level) {
             // Loop all items in level and if we find a sub, recurse.
-            level.forEach((item) => {
+            level.forEach(item => {
                 if (item.hasOwnProperty('sub')) {
                     sortLevel(item.sub);
                 }
@@ -164,16 +162,9 @@ QtObject {
             level.sort((a, b) => {
                 let charA = a.txt.charAt(3);
                 let charB = b.txt.charAt(3);
-                if ((charA === 'x' && charB === '-') ||
-                    (charA === 'x' && charB === ' ') ||
-                    (charA === '-' && charB === ' ')
-                ) {
+                if ((charA === 'x' && charB === '-') || (charA === 'x' && charB === ' ') || (charA === '-' && charB === ' ')) {
                     return reverseOrder ? 1 : -1;
-                } else if (
-                    (charA === ' ' && charB === 'x') ||
-                    (charA === ' ' && charB === '-') ||
-                    (charA === '-' && charB === 'x')
-                ) {
+                } else if ((charA === ' ' && charB === 'x') || (charA === ' ' && charB === '-') || (charA === '-' && charB === 'x')) {
                     return reverseOrder ? -1 : 1;
                 } else {
                     return 0;
@@ -184,7 +175,7 @@ QtObject {
         }
 
         function unfold(out, prefix) {
-            out.forEach((item) => {
+            out.forEach(item => {
                 // Create output text by adding toplevelIndentation and the level of indentation needed for this level.
                 text_sorted = text_sorted + toplevelIndentation + prefix + item.txt + lineEnding;
 

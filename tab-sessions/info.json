@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.3",
   "minAppVersion": "22.8.4",
-  "description" : "This script lets you manage <b>Tab Sessions</b> - predefined layouts of note tabs to be opened. \n\nTo create a Tab Session make a tag named <code>[[session_name]]</code> (where <i>session_name</i> is the name of the session and <i>square brackets</i> are a mask telling the script that the tag is related to Tab Session). \nThe script will automatically rebuild all the sessions on load.\n\nThis script is still <b>experimental</b>!\nPlease report your experiences."
+  "description": "This script lets you manage <b>Tab Sessions</b> - predefined layouts of note tabs to be opened. \n\nTo create a Tab Session make a tag named <code>[[session_name]]</code> (where <i>session_name</i> is the name of the session and <i>square brackets</i> are a mask telling the script that the tag is related to Tab Session). \nThe script will automatically rebuild all the sessions on load.\n\nThis script is still <b>experimental</b>!\nPlease report your experiences."
 }

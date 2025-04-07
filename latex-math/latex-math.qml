@@ -1,7 +1,6 @@
 import QtQml 2.13
 import com.qownnotes.noteapi 1.0
 
-
 /**
  * This script creates LaTex images on the fly with KLatexFormula. e. g. $x^2$ or $[22] x^2$ to create larger images.
  * The images are created once and reused as long as the formula does not change.
@@ -11,19 +10,18 @@ import com.qownnotes.noteapi 1.0
  * test cmd: klatexformula -b '#ff0000' --latexinput '\delta(x) = \frac{1}{2\pi} \int e^{ikx}\,dk' --dpi 300 --output dirac-delta.png
  */
 QtObject {
-    property string settingImageSize;
-    property string settingDPI;
-    property string executable;
-    property string workDir
-    property string formulaPrefix;
-    property string formulaColor;
-    property string formulaBgColor;
-    property string usepackages;
-    property string customPreamble;
-    property bool debug;
+    property string customPreamble
+    property bool debug
+    property string executable
+    property string formulaBgColor
+    property string formulaColor
+    property string formulaPrefix
+    property string settingDPI
+    property string settingImageSize
 
     // register your settings variables so the user can set them in the script settings
-    property variant settingsVariables: [{
+    property variant settingsVariables: [
+        {
             "identifier": "settingImageSize",
             "name": "Default image height size",
             "description": "The default size of the LaTex image. Change it via parameter e. g. $[14] x^2$",
@@ -84,25 +82,77 @@ QtObject {
             "name": "Debug logs",
             "description": "Display debug logs in the script panel.",
             "type": "boolean",
-            "default": "false",
+            "default": "false"
         }
-    ];
+    ]
+    property string usepackages
+    property string workDir
 
-    function log(text) {
-        if (debug) {
-            script.log("[LaTex] " + text)
+    /**
+     * This function is invoked when a custom action is triggered
+     * in the menu or via button
+     *
+     * @param identifier string the identifier defined in registerCustomAction
+     */
+    function customActionInvoked(identifier) {
+        if (identifier !== "latex-math-refresh") {
+            return;
         }
+        log("clearing cache dir ...");
+        log(script.clearCacheDir("latex-math"));
+        script.regenerateNotePreview();
+    }
+
+    /**
+     * This function invokes a bash command
+     * @param cmdList 0-cmdNumber, 1-path, 2-cmd
+     * @return the result or [true/false] if detached = true
+     */
+    function execBashList(cmdList) {
+        const linuxExec = "bash";
+        log("got cmds: " + cmdList.length);
+        if (cmdList.length > 0) {
+            const cmd = cmdList.pop();
+            const exec = script.platformIsWindows() ? cmd[2] : linuxExec;
+            const param = script.platformIsWindows() ? [] : ["-c", cmd[2]];
+            log("exec" + cmd[0] + ": " + exec);
+            script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
+        }
+    }
+    function getBashCmd(path, latexBase64) {
+        const exec = executable;
+        const preamble = Qt.btoa(getPreamble());
+        const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
+        const cmd = `"${exec}" -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`;
+        //log("cmd: "+cmd)
+        return cmd;
+    }
+    function getPreamble() {
+        var packages = usepackages.split(',');
+        var preamble = "";
+        // add packages
+        packages.forEach(function myFunction(item) {
+            preamble += `\\usepackage{${item}}`;
+        });
+        // add custom preamble
+        preamble += customPreamble;
+        return preamble;
     }
 
     /**
      * Initializes the custom action
      */
     function init() {
-        log("init")
+        log("init");
         // create a menu entry to paste Latex code as an image
         script.registerCustomAction("latex-math-refresh", "Refresh LaTex Images", "Latex", "view-refresh");
         workDir = script.cacheDir("latex-math");
-        log(workDir)
+        log(workDir);
+    }
+    function log(text) {
+        if (debug) {
+            script.log("[LaTex] " + text);
+        }
     }
 
     /**
@@ -121,60 +171,39 @@ QtObject {
     function noteToMarkdownHtmlHook(note, html, forExport) {
         // $ were replaced by <x-equation> tags
         //const regex_latex = /\$(?:\[(\d+)\])?([\s\S]+?)\$(?!\d)/g   // don't allow $4 as closing character
-        const regex_latex = /(?:<x-equation>)(?:\[(\d+)\])?([\s\S]+?)(?:<\/x-equation>)/g // don't allow $4 as closing character
+        const regex_latex = /(?:<x-equation>)(?:\[(\d+)\])?([\s\S]+?)(?:<\/x-equation>)/g; // don't allow $4 as closing character
         var count = 0;
         var cmdList = [];
-        html = html.replace(regex_latex, function(match, matchImageSize, latex, offset) {
-
+        html = html.replace(regex_latex, function (match, matchImageSize, latex, offset) {
             let imageSize = settingImageSize;
 
             if (matchImageSize != null && matchImageSize.length > 0) {
-                imageSize = matchImageSize
+                imageSize = matchImageSize;
             }
 
-            latex = formulaPrefix + latex // add prefix from settings
-            latex = latex.trim()
-            const latexBase64 = Qt.btoa(latex)
-            const filename = Qt.md5(latex)
-            const path = workDir + "/" + filename + ".png"
+            latex = formulaPrefix + latex; // add prefix from settings
+            latex = latex.trim();
+            const latexBase64 = Qt.btoa(latex);
+            const filename = Qt.md5(latex);
+            const path = workDir + "/" + filename + ".png";
 
-            if (!script.fileExists(path)) { // performance: do not create the same formula twice
+            if (!script.fileExists(path)) {
+                // performance: do not create the same formula twice
                 count++;
-                var bashCmd = getBashCmd(path, latexBase64)
+                var bashCmd = getBashCmd(path, latexBase64);
                 //execBashDetached(bashCmd, true)
-                cmdList.push([count, path, bashCmd])
+                cmdList.push([count, path, bashCmd]);
             }
-			
-			// we need third slash after file:// if path contains drive letter (e.g. c:) in Windows
-			const thirdSlash = script.platformIsWindows() && path.indexOf(":")===1 ? "/" : "";
-			
-			return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${thirdSlash}${path}" alt="LaTex">`; //style='vertical-align: middle;'
+
+            // we need third slash after file:// if path contains drive letter (e.g. c:) in Windows
+            const thirdSlash = script.platformIsWindows() && path.indexOf(":") === 1 ? "/" : "";
+
+            return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${thirdSlash}${path}" alt="LaTex">`; //style='vertical-align: middle;'
         });
         if (cmdList.length > 0) {
             execBashList(cmdList); // use a 'thread pool'
         }
-        return html
-    }
-
-    function getPreamble() {
-        var packages = usepackages.split(',')
-        var preamble = ""
-        // add packages
-        packages.forEach(function myFunction(item) {
-            preamble += `\\usepackage{${item}}`
-        });
-        // add custom preamble
-        preamble += customPreamble
-        return preamble
-    }
-
-    function getBashCmd(path, latexBase64) {
-        const exec = executable
-        const preamble = Qt.btoa(getPreamble())
-        const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `"${exec}" -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`
-        //log("cmd: "+cmd)
-        return cmd
+        return html;
     }
 
     /**
@@ -188,47 +217,14 @@ QtObject {
      */
     function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
         if (callbackIdentifier == "callback-latex-math") {
-            log("remaining: " + thread[1])
+            log("remaining: " + thread[1]);
             if (thread[0].length > 0) {
-                log("more to do")
-                execBashList(thread[0])
+                log("more to do");
+                execBashList(thread[0]);
             } else {
-                log("done")
+                log("done");
                 script.regenerateNotePreview();
             }
         }
     }
-
-    /**
-     * This function invokes a bash command
-     * @param cmdList 0-cmdNumber, 1-path, 2-cmd
-     * @return the result or [true/false] if detached = true
-     */
-    function execBashList(cmdList) {
-        const linuxExec = "bash";
-        log("got cmds: " + cmdList.length)
-        if (cmdList.length > 0) {
-            const cmd = cmdList.pop();
-			const exec = script.platformIsWindows() ? cmd[2] : linuxExec;
-            const param = script.platformIsWindows() ? [] : ["-c", cmd[2]];
-            log("exec" + cmd[0] + ": " + exec)
-            script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
-        }
-    }
-
-    /**
-     * This function is invoked when a custom action is triggered
-     * in the menu or via button
-     *
-     * @param identifier string the identifier defined in registerCustomAction
-     */
-    function customActionInvoked(identifier) {
-        if (identifier !== "latex-math-refresh") {
-            return;
-        }
-        log("clearing cache dir ...")
-        log(script.clearCacheDir("latex-math"))
-        script.regenerateNotePreview();
-    }
-
 }

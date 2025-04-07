@@ -5,5 +5,5 @@
   "version": "0.0.2",
   "minAppVersion": "24.6.3",
   "authors": ["@pbek"],
-  "description" : "This script provides integration for a local <a href=\"https://github.com/ggerganov/llama.cpp\">llama.cpp</a> AI backend."
+  "description": "This script provides integration for a local <a href=\"https://github.com/ggerganov/llama.cpp\">llama.cpp</a> AI backend."
 }

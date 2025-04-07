@@ -13,7 +13,7 @@ Script {
     function noteDoubleClickedHook(note) {
         // disable the read-only mode
         script.triggerMenuAction("actionAllow_note_editing", 1);
-        
+
         // focus the note text edit
         mainWindow.focusNoteTextEdit();
     }

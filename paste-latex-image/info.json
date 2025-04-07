@@ -5,5 +5,5 @@
   "version": "0.0.1",
   "minAppVersion": "17.05.6",
   "authors": ["@pbek"],
-  "description" : "This script creates a menu item and a button that generates and pastes an image from Latex code in the clipboard.\n\nIt uses the webservice <a href='http://latex.codecogs.com'>Codecogs Equation Editor</a>."
+  "description": "This script creates a menu item and a button that generates and pastes an image from Latex code in the clipboard.\n\nIt uses the webservice <a href='http://latex.codecogs.com'>Codecogs Equation Editor</a>."
 }

@@ -9,13 +9,6 @@ import QOwnNotesTypes 1.0
 Script {
 
     /**
-     * Initializes the custom actions
-     */
-    function init() {
-        script.registerCustomAction("duplicateNote", "Duplicate selected note", "", "", false, true, true);
-    }
-
-    /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
      *
@@ -28,5 +21,12 @@ Script {
 
         var currentNote = script.currentNote();
         script.createNote(currentNote.noteText);
+    }
+
+    /**
+     * Initializes the custom actions
+     */
+    function init() {
+        script.registerCustomAction("duplicateNote", "Duplicate selected note", "", "", false, true, true);
     }
 }

@@ -8,67 +8,25 @@ import QOwnNotesTypes 1.0
  */
 
 Script {
+    readonly property string _DDMM: "DD-MM"
+    readonly property string _DDMMYYYY: "DD-MM-YYYY"
+    readonly property string _FULL: "YYYY-MM-DDTHH:mm:ss"
+    readonly property int _MILLI_DAY: 86400000
+    readonly property string _WEEKWWYYYY: "wWW-YYYY"
+    readonly property string _WWYYYY: "WW-YYYY"
     // DateFormats
-    readonly property string _YYYYMMDD : "YYYY-MM-DD";
-    readonly property string _DDMMYYYY : "DD-MM-YYYY";
-    readonly property string _DDMM : "DD-MM";
-    readonly property string _WWYYYY : "WW-YYYY";
-    readonly property string _WEEKWWYYYY : "wWW-YYYY";
-    readonly property string _FULL : "YYYY-MM-DDTHH:mm:ss";
-
-    readonly property int _MILLI_DAY : 86400000;
-    property var commands;
-    property string customCommands;
-
+    readonly property string _YYYYMMDD: "YYYY-MM-DD"
+    property var commands
+    property string customCommands
     property variant settingsVariables: [
         {
             "identifier": "customCommands",
             "name": "Custom Commands",
             "description": "Custom quick commands. Each line is a separate command, with the options split by space and the first word being the command name. For example: 'myName first first-last last-first'",
             "type": "text",
-            "default": "",
+            "default": ""
         }
-    ]   
-
-    function init() {
-        commands = new Object();
-        reInitCommands();
-    }
-
-    function buildTimeList(date) {
-        var timeList = [];
-        timeList.push(formatDate(date, _DDMM));
-        timeList.push(formatDate(date, _YYYYMMDD));
-        timeList.push(formatDate(date, _DDMMYYYY));
-        timeList.push(formatDate(date, _FULL));
-        return timeList;
-    }
-
-    function reInitCommands(){
-        var today = new Date();
-        var todayMillis = today.getTime();
-        var yesterday = new Date(todayMillis - _MILLI_DAY);
-        var tomorrow = new Date(todayMillis + _MILLI_DAY);
-
-        commands["today"] = buildTimeList(today);
-        commands["tomorrow"] = buildTimeList(tomorrow);
-        commands["yesterday"] = buildTimeList(yesterday);
-        commands["week"] = [formatDate(today, _WWYYYY), formatDate(today, _WEEKWWYYYY)];
-        commands["now"] = [formatDate(today, _FULL)];
-
-
-        var customRows = customCommands.split("\n");
-        for (let i = 0; i < customRows.length; i++) {
-          var customCommandDetails = customRows[i].split(" ");
-          var customCommandName = customCommandDetails[0];
-          var customCommandValues = [];
-          for (let j = 1; j < customCommandDetails.length; j++) {
-            customCommandValues.push(customCommandDetails[j]);
-          }
-
-          commands[customCommandName] = customCommandValues;
-        }
-    }
+    ]
 
     function autocompletionHook() {
         var word = script.noteTextEditCurrentWord(true);
@@ -83,22 +41,19 @@ Script {
         var command = word.substr(1);
 
         var availableCommands = commands[command];
-        if (availableCommands == null){
+        if (availableCommands == null) {
             return [];
         }
 
         return availableCommands;
-
     }
-
-    // Taken from https://github.com/qownnotes/scripts/blob/master/journal-entry/journal-entry.qml
-    function getWeekNumber(d) {
-        // Copy date so don't modify original
-        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-        var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-        var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
-        return weekNo;
+    function buildTimeList(date) {
+        var timeList = [];
+        timeList.push(formatDate(date, _DDMM));
+        timeList.push(formatDate(date, _YYYYMMDD));
+        timeList.push(formatDate(date, _DDMMYYYY));
+        timeList.push(formatDate(date, _FULL));
+        return timeList;
     }
 
     // Taken from https://github.com/qownnotes/scripts/blob/master/journal-entry/journal-entry.qml
@@ -129,5 +84,43 @@ Script {
         format = format.replace('ss', seconds);
 
         return format;
+    }
+
+    // Taken from https://github.com/qownnotes/scripts/blob/master/journal-entry/journal-entry.qml
+    function getWeekNumber(d) {
+        // Copy date so don't modify original
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        return weekNo;
+    }
+    function init() {
+        commands = new Object();
+        reInitCommands();
+    }
+    function reInitCommands() {
+        var today = new Date();
+        var todayMillis = today.getTime();
+        var yesterday = new Date(todayMillis - _MILLI_DAY);
+        var tomorrow = new Date(todayMillis + _MILLI_DAY);
+
+        commands["today"] = buildTimeList(today);
+        commands["tomorrow"] = buildTimeList(tomorrow);
+        commands["yesterday"] = buildTimeList(yesterday);
+        commands["week"] = [formatDate(today, _WWYYYY), formatDate(today, _WEEKWWYYYY)];
+        commands["now"] = [formatDate(today, _FULL)];
+
+        var customRows = customCommands.split("\n");
+        for (let i = 0; i < customRows.length; i++) {
+            var customCommandDetails = customRows[i].split(" ");
+            var customCommandName = customCommandDetails[0];
+            var customCommandValues = [];
+            for (let j = 1; j < customCommandDetails.length; j++) {
+                customCommandValues.push(customCommandDetails[j]);
+            }
+
+            commands[customCommandName] = customCommandValues;
+        }
     }
 }

@@ -4,7 +4,7 @@ import QtQml 2.0
  * This is an example for custom styling of html in the note preview
  */
 QtObject {
-    property string customStylesheet;
+    property string customStylesheet
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -13,9 +13,9 @@ QtObject {
             "name": "Custom stylesheet",
             "description": "Please enter your custom stylesheet:",
             "type": "text",
-            "default": "h2 {margin-left: 20px;}\nh3 {margin-left: 40px;}\nh4 {margin-left: 60px;}",
+            "default": "h2 {margin-left: 20px;}\nh3 {margin-left: 40px;}\nh4 {margin-left: 60px;}"
         },
-    ];
+    ]
 
     /**
      * This function is called when the markdown html of a note is generated

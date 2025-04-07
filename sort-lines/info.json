@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "1.0.0",
   "minAppVersion": "18.04.3",
-  "description" : "This script sort selected lines in note text edit. \n\nIt creates an array from selected lines,  sorts array and joins it again to output string."
+  "description": "This script sort selected lines in note text edit. \n\nIt creates an array from selected lines,  sorts array and joins it again to output string."
 }

@@ -12,14 +12,15 @@ import QtQuick 2.0
  * It creates a small window to select the category e. g. 'work' and creates the corresponding note (in its separate subfolder) with a date.
  */
 QtObject {
-    property string categoryList;
-    property string defaultFolder;
-    property bool hasOwnCategoryFolder;
-    property bool hasCategoryPrefix;
-    property bool hasCategoryAsTag;
-    property string defaultTags;
-    property bool hasTimeInNoteName;
-    property string noteBodyTemplate;
+    property string categoryList
+    property string defaultFolder
+    property string defaultTags
+    property var dialog
+    property bool hasCategoryAsTag
+    property bool hasCategoryPrefix
+    property bool hasOwnCategoryFolder
+    property bool hasTimeInNoteName
+    property string noteBodyTemplate
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -28,106 +29,73 @@ QtObject {
             "name": "File and headline prefix",
             "description": "Please enter the note categories comma separated e. g. 'sales,logistics,support'",
             "type": "string",
-            "default": "sales,logistics,support,colleagues,clients,honeymoon",
+            "default": "sales,logistics,support,colleagues,clients,honeymoon"
         },
         {
             "identifier": "defaultFolder",
             "name": "Default folder",
             "description": "The default folder where the newly created note should be placed. Specify the path to the folder relative to the note folder. Make sure that the full path exists. \nExamples: to place new notes in the subfolder 'Work' enter: \"Work\"; to place new notes in the subfolder 'Clients' in the subfolder 'Work' enter: \"Work/Clients\". Leave blank to disable (notes will be created in the currently active folder).",
             "type": "string",
-            "default": "",
+            "default": ""
         },
         {
             "identifier": "hasOwnCategoryFolder",
             "name": "Default Category Folder",
             "description": "The category will create its own subfolder.",
             "type": "boolean",
-            "default": true,
+            "default": true
         },
         {
             "identifier": "hasCategoryPrefix",
             "name": "Category Prefix",
             "description": "The note file will carry the category's name as prefix.",
             "type": "boolean",
-            "default": true,
+            "default": true
         },
         {
             "identifier": "hasCategoryAsTag",
             "name": "Category Tag",
             "description": "Add the category's name as tag.",
             "type": "boolean",
-            "default": true,
+            "default": true
         },
         {
             "identifier": "defaultTags",
             "name": "Default tags (TODO)",
             "description": "One or more default tags (separated by commas) to assign to a newly created meeting note. Leave blank to disable auto-tagging.",
             "type": "string",
-            "default": "meeting",
+            "default": "meeting"
         },
         {
             "identifier": "hasTimeInNoteName",
             "name": "Time in note name",
             "description": "Add time (HH:mm) in the category's note name.",
             "type": "boolean",
-            "default": false,
+            "default": false
         },
         {
             "identifier": "noteBodyTemplate",
             "name": "Template",
             "description": "Template for a new meeting entry.",
             "type": "text",
-            "default": "",
+            "default": ""
         },
-    ];
-
-    property var dialog
-    function showCategoryBox() {
-        var component = Qt.createComponent(  "categorized-notes-window.qml")
-        if(component.status === Component.Ready) {
-            dialog = component.createObject()
-            var categories = categoryList.split(",")
-            let categories = categories.map(str => str.trim()); // trim names
-            dialog.createButtons(categories);
-        } else{
-            console.error(component.errorString())
-        }
-    }
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        script.registerCustomAction("categorizedNote", "Create or open a categorized note", "Categorized Note", "document-new", true, false, true);
-    }
-
-    /**
-     * This function is invoked when a custom action is triggered
-     * in the menu or via button
-     *
-     * @param identifier string the identifier defined in registerCustomAction
-     */
-    function customActionInvoked(identifier) {
-        if (identifier !== "categorizedNote") {
-            return;
-        }
-        showCategoryBox()
-    }
-
+    ]
 
     /**
       *
       *
       */
-    function createNote(category){
+    function createNote(category) {
         // close the window a little faster
-        dialog.close()
-        dialog.destroy()
+        dialog.close();
+        dialog.destroy();
 
         // get the date headline
         var m = new Date();
-        var dateString = m.getFullYear() + "-" + ("0" + (m.getMonth()+1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2)
+        var dateString = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
 
-      /*  if (isAskForDateString) {
+        /*  if (isAskForDateString) {
             dateString = script.inputDialogGetText(
                         "Date string", "Please enter the date string", dateString);
         }*/
@@ -156,10 +124,9 @@ QtObject {
         if (hasOwnCategoryFolder) {
             subFolder += (subFolder !== '') ? '/' : '';
             subFolder += category;
-            mainWindow.createNewNoteSubFolder(category)
+            mainWindow.createNewNoteSubFolder(category);
             script.jumpToNoteSubFolder(subFolder);
         }
-
 
         var note = script.fetchNoteByFileName(fileName);
 
@@ -192,24 +159,52 @@ QtObject {
             if (defaultTags && defaultTags !== '') {
                 defaultTags
                 // Split on 0..* ws, 1..* commas, 0..* ws.
-                .split(/\s*,+\s*/)
-                .forEach(function(i) {
+                .split(/\s*,+\s*/).forEach(function (i) {
                     script.log('Tag the new meeting note with default tag: ' + i);
                     script.tagCurrentNote(i);
                 });
             }
             // category tag
-            if(hasCategoryAsTag && defaultTags !== ''){
-                script.tagCurrentNote(category)
+            if (hasCategoryAsTag && defaultTags !== '') {
+                script.tagCurrentNote(category);
             }
 
             // adjust file name
             //script.log("Allow different file names: "+currentNote.allowDifferentFileName())
-            if(currentNote.allowDifferentFileName()){
-                currentNote.renameNoteFile(headline)
+            if (currentNote.allowDifferentFileName()) {
+                currentNote.renameNoteFile(headline);
                 mainWindow.buildNotesIndexAndLoadNoteDirectoryList(false, true);
             }
+        }
+    }
 
+    /**
+     * This function is invoked when a custom action is triggered
+     * in the menu or via button
+     *
+     * @param identifier string the identifier defined in registerCustomAction
+     */
+    function customActionInvoked(identifier) {
+        if (identifier !== "categorizedNote") {
+            return;
+        }
+        showCategoryBox();
+    }
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("categorizedNote", "Create or open a categorized note", "Categorized Note", "document-new", true, false, true);
+    }
+    function showCategoryBox() {
+        var component = Qt.createComponent("categorized-notes-window.qml");
+        if (component.status === Component.Ready) {
+            dialog = component.createObject();
+            var categories = categoryList.split(",");
+            let categories = categories.map(str => str.trim()); // trim names
+            dialog.createButtons(categories);
+        } else {
+            console.error(component.errorString());
         }
     }
 }

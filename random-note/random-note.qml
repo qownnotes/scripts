@@ -5,19 +5,6 @@ import com.qownnotes.noteapi 1.0
  * This script creates a menu item and a button to jump to a random note from the collection
  */
 QtObject {
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-        script.registerCustomAction("randomNote", "Jump to a random note", "Random note", "media-playlist-shuffle");
-    }
-
-    function getSubFolder(note, path) {
-        var fileName = note.fullNoteFilePath;
-        var pathRe = new RegExp(path + "\/((.*)\/)*.*");
-        var subfolderName = fileName.replace(pathRe, "$2");
-        return subfolderName;
-    }
 
     /**
      * This function is invoked when a custom action is triggered
@@ -42,5 +29,17 @@ QtObject {
         var path = script.currentNoteFolderPath();
         var subfolderName = getSubFolder(note, path);
         script.jumpToNoteSubFolder(subfolderName);
+    }
+    function getSubFolder(note, path) {
+        var fileName = note.fullNoteFilePath;
+        var pathRe = new RegExp(path + "\/((.*)\/)*.*");
+        var subfolderName = fileName.replace(pathRe, "$2");
+        return subfolderName;
+    }
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("randomNote", "Jump to a random note", "Random note", "media-playlist-shuffle");
     }
 }

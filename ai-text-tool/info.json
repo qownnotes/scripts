@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.2.0",
   "minAppVersion": "24.11.4",
-  "description" : "This script allows some options to use the AI completer to replace the selected text, but showing the differences first."
+  "description": "This script allows some options to use the AI completer to replace the selected text, but showing the differences first."
 }

@@ -2,11 +2,11 @@ import QtQml 2.0
 import QOwnNotesTypes 1.0
 
 Script {
+    // the path to the pandoc executable will be set here
+    property string pandocPath
 
     // the path to the script's directory will be set here
-    property string scriptDirPath;
-    // the path to the pandoc executable will be set here
-    property string pandocPath;
+    property string scriptDirPath
 
     // register your settings variables so the user can set them in the script settings
     property variant settingsVariables: [
@@ -15,25 +15,17 @@ Script {
             "name": "Pandoc path",
             "description": "Please select the path to your Pandoc executable:",
             "type": "file",
-            "default": "pandoc",
+            "default": "pandoc"
         },
-    ];
-
-    /**
-     * Initializes the custom action
-     */
-    function init() {
-		script.registerCustomAction("pandocExport", "Export note using pandoc", "Pandoc Export" );
-    }
+    ]
 
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
-     * 
+     *
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
-
         if (identifier != "pandocExport") {
             return;
         }
@@ -54,10 +46,9 @@ Script {
             return;
         }
 
-
         //variables for pandoc
         var defaultsFile = noteFileDir + "/defaults.yaml";
-        if ( !script.fileExists(defaultsFile) ) {
+        if (!script.fileExists(defaultsFile)) {
             defaultsFile = scriptDirPath + "/defaults.yaml";
         }
         var pandocArgs = [fullFileName, "-d", defaultsFile, "-o", outFile];
@@ -72,5 +63,11 @@ Script {
         script.log(identifier + ": exported note file - " + outFile);
         script.informationMessageBox("exported note file - " + outFile);
     }
-}
 
+    /**
+     * Initializes the custom action
+     */
+    function init() {
+        script.registerCustomAction("pandocExport", "Export note using pandoc", "Pandoc Export");
+    }
+}

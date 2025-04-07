@@ -5,5 +5,5 @@
   "authors": ["@dohliam"],
   "version": "1.0",
   "minAppVersion": "20.4.16",
-  "description" : "This script creates a custom action to comment/uncomment the current Markdown line."
+  "description": "This script creates a custom action to comment/uncomment the current Markdown line."
 }

@@ -6,18 +6,11 @@ import com.qownnotes.noteapi 1.0
  * This script exports multiple notes as one HTML file
  */
 Script {
-    /**
-     * Initializes the custom actions
-     */
-    function init() {
-        script.registerCustomAction("exportHTML", "Export notes as HTML file",
-            "", "", false, true, true);
-    }
 
     /**
      * This function is invoked when a custom action is triggered
      * in the menu or via button
-     * 
+     *
      * @param identifier string the identifier defined in registerCustomAction
      */
     function customActionInvoked(identifier) {
@@ -33,7 +26,7 @@ Script {
 
         var html = "";
 
-        noteIds.forEach(function (noteId){
+        noteIds.forEach(function (noteId) {
             var note = script.fetchNoteById(noteId);
             var noteHtml = note.toMarkdownHtml();
 
@@ -41,13 +34,18 @@ Script {
             html += noteHtml;
         });
 
-        var filePath = script.getSaveFileName("Please select where to store the HTML",
-            "Notes.html", "HTML (*.html)");
+        var filePath = script.getSaveFileName("Please select where to store the HTML", "Notes.html", "HTML (*.html)");
 
         if (filePath == "") {
             return;
         }
 
         script.writeToFile(filePath, html);
+    }
+    /**
+     * Initializes the custom actions
+     */
+    function init() {
+        script.registerCustomAction("exportHTML", "Export notes as HTML file", "", "", false, true, true);
     }
 }

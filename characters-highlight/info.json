@@ -6,5 +6,5 @@
   "platforms": ["linux", "macos", "windows"],
   "version": "0.0.1",
   "minAppVersion": "22.4.1",
-  "description" : "The script was meant to highlight in the editor the non breaking spaces. But, as you can set the characters to highlight (and their style), you may be able to highlight everything you want."
+  "description": "The script was meant to highlight in the editor the non breaking spaces. But, as you can set the characters to highlight (and their style), you may be able to highlight everything you want."
 }
