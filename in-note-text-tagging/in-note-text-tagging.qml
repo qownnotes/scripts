@@ -61,7 +61,11 @@ Script {
 
                     // make an array of up to 3 first lines and other text as last item
                     var textLines = [];
-                    for (var lineCount = 0, lineStart = 0, lineEnd = 0; lineCount != 3; lineCount++) {
+                    var lineCount = 0;
+                    var lineStart = 0;
+                    var lineEnd = 0;
+
+                    for (; lineCount != 3; lineCount++) {
                         lineEnd = noteText.indexOf("\n", lineStart + 1);
 
                         if (lineEnd == -1)
