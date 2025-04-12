@@ -14,10 +14,13 @@ Script {
     readonly property int _MILLI_DAY: 86400000
     readonly property string _WEEKWWYYYY: "wWW-YYYY"
     readonly property string _WWYYYY: "WW-YYYY"
-    // DateFormats
     readonly property string _YYYYMMDD: "YYYY-MM-DD"
+    readonly property string _DDDDMY: "ddd (DD-MM-YYYY)"
+    readonly property variant _SHORT_DAYS_EN: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
     property var commands
     property string customCommands
+ 
     property variant settingsVariables: [
         {
             "identifier": "customCommands",
@@ -52,6 +55,7 @@ Script {
         timeList.push(formatDate(date, _DDMM));
         timeList.push(formatDate(date, _YYYYMMDD));
         timeList.push(formatDate(date, _DDMMYYYY));
+        timeList.push(formatDate(date, _DDDDMY));
         timeList.push(formatDate(date, _FULL));
         return timeList;
     }
@@ -59,6 +63,7 @@ Script {
     // Taken from https://github.com/qownnotes/scripts/blob/master/journal-entry/journal-entry.qml
     function formatDate(date, format) {
         let day = date.getDate();
+        let dayOfWeek = _SHORT_DAYS_EN[date.getDay()];
         let month = date.getMonth() + 1; //getMonth() returns 0-11 so we must add 1
         let week = getWeekNumber(date);
         let year = date.getFullYear();
@@ -78,6 +83,7 @@ Script {
         format = format.replace('WW', week);
         format = format.replace('MM', month);
         format = format.replace('DD', day);
+        format = format.replace('ddd', dayOfWeek);
         format = format.replace('YYYY', year);
         format = format.replace('HH', hours);
         format = format.replace('mm', minutes);
