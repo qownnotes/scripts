@@ -7,6 +7,8 @@ import com.qownnotes.noteapi 1.0
  */
 QtObject {
     id: journalEntry
+    readonly property variant _SHORT_DAYS_EN: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
 
     property string defaultFolder
     property string defaultTags
@@ -31,7 +33,7 @@ QtObject {
         {
             "identifier": "noteTitleFormat",
             "name": "Title Format",
-            "description": "How the journal title should be formatted, use date format placeholders inside curly braces. YYYY: year, MM: month, DD: day, WW: week, HH: hours, mm: minutes, ss: seconds. For example \"Journal {YYYYMMDD}\" will return \"Journal 20240928\". You can have monthly or weekly journals instead of daily by formatting the date to the week or monthly level, or one journal file per entry by including the hour, minutes and seconds.",
+            "description": "How the journal title should be formatted, use date format placeholders inside curly braces. YYYY: year, MM: month, DD: day, WW: week, HH: hours, mm: minutes, ss: seconds, ddd: short day of the week e.g. 'Mon'. For example \"Journal {YYYYMMDD}\" will return \"Journal 20240928\". You can have monthly or weekly journals instead of daily by formatting the date to the week or monthly level, or one journal file per entry by including the hour, minutes and seconds.",
             "type": "string",
             "default": "Journal {YYYYMMDD}"
         },
@@ -137,6 +139,7 @@ QtObject {
     }
     function formatDate(date, format) {
         let day = date.getDate();
+        let dayOfWeek = _SHORT_DAYS_EN[date.getDay()];
         let month = date.getMonth() + 1; //getMonth() returns 0-11 so we must add 1
         let week = getWeekNumber(date);
         let year = date.getFullYear();
@@ -156,6 +159,7 @@ QtObject {
         format = format.replace('WW', week);
         format = format.replace('MM', month);
         format = format.replace('DD', day);
+        format = format.replace('ddd', dayOfWeek);
         format = format.replace('YYYY', year);
         format = format.replace('HH', hours);
         format = format.replace('mm', minutes);
