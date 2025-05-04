@@ -103,7 +103,7 @@ QtObject {
                         ? closeMathTag + '</i><br>'
                         : closeMathTag + '</i>&nbsp;';
 
-                    mdHtml = out;
+                    return out;
                 }
             );
         }
