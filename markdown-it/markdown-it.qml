@@ -56,6 +56,33 @@ QtObject {
         };
     }
 
+    function resolvePath(base, relative) {
+        const baseParts = base.replace(/\/+$/, '').split('/');
+        const relParts = relative.replace(/^\.\/+/, '').split('/');
+
+        for (const part of relParts) {
+            if (part === '..') {
+            baseParts.pop();
+            } else if (part !== '.' && part !== '') {
+            baseParts.push(part);
+            }
+        }
+
+        return baseParts.join('/');
+    }
+
+    function isProtocolUrl(url) {
+        return /^[a-zA-Z][\w+.-]*:\/\//.test(url);
+    }
+
+    function isWindowsAbsolute(path) {
+        return /^[a-zA-Z]:[\\/]/.test(path);
+    }
+
+    function isUnixAbsolute(path) {
+        return path.startsWith('/');
+    }
+
     /**
      * This function is called when the markdown html of a note is generated
      *
@@ -76,8 +103,24 @@ QtObject {
         if (script.platformIsWindows())
             path = "/" + path;
 
-        mdHtml = mdHtml.replace(new RegExp("href=\"file://attachments/", "gi"), "href=\"file://" + path + "/attachments/");
-        mdHtml = mdHtml.replace(new RegExp("src=\"file://media/", "gi"), "src=\"file://" + path + "/media/");
+        mdHtml = mdHtml.replace(
+            /(\b(?:src|href|data-[\w-]+)\s*=\s*["'])([^"']+)["']/gi,
+            (_, prefix, rawPath) => {
+                if (isProtocolUrl(rawPath)) return `${prefix}${rawPath}"`;
+
+                let finalPath;
+
+                if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath)) {
+                // Absolute path (Unix or Windows)
+                finalPath = rawPath.replace(/\\/g, '/'); // Convert backslashes to forward slashes for URL
+                } else {
+                // Relative path → resolve against base
+                finalPath = resolvePath(basePath, rawPath.replace(/^\.\/+/, ''));
+                }
+
+                return `${prefix}file://${finalPath}"`;
+            }
+        );
         // Don't attempt to render in the preview, it doesn't support mathml or complex css
         if (!forExport && useKatexPlugin) {
             mdHtml = mdHtml.replace(
