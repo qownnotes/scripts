@@ -111,11 +111,11 @@ QtObject {
                 let finalPath;
 
                 if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath)) {
-                // Absolute path (Unix or Windows)
-                finalPath = rawPath.replace(/\\/g, '/'); // Convert backslashes to forward slashes for URL
+                    // Absolute path (Unix or Windows)
+                    finalPath = rawPath.replace(/\\/g, '/'); // Convert backslashes to forward slashes for URL
                 } else {
-                // Relative path → resolve against base
-                finalPath = resolvePath(basePath, rawPath.replace(/^\.\/+/, ''));
+                    // Relative path → resolve against base
+                    finalPath = resolvePath(basePath, rawPath.replace(/^\.\/+/, ''));
                 }
 
                 return `${prefix}file://${finalPath}"`;
