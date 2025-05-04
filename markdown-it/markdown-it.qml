@@ -44,8 +44,8 @@ QtObject {
 
         if (useKatexPlugin)
             this.markdownItKatex(md, {
-                "output": "mathml"
-            });
+            "output": "mathml"
+        });
 
         //Allow file:// url scheme
         var validateLinkOrig = md.validateLink;
@@ -59,15 +59,12 @@ QtObject {
     function resolvePath(base, relative) {
         const baseParts = base.replace(/\/+$/, '').split('/');
         const relParts = relative.replace(/^\.\/+/, '').split('/');
-
         for (const part of relParts) {
-            if (part === '..') {
-            baseParts.pop();
-            } else if (part !== '.' && part !== '') {
-            baseParts.push(part);
-            }
+            if (part === '..')
+                baseParts.pop();
+            else if (part !== '.' && part !== '')
+                baseParts.push(part);
         }
-
         return baseParts.join('/');
     }
 
@@ -103,53 +100,33 @@ QtObject {
         if (script.platformIsWindows())
             path = "/" + path;
 
-        mdHtml = mdHtml.replace(
-            /(\b(?:src|href|data-[\w-]+)\s*=\s*["'])([^"']+)["']/gi,
-            (_, prefix, rawPath) => {
-                if (isProtocolUrl(rawPath)) return `${prefix}${rawPath}"`;
+        mdHtml = mdHtml.replace(/(\b(?:src|href|data-[\w-]+)\s*=\s*["'])([^"']+)["']/gi, (_, prefix, rawPath) => {
+            // Convert backslashes to forward slashes for URL
 
-                let finalPath;
+            if (isProtocolUrl(rawPath))
+                return `${prefix}${rawPath}"`;
 
-                if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath)) {
-                    // Absolute path (Unix or Windows)
-                    finalPath = rawPath.replace(/\\/g, '/'); // Convert backslashes to forward slashes for URL
-                } else {
-                    // Relative path → resolve against base
-                    finalPath = resolvePath(basePath, rawPath.replace(/^\.\/+/, ''));
-                }
-
-                return `${prefix}file://${finalPath}"`;
-            }
-        );
+            let finalPath;
+            if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath))
+                // Absolute path (Unix or Windows)
+                finalPath = rawPath.replace(/\\/g, '/');
+            else
+                // Relative path → resolve against base
+                finalPath = resolvePath(basePath, rawPath.replace(/^\.\/+/, ''));
+            return `${prefix}file://${finalPath}"`;
+        });
         // Don't attempt to render in the preview, it doesn't support mathml or complex css
-        if (!forExport && useKatexPlugin) {
-            mdHtml = mdHtml.replace(
-                /(<math\b[^>]*>)([\s\S]*?)(<\/math>)/gi,
-                (fullMatch, openMathTag, mathInner, closeMathTag) => {
-                    let blockPresent = /\bdisplay="block"/i.test(openMathTag);
-                    let out = blockPresent
-                        ? '<br><i>' + openMathTag
-                        : '&nbsp;<i>' + openMathTag;
-
-                    out += mathInner.replace(
-                        /(<semantics\b[^>]*>)([\s\S]*?)(<\/semantics>)/gi,
-                        (semiMatch, openSemi, semiInner, closeSemi) => {
-                            const cleaned = semiInner.replace(
-                                /<mrow\b[^>]*>[\s\S]*?<\/mrow>/gi,
-                                ''
-                            );
-                            return openSemi + cleaned + closeSemi;
-                        }
-                    );
-
-                    out += blockPresent
-                        ? closeMathTag + '</i><br>'
-                        : closeMathTag + '</i>&nbsp;';
-
-                    return out;
-                }
-            );
-        }
+        if (!forExport && useKatexPlugin)
+            mdHtml = mdHtml.replace(/(<math\b[^>]*>)([\s\S]*?)(<\/math>)/gi, (fullMatch, openMathTag, mathInner, closeMathTag) => {
+                let blockPresent = /\bdisplay="block"/i.test(openMathTag);
+                let out = blockPresent ? '<br><i>' + openMathTag : '&nbsp;<i>' + openMathTag;
+                out += mathInner.replace(/(<semantics\b[^>]*>)([\s\S]*?)(<\/semantics>)/gi, (semiMatch, openSemi, semiInner, closeSemi) => {
+                    const cleaned = semiInner.replace(/<mrow\b[^>]*>[\s\S]*?<\/mrow>/gi, '');
+                    return openSemi + cleaned + closeSemi;
+                });
+                out += blockPresent ? closeMathTag + '</i><br>' : closeMathTag + '</i>&nbsp;';
+                return out;
+            });
 
         //Get original styles
         var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
