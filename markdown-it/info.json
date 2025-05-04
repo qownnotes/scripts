@@ -2,9 +2,9 @@
   "name": "Markdown-it markdown parser",
   "identifier": "markdown-it",
   "script": "markdown-it.qml",
-  "resources": ["markdown-it.js", "markdown-it-deflist.js"],
+  "resources": ["markdown-it.js", "markdown-it-deflist.js", "markdown-it-katex.js"],
   "authors": ["@milan-rusev", "@bessw"],
-  "version": "1.4",
+  "version": "1.5",
   "minAppVersion": "20.6.0",
   "description": "This script replaces the default markdown renderer with markdown-it.\n\n<b>Dependencies</b>\n<a href=\"https://github.com/markdown-it/markdown-it\">markdown-it.js</a> (v8.4.2 bundled with the script)\n\n<b>Usage</b>\nFor the possible configuration options check <a href=\"https://github.com/markdown-it/markdown-it/tree/master/lib/presets\">here</a>.\n\n<b>Important</b>\nThis script currently only works with <a href=\"https://github.com/qownnotes/scripts/issues/77\"><b>legacy media links</b></a>. You can turn them on in the <i>General Settings</i>.\n\nImportant note: You need to use legacy image linking with this script, otherwise there will be no images shown in the preview!"
 }
