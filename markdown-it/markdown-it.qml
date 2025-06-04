@@ -8,31 +8,36 @@ QtObject {
     property string customStylesheet
     property variant md
     property string options
-    property variant settingsVariables: [{
-        "identifier": "options",
-        "name": "Markdown-it options",
-        "description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/master/lib/presets'>markdown-it presets</a>.",
-        "type": "text",
-        "default": "{" + "\n" + "    //html:         false,        // Enable HTML tags in source" + "\n" + "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)" + "\n" + "    //breaks:       false,        // Convert '\\n' in paragraphs into <br>" + "\n" + "    //langPrefix:   'language-',  // CSS language prefix for fenced blocks" + "\n" + "    //linkify:      false,        // autoconvert URL-like texts to links" + "\n" + "" + "\n" + "    // Enable some language-neutral replacements + quotes beautification" + "\n" + "    //typographer:  false," + "\n" + "" + "\n" + "    // Double + single quotes replacement pairs, when typographer enabled," + "\n" + "    // and smartquotes on. Could be either a String or an Array." + "\n" + "    //" + "\n" + "    // For example, you can use '«»„“' for Russian, '„“‚‘' for German," + "\n" + "    // and ['«\\xA0', '\\xA0»', '‹\\xA0', '\\xA0›'] for French (including nbsp)." + "\n" + "    //quotes: '\\u201c\\u201d\\u2018\\u2019', /* “”‘’ */" + "\n" + "" + "\n" + "    // Highlighter function. Should return escaped HTML," + "\n" + "    // or '' if the source string is not changed and should be escaped externaly." + "\n" + "    // If result starts with <pre... internal wrapper is skipped." + "\n" + "    //" + "\n" + "    // function (/*str, lang*/) { return ''; }" + "\n" + "    //" + "\n" + "    //highlight: null," + "\n" + "" + "\n" + "    //maxNesting:   100            // Internal protection, recursion limit" + "\n" + "}"
-    }, {
-        "identifier": "useDeflistPlugin",
-        "name": "Definition lists",
-        "text": "Enable the Markdown-it definition list (<dl>) plugin",
-        "type": "boolean",
-        "default": false
-    }, {
-        "identifier": "useKatexPlugin",
-        "name": "LaTeX Support",
-        "text": "Enable the Markdown-it definition list KaTeX plugin",
-        "type": "boolean",
-        "default": false
-    }, {
-        "identifier": "customStylesheet",
-        "name": "Custom stylesheet",
-        "description": "Please enter your custom stylesheet:",
-        "type": "text",
-        "default": null
-    }]
+    property variant settingsVariables: [
+        {
+            "identifier": "options",
+            "name": "Markdown-it options",
+            "description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/master/lib/presets'>markdown-it presets</a>.",
+            "type": "text",
+            "default": "{" + "\n" + "    //html:         false,        // Enable HTML tags in source" + "\n" + "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)" + "\n" + "    //breaks:       false,        // Convert '\\n' in paragraphs into <br>" + "\n" + "    //langPrefix:   'language-',  // CSS language prefix for fenced blocks" + "\n" + "    //linkify:      false,        // autoconvert URL-like texts to links" + "\n" + "" + "\n" + "    // Enable some language-neutral replacements + quotes beautification" + "\n" + "    //typographer:  false," + "\n" + "" + "\n" + "    // Double + single quotes replacement pairs, when typographer enabled," + "\n" + "    // and smartquotes on. Could be either a String or an Array." + "\n" + "    //" + "\n" + "    // For example, you can use '«»„“' for Russian, '„“‚‘' for German," + "\n" + "    // and ['«\\xA0', '\\xA0»', '‹\\xA0', '\\xA0›'] for French (including nbsp)." + "\n" + "    //quotes: '\\u201c\\u201d\\u2018\\u2019', /* “”‘’ */" + "\n" + "" + "\n" + "    // Highlighter function. Should return escaped HTML," + "\n" + "    // or '' if the source string is not changed and should be escaped externaly." + "\n" + "    // If result starts with <pre... internal wrapper is skipped." + "\n" + "    //" + "\n" + "    // function (/*str, lang*/) { return ''; }" + "\n" + "    //" + "\n" + "    //highlight: null," + "\n" + "" + "\n" + "    //maxNesting:   100            // Internal protection, recursion limit" + "\n" + "}"
+        },
+        {
+            "identifier": "useDeflistPlugin",
+            "name": "Definition lists",
+            "text": "Enable the Markdown-it definition list (<dl>) plugin",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "identifier": "useKatexPlugin",
+            "name": "LaTeX Support",
+            "text": "Enable the Markdown-it definition list KaTeX plugin",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "identifier": "customStylesheet",
+            "name": "Custom stylesheet",
+            "description": "Please enter your custom stylesheet:",
+            "type": "text",
+            "default": null
+        }
+    ]
     property bool useDeflistPlugin
     property bool useKatexPlugin
 
@@ -44,40 +49,25 @@ QtObject {
 
         if (useKatexPlugin)
             this.markdownItKatex(md, {
-            "output": "mathml"
-        });
+                "output": "mathml"
+            });
 
         //Allow file:// url scheme
         var validateLinkOrig = md.validateLink;
         var GOOD_PROTO_RE = /^(file):/;
-        md.validateLink = function(url) {
+        md.validateLink = function (url) {
             var str = url.trim().toLowerCase();
             return GOOD_PROTO_RE.test(str) ? true : validateLinkOrig(url);
         };
     }
-
-    function resolvePath(base, relative) {
-        const baseParts = base.replace(/\/+$/, '').split('/');
-        const relParts = relative.replace(/^\.\/+/, '').split('/');
-        for (const part of relParts) {
-            if (part === '..')
-                baseParts.pop();
-            else if (part !== '.' && part !== '')
-                baseParts.push(part);
-        }
-        return baseParts.join('/');
-    }
-
     function isProtocolUrl(url) {
         return /^[a-zA-Z][\w+.-]*:\/\//.test(url);
     }
-
-    function isWindowsAbsolute(path) {
-        return /^[a-zA-Z]:[\\/]/.test(path);
-    }
-
     function isUnixAbsolute(path) {
         return path.startsWith('/');
+    }
+    function isWindowsAbsolute(path) {
+        return /^[a-zA-Z]:[\\/]/.test(path);
     }
 
     /**
@@ -135,5 +125,15 @@ QtObject {
         mdHtml = "<html>" + head + "<body>" + mdHtml + "</body></html>";
         return mdHtml;
     }
-
+    function resolvePath(base, relative) {
+        const baseParts = base.replace(/\/+$/, '').split('/');
+        const relParts = relative.replace(/^\.\/+/, '').split('/');
+        for (const part of relParts) {
+            if (part === '..')
+                baseParts.pop();
+            else if (part !== '.' && part !== '')
+                baseParts.push(part);
+        }
+        return baseParts.join('/');
+    }
 }

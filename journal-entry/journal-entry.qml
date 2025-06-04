@@ -7,9 +7,8 @@ import com.qownnotes.noteapi 1.0
  */
 QtObject {
     id: journalEntry
+
     readonly property variant _SHORT_DAYS_EN: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
-
     property string defaultFolder
     property string defaultTags
     property var dialog

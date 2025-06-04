@@ -2,7 +2,11 @@
   "name": "Markdown-it markdown parser",
   "identifier": "markdown-it",
   "script": "markdown-it.qml",
-  "resources": ["markdown-it.js", "markdown-it-deflist.js", "markdown-it-katex.js"],
+  "resources": [
+    "markdown-it.js",
+    "markdown-it-deflist.js",
+    "markdown-it-katex.js"
+  ],
   "authors": ["@milan-rusev", "@bessw", "@cjendantix"],
   "version": "1.5",
   "minAppVersion": "20.6.0",

@@ -8,19 +8,17 @@ import QOwnNotesTypes 1.0
  */
 
 Script {
+    readonly property string _DDDDMY: "ddd (DD-MM-YYYY)"
     readonly property string _DDMM: "DD-MM"
     readonly property string _DDMMYYYY: "DD-MM-YYYY"
     readonly property string _FULL: "YYYY-MM-DDTHH:mm:ss"
     readonly property int _MILLI_DAY: 86400000
+    readonly property variant _SHORT_DAYS_EN: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     readonly property string _WEEKWWYYYY: "wWW-YYYY"
     readonly property string _WWYYYY: "WW-YYYY"
     readonly property string _YYYYMMDD: "YYYY-MM-DD"
-    readonly property string _DDDDMY: "ddd (DD-MM-YYYY)"
-    readonly property variant _SHORT_DAYS_EN: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
     property var commands
     property string customCommands
- 
     property variant settingsVariables: [
         {
             "identifier": "customCommands",
