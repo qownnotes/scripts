@@ -40,4 +40,4 @@ add-git-blame-ignore-revs:
 # Format all files
 [group('linter')]
 format args='':
-    nix-shell -p treefmt nodePackages.prettier shfmt nixfmt-rfc-style statix taplo kdePackages.qtdeclarative --run "treefmt {{ args }}"
+    treefmt {{ args }}
