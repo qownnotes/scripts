@@ -30,15 +30,12 @@ git-apply-patch:
 @test:
     php ./.github/workflows/scripts/run-tests.php
 
-# Format all justfiles
+# Add git commit hashes to the .git-blame-ignore-revs file
 [group('linter')]
-just-format:
-    #!/usr/bin/env bash
-    # Find all files named "justfile" recursively and run just --fmt --unstable on them
-    find . -type f -name "justfile" -print0 | while IFS= read -r -d '' file; do
-        echo "Formatting $file"
-        just --fmt --unstable -f "$file"
-    done
+add-git-blame-ignore-revs:
+    git log --pretty=format:"%H" --grep="^lint" >> .git-blame-ignore-revs
+    sort .git-blame-ignore-revs | uniq > .git-blame-ignore-revs.tmp
+    mv .git-blame-ignore-revs.tmp .git-blame-ignore-revs
 
 # Format all files
 [group('linter')]
