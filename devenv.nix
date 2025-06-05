@@ -7,6 +7,7 @@
   # https://devenv.sh/packages/
   packages = with pkgs; [
     just
+    php
 
     # Packages for treefmt
     nodePackages.prettier
@@ -17,15 +18,16 @@
     kdePackages.qtdeclarative
   ];
 
-  # https://devenv.sh/languages/
-  languages.php.enable = true;
-
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.treefmt.enable = true;
 
+  enterShell = ''
+    echo "🛠️ QOwnNotes scripts dev shell"
+  '';
+
   # https://devenv.sh/tests/
   enterTest = ''
-    echo "?? Running tests"
+    echo "⚙️ Running tests"
     just test
   '';
 
