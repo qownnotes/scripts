@@ -1,6 +1,6 @@
 {
   "name": "Text2link",
-  "identifier": "Text2link",
+  "identifier": "text2link",
   "script": "text2link.qml",
   "authors": [
     "@Glin76"
