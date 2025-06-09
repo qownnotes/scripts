@@ -1,0 +1,16 @@
+{
+  "name": "Text2link",
+  "identifier": "text2link",
+  "script": "text2link.qml",
+  "authors": [
+    "@Glin76"
+  ],
+  "platforms": [
+    "linux",
+    "macos",
+    "windows"
+  ],
+  "version": "0.0.1",
+  "minAppVersion": "25.05.3",
+  "description": "This script creates links to all notes containing the selected text at the end of the current note. Caution ! This script doesn't work with note-subfolders."
+}
