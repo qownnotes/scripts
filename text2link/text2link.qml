@@ -7,7 +7,7 @@ QtObject {
     function customActionInvoked(identifier) {
         switch (identifier) {
         case "Text2link":
-            var text = script.noteTextEditSelectedText();
+            var text = script.noteTextEditSelectedText().trim();
             if (text == "") {
                 break;
             }
