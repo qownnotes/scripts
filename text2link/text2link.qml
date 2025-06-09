@@ -1,7 +1,7 @@
 import QtQml 2.0
 
 /**
- * This script creates links to all notes containing the selected text at the end of the current note.
+ * This script creates links to all notes containing the selected text at the end of the current note. Caution ! This script doesn't work with note-subfolders.
  */
 QtObject {
 
