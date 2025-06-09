@@ -22,16 +22,12 @@ QtObject {
                 // first condition : text should be a complete word in the note
                 var reTest = RegExp("\\b" + text + "\\b", "gi").exec(note.noteText);
                 // second condition : the note should not be already linked in this note
-                var link = "(" + note.fileName + ")";
-                while (link.search(" ") > -1) {
-                    // need to loop for each space because .replace() only works once
-                    link = link.replace(" ", "%20");
-                }
-                var alreadyLinked = currentNote.noteText.search(link);
+                var linkPart = "(" + currentNote.getNoteUrlForLinkingToNoteId(noteId) + ")";
+                var alreadyLinked = currentNote.noteText.search(linkPart);
                 // third condition : the note should not be self
                 if (reTest != null & alreadyLinked == -1 & currentNote.id != noteId) {
                     script.noteTextEditSetCursorPosition(-1); // end of the current note
-                    script.noteTextEditWrite("\n\n" + "[" + note.name + "]" + link); // add a blank line and the link
+                    script.noteTextEditWrite("\n\n" + "[" + note.name + "]" + linkPart); // add a blank line and the link
                     addedLinks += 1;
                 }
                 if (reTest != null) {
