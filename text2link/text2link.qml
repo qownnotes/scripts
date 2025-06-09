@@ -14,6 +14,8 @@ QtObject {
             var foundedNotes = -1; // Current note will not be counted
             var addedLinks = 0;
             var oldLinks = 0;
+            var currentNote = script.currentNote();
+
             // loop for all notes containing the raw text
             script.fetchNoteIdsByNoteTextPart(text).forEach(function (noteId) {
                 var note = script.fetchNoteById(noteId);
@@ -25,10 +27,10 @@ QtObject {
                     // need to loop for each space because .replace() only works once
                     link = link.replace(" ", "%20");
                 }
-                var alreadyLinked = script.currentNote().noteText.search(link);
+                var alreadyLinked = currentNote.noteText.search(link);
                 // third condition : the note should not be self
-                if (reTest != null & alreadyLinked == -1 & script.currentNote().id != noteId) {
-                    script.noteTextEditSetCursorPosition(-1); // end of the this note
+                if (reTest != null & alreadyLinked == -1 & currentNote.id != noteId) {
+                    script.noteTextEditSetCursorPosition(-1); // end of the current note
                     script.noteTextEditWrite("\n\n" + "[" + note.name + "]" + link); // add a blank line and the link
                     addedLinks += 1;
                 }
