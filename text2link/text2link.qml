@@ -16,6 +16,9 @@ QtObject {
 
                 var text = script.noteTextEditSelectedText();
                 if (text == "") {break;}
+                var foundedNotes = -1; // Current note will not be counted
+                var addedLinks = 0;
+                var oldLinks = 0;
                 // loop for all notes containing the raw text
                 script.fetchNoteIdsByNoteTextPart(text).forEach(function (noteId) {
                     var note = script.fetchNoteById(noteId);
@@ -31,8 +34,12 @@ QtObject {
                     if (reTest != null & alreadyLinked == -1 & script.currentNote().id != noteId) {
                         script.noteTextEditSetCursorPosition(-1); // end of the this note
                         script.noteTextEditWrite("\n\n"+"["+note.name+"]"+link); // add a blank line and the link
+                        addedLinks += 1;
                     }
+                    if (reTest != null) { foundedNotes += 1;}
+                    if (alreadyLinked > 0) { oldLinks += 1;}
                 });
+                script.informationMessageBox(foundedNotes+" note(s) containing '"+text+"'\n"+oldLinks+" already linked\n"+addedLinks+" added", "Results");
                 break;
         }
     }
