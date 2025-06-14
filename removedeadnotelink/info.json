@@ -4,7 +4,7 @@
   "script": "removedeadnotelink.qml",
   "authors": ["@Glin76"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.2",
+  "version": "0.0.1",
   "minAppVersion": "25.6.1",
-  "description": "This script creates a menu item and a button that search in all notes and remove links to note (MD file) no longer existing (aka dead note-link)."
+  "description": "This script creates a menu item and a button that searches in all notes and removes links to notes (MD file) that no longer exist (aka dead note-link)."
 }
