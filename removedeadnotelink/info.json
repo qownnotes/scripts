@@ -1,0 +1,10 @@
+{
+  "name": "RemoveDeadNoteLink",
+  "identifier": "removedeadnotelink",
+  "script": "removedeadnotelink.qml",
+  "authors": ["@Glin76"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "25.6.1",
+  "description": "This script creates a menu item and a button that searches through all notes and removes links to all notes (Markdown files) that no longer exist, also known as dead note links."
+}
