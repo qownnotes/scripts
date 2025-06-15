@@ -1,0 +1,9 @@
+{
+  "name": "GitHub Copilot AI backend integration",
+  "identifier": "github-copilot-integration",
+  "script": "github-copilot-integration.qml",
+  "version": "0.0.1",
+  "minAppVersion": "24.6.3",
+  "authors": ["@pbek"],
+  "description": "This script provides integration for a local <a href=\"https://github.com/features/copilot\">GitHub Copilot</a> AI backend."
+}
