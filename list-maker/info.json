@@ -4,7 +4,7 @@
   "script": "list-maker.qml",
   "authors": ["@Maboroshy", "@pbek"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.1.2",
+  "version": "0.1.3",
   "minAppVersion": "17.07.8",
   "description": "This script adds toolbar buttons and context menu items to change selected text formatting:\n- make it an ordered list with numbers or letters;\n- make it an unordered list with markers of your choice;\n- clear any list formatting.\n\nIdented lines in numbered list will become a sub-list (1.1., 1.2...). Using buttons on a list will override it's formatting with the one you choose. If the first line is part of the ordered list, other lines will continue the list:\n<i>\n2. First selected line\n  Some new line\n3. Ordered list line\n- marked list line\na. A first line of another ordered list\nb. A second line of another ordered list\n</i>\nWill become:\n<i>\n2. First selected line\n 2.1. Some new line\n3. Ordered list line\n4. marked list line\n5. A first line of another ordered list\n6. A second line of another ordered list\n</i>\nUnordered list marks and letters used for ordered list can be altered in the script settings.\n\nYou can also replace letters with Chinese/Japanese numbers or any other characters to use them for ordered lists.\n"
 }

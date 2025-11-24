@@ -40,6 +40,10 @@ Script {
     // This will clear the text of all list formatting the script uses
     function clearLine(text) {
         var line = text;
+
+        // Remove checkbox list formatting (e.g., "- [ ] " or "- [x] ")
+        line = line.replace(/^(\s*)[-*+] \[[^\]]*\] (.*)$/gm, "$1$2");
+
         var lineType = getListType(line);
 
         while (lineType != "none") {
