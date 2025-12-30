@@ -895,12 +895,12 @@
            * MarkdownIt provides named presets as a convenience to quickly
            * enable/disable active syntax rules and options for common use cases.
            *
-           * - ["commonmark"](https://github.com/markdown-it/markdown-it/blob/master/lib/presets/commonmark.js) -
+           * - ["commonmark"](https://github.com/markdown-it/markdown-it/blob/main/lib/presets/commonmark.js) -
            *   configures parser to strict [CommonMark](http://commonmark.org/) mode.
-           * - [default](https://github.com/markdown-it/markdown-it/blob/master/lib/presets/default.js) -
+           * - [default](https://github.com/markdown-it/markdown-it/blob/main/lib/presets/default.js) -
            *   similar to GFM, used when no preset name given. Enables all available rules,
            *   but still without html, typographer & autolinker.
-           * - ["zero"](https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js) -
+           * - ["zero"](https://github.com/markdown-it/markdown-it/blob/main/lib/presets/zero.js) -
            *   all rules disabled. Useful to quickly setup your config via `.enable()`.
            *   For example, when you need only `bold` and `italic` markup and nothing else.
            *
@@ -917,7 +917,7 @@
            *   Can be useful for external highlighters.
            * - __linkify__ - `false`. Set `true` to autoconvert URL-like text to links.
            * - __typographer__  - `false`. Set `true` to enable [some language-neutral
-           *   replacement](https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js) +
+           *   replacement](https://github.com/markdown-it/markdown-it/blob/main/lib/rules_core/replacements.js) +
            *   quotes beautification (smartquotes).
            * - __quotes__ - `“”‘’`, String or Array. Double + single quotes replacement
            *   pairs, when typographer enabled and smartquotes on. For example, you can
@@ -1043,7 +1043,7 @@
              * md.renderer.rules['my_token'] = myToken
              * ```
              *
-             * See [[Renderer]] docs and [source code](https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.js).
+             * See [[Renderer]] docs and [source code](https://github.com/markdown-it/markdown-it/blob/main/lib/renderer.js).
              **/
             this.renderer = new Renderer();
 
@@ -1051,7 +1051,7 @@
              * MarkdownIt#linkify -> LinkifyIt
              *
              * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
-             * Used by [linkify](https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/linkify.js)
+             * Used by [linkify](https://github.com/markdown-it/markdown-it/blob/main/lib/rules_core/linkify.js)
              * rule.
              **/
             this.linkify = new LinkifyIt();
@@ -1094,7 +1094,7 @@
              * MarkdownIt#utils -> utils
              *
              * Assorted utility functions, useful to write plugins. See details
-             * [here](https://github.com/markdown-it/markdown-it/blob/master/lib/common/utils.js).
+             * [here](https://github.com/markdown-it/markdown-it/blob/main/lib/common/utils.js).
              **/
             this.utils = utils;
 
@@ -1102,7 +1102,7 @@
              * MarkdownIt#helpers -> helpers
              *
              * Link components parser functions, useful to write plugins. See details
-             * [here](https://github.com/markdown-it/markdown-it/blob/master/lib/helpers).
+             * [here](https://github.com/markdown-it/markdown-it/blob/main/lib/helpers).
              **/
             this.helpers = utils.assign({}, helpers);
 
@@ -1143,7 +1143,7 @@
            *
            * Batch load of all options and compenent settings. This is internal method,
            * and you probably will not need it. But if you with - see available presets
-           * and data structure [here](https://github.com/markdown-it/markdown-it/tree/master/lib/presets)
+           * and data structure [here](https://github.com/markdown-it/markdown-it/tree/main/lib/presets)
            *
            * We strongly recommend to use presets instead of direct config loads. That
            * will give better compatibility with next versions.
@@ -2187,7 +2187,7 @@
              * }
              * ```
              *
-             * See [source code](https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.js)
+             * See [source code](https://github.com/markdown-it/markdown-it/blob/main/lib/renderer.js)
              * for more details and examples.
              **/
             this.rules = assign({}, default_rules);

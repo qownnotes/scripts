@@ -24,6 +24,6 @@ This script for [QOwnNotes](https://www.qownnotes.org/) renders text based diagr
 
 ## Developpement
 
-The script is developed on Github: https://github.com/qownnotes/scripts/tree/master/render-plantuml
+The script is developed on Github: https://github.com/qownnotes/scripts/tree/main/render-plantuml
 
 Feel free to contribute.

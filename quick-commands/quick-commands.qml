@@ -58,7 +58,7 @@ Script {
         return timeList;
     }
 
-    // Taken from https://github.com/qownnotes/scripts/blob/master/journal-entry/journal-entry.qml
+    // Taken from https://github.com/qownnotes/scripts/blob/main/journal-entry/journal-entry.qml
     function formatDate(date, format) {
         let day = date.getDate();
         let dayOfWeek = _SHORT_DAYS_EN[date.getDay()];
@@ -90,7 +90,7 @@ Script {
         return format;
     }
 
-    // Taken from https://github.com/qownnotes/scripts/blob/master/journal-entry/journal-entry.qml
+    // Taken from https://github.com/qownnotes/scripts/blob/main/journal-entry/journal-entry.qml
     function getWeekNumber(d) {
         // Copy date so don't modify original
         d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));

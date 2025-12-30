@@ -5,7 +5,7 @@ import QOwnNotesTypes 1.0
  * This script provides integration for a local llama.cpp backend
  * See: https://github.com/ggerganov/llama.cpp
  * List of models: https://github.com/ggerganov/llama.cpp#description
- * OpenAPI endpoint: https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md#result-json-1
+ * OpenAPI endpoint: https://github.com/ggerganov/llama.cpp/blob/main/examples/server/README.md#result-json-1
  */
 Script {
     property string baseUrl

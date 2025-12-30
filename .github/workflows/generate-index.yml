@@ -2,7 +2,7 @@ name: Generate script metadata index
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   build:
