@@ -61,7 +61,6 @@ Script {
         } else if (identifier === "closeAllNoteTabs") {
             // Close all opened note tabs
             while (mainWindow.removeNoteTab(0)) {}
-            ;
         }
     }
     function init() {

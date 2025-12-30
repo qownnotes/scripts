@@ -69,7 +69,6 @@ Script {
         if (requestType != "selection") {
             return false;
         }
-        ;
 
         switch (linkStyle) {
         case "Below":

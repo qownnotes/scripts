@@ -11,7 +11,7 @@ RESULT_FILE_NAME=index.json
 echo "[" >${TMP_FILE_NAME}
 
 # Search for all files named "info.json" and store their paths in an array
-files=($(find . -name "info.json"))
+mapfile -t files < <(find . -name "info.json")
 
 # Loop through the array of files and concatenate their contents into a new file
 for ((i = 0; i < ${#files[@]}; i++)); do

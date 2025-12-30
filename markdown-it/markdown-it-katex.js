@@ -32,10 +32,10 @@ function _objectWithoutProperties(e, t) {
   if (Object.getOwnPropertySymbols) {
     var n = Object.getOwnPropertySymbols(e);
     for (r = 0; r < n.length; r++)
-      (o = n[r]),
+      ((o = n[r]),
         -1 === t.indexOf(o) &&
           {}.propertyIsEnumerable.call(e, o) &&
-          (i[o] = e[o]);
+          (i[o] = e[o]));
   }
   return i;
 }
@@ -53,11 +53,11 @@ function ownKeys(e, r) {
   var t = Object.keys(e);
   if (Object.getOwnPropertySymbols) {
     var o = Object.getOwnPropertySymbols(e);
-    r &&
+    (r &&
       (o = o.filter(function (r) {
         return Object.getOwnPropertyDescriptor(e, r).enumerable;
       })),
-      t.push.apply(t, o);
+      t.push.apply(t, o));
   }
   return t;
 }
@@ -126,7 +126,7 @@ function _iterableToArrayLimit(r, l) {
           f = !0
         );
     } catch (r) {
-      (o = !0), (n = r);
+      ((o = !0), (n = r));
     } finally {
       try {
         if (!f && null != t["return"] && ((u = t["return"]()), Object(u) !== u))
@@ -191,10 +191,10 @@ function _classCallCheck(a, n) {
 function _defineProperties(e, r) {
   for (var t = 0; t < r.length; t++) {
     var o = r[t];
-    (o.enumerable = o.enumerable || !1),
+    ((o.enumerable = o.enumerable || !1),
       (o.configurable = !0),
       "value" in o && (o.writable = !0),
-      Object.defineProperty(e, _toPropertyKey(o.key), o);
+      Object.defineProperty(e, _toPropertyKey(o.key), o));
   }
 }
 function _createClass(e, r, t) {
