@@ -1,5 +1,5 @@
 {
-  "name": "Insert Table of Contents (TOC)",
+  "name": "Table of Contents (TOC)",
   "identifier": "insert-toc",
   "script": "insert-toc.qml",
   "authors": ["@flopp", "@toindev"],

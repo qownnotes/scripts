@@ -1,5 +1,5 @@
 {
-  "name": "Insert Table of Contents II (M.O.C. Map of Contents)",
+  "name": "Table of Contents II (M.O.C. Map of Contents)",
   "identifier": "insert-moc",
   "script": "insert-moc.qml",
   "authors": ["@netlimpopo"],
