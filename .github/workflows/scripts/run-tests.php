@@ -40,11 +40,23 @@ class TestHelper {
         $jsonData = file_get_contents($dir . "/info.json");
         $data = json_decode($jsonData, true);
 
-        if ($data["name"] == "") {
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            $errors[] = "Failed to parse info.json: " . json_last_error_msg();
+            $this->errors[$dir] = $errors;
+            return;
+        }
+
+        if (!is_array($data)) {
+            $errors[] = "info.json does not contain a valid object!";
+            $this->errors[$dir] = $errors;
+            return;
+        }
+
+        if (!isset($data["name"]) || $data["name"] == "") {
             $errors[] = "No name was entered!";
         }
 
-        $identifier = $data["identifier"];
+        $identifier = $data["identifier"] ?? "";
         if ($identifier == "") {
             $errors[] = "No identifier was entered!";
         } elseif (preg_match('/[^a-z0-9\-]/', $identifier)) {
@@ -55,18 +67,18 @@ class TestHelper {
             $errors[] = "Identifier and directory name do not match!";
         }
 
-        if ($data["description"] == "") {
+        if (!isset($data["description"]) || $data["description"] == "") {
             $errors[] = "No description was entered!";
         }
 
-        $script = $data["script"];
+        $script = $data["script"] ?? "";
         if ($script == "") {
             $errors[] = "No script was entered!";
         } elseif (!file_exists($dir . "/" . $script)) {
             $errors[] = "Script '$script' doesn't exist!";
         }
 
-        if ($data["version"] == "") {
+        if (!isset($data["version"]) || $data["version"] == "") {
             $errors[] = "No version was entered!";
         }
 
