@@ -1,0 +1,10 @@
+{
+  "name": "Insert Table of Contents II (M.O.C. Map of Contents)",
+  "identifier": "insert-table-of-contents-II-map-of-contents",
+  "script": "insert-table-of-contents-II-map-of-contents.qml",
+  "authors": ["@netlimpopo"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "25.12.07",
+  "description": "This script generates a list of clickable links which map to every single <code>.md</code> note within the active note folder (= "Map of contents (M.O.C.)"). It displays the links in a table format along with the <em>relative filepaths of the files</em>. Furthermore it sorts the links in alphabetical order. \n The difference to the "Table of Contents" script lies in the fact, that the T.O.C script creates links to headings of the same document whereas this M.O.C. script creates references to every single notename in the active note folder.\n <strong>Usage</strong> \n. <ol> <li>Select the highest folder hierachy <strong>(!)</strong>.</li> <li>Create a new note with an arbitrary name in the highest note hierachy (note level).</li><li>Click the M.O.C button in the script menu. Then the script will overwrite all of the current note content and will insert the linkslist.</li> </ol>  \n\n  <strong>Warning</strong> \n Note that <strong>all of the content</strong> of the selcted note <strong>will be replaced</strong> by the table of contents link list. Therefore it is essential to create a new note and exclusive use this note for the M.O.C list.\n  <strong>automatic updates</strong>\n In case you rename a note, the markdown links in the M.O.C will be automatically updated too, as QOwnNotes watches all markdownlinks and checks links for necessary updates. \n  However, if <strong>one creates a new note anywhere, the script must be excecuted again</strong>, as it will otherwise not watch for file additions nor will it add a new link to the list.\n Also if you want to move the M.O.C file to a different location, all the links will be updated accordingly thanks to the QOwnNotes logic.
+}
