@@ -3,10 +3,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1749054588,
+        "lastModified": 1767111144,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "b6be42d9e6f6053be1d180e4a4fb95e0aa9a8424",
+        "rev": "4dece0eb98c5ad9e1bda60711228228a023e1652",
         "type": "github"
       },
       "original": {
@@ -19,10 +19,10 @@
     "flake-compat": {
       "flake": false,
       "locked": {
-        "lastModified": 1747046372,
+        "lastModified": 1767039857,
         "owner": "edolstra",
         "repo": "flake-compat",
-        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
         "type": "github"
       },
       "original": {
@@ -40,10 +40,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1747372754,
+        "lastModified": 1765911976,
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "80479b6ec16fefd9c1db3ea13aeb038c60530f46",
+        "rev": "b68b780b69702a090c8bb1b973bab13756cc7a27",
         "type": "github"
       },
       "original": {
@@ -60,10 +60,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1709087332,
+        "lastModified": 1762808025,
         "owner": "hercules-ci",
         "repo": "gitignore.nix",
-        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "rev": "cb5e3fdca1de58ccbc3ef53de65bd372b48f567c",
         "type": "github"
       },
       "original": {
@@ -74,10 +74,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1746807397,
+        "lastModified": 1767052823,
         "owner": "cachix",
         "repo": "devenv-nixpkgs",
-        "rev": "c5208b594838ea8e6cca5997fbf784b7cca1ca90",
+        "rev": "538a5124359f0b3d466e1160378c87887e3b51a4",
         "type": "github"
       },
       "original": {
@@ -94,7 +94,23 @@
         "nixpkgs": "nixpkgs",
         "pre-commit-hooks": [
           "git-hooks"
-        ]
+        ],
+        "shared": "shared"
+      }
+    },
+    "shared": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766581418,
+        "owner": "pbek",
+        "repo": "nix-shared",
+        "rev": "c6815e7f9959b7f4a0801697875775db75ae3bf3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pbek",
+        "repo": "nix-shared",
+        "type": "github"
       }
     }
   },

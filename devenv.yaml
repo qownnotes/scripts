@@ -3,3 +3,10 @@ inputs:
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
     # url: github:NixOS/nixpkgs/nixos-unstable
+  shared:
+    url: github:pbek/nix-shared
+    flake: false
+
+imports:
+  - shared/common
+  - shared/php

@@ -4,22 +4,19 @@
 }:
 
 {
-  # https://devenv.sh/packages/
-  packages = with pkgs; [
-    just
-    php
-
-    # Packages for treefmt
-    nodePackages.prettier
-    shfmt
-    nixfmt-rfc-style
-    statix
-    taplo
-    kdePackages.qtdeclarative
-  ];
-
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.treefmt.enable = true;
+  git-hooks.hooks = {
+    # Custom pre-commit hook to format justfile
+    qmlformat = {
+      enable = true;
+      name = "qmlformat";
+      entry = "${pkgs.qt6.qtdeclarative}/bin/qmlformat -i";
+      language = "system";
+      pass_filenames = true;
+      stages = [ "pre-commit" ];
+      files = "\\.qml$";
+    };
+  };
 
   enterShell = ''
     echo "🛠️ QOwnNotes scripts dev shell"

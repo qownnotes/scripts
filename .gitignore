@@ -2,6 +2,7 @@
 *.qmlc
 *.jsc
 .idea
+.shared
 
 # Devenv
 .devenv*

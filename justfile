@@ -1,6 +1,8 @@
 # Use `just <recipe>` to run a recipe
 # https://just.systems/man/en/
 
+import ".shared/common.just"
+
 # By default, run the `--list` command
 default:
     @just --list
@@ -8,10 +10,6 @@ default:
 # Variables
 
 transferDir := `if [ -d "$HOME/NextcloudPrivate/Transfer" ]; then echo "$HOME/NextcloudPrivate/Transfer"; else echo "$HOME/Nextcloud/Transfer"; fi`
-
-# Aliases
-
-alias fmt := format
 
 # Apply the patch to the qownnotes-scripts repository
 [group('patch')]
@@ -29,15 +27,3 @@ git-apply-patch:
 [group('test')]
 @test:
     php ./.github/workflows/scripts/run-tests.php
-
-# Add git commit hashes to the .git-blame-ignore-revs file
-[group('linter')]
-add-git-blame-ignore-revs:
-    git log --pretty=format:"%H" --grep="^lint" >> .git-blame-ignore-revs
-    sort .git-blame-ignore-revs | uniq > .git-blame-ignore-revs.tmp
-    mv .git-blame-ignore-revs.tmp .git-blame-ignore-revs
-
-# Format all files
-[group('linter')]
-format args='':
-    treefmt {{ args }}
