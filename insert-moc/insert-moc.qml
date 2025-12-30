@@ -4,7 +4,7 @@ import QOwnNotesTypes 1.0
 Script {
     function init() {
         // Register custom action for MOC index generation
-        script.registerCustomAction("indexpage", "Generate MOC", "indexpage");
+        script.registerCustomAction("MOC", "Generate MOC", "MOC");
     }
 
     function customActionInvoked(action) {
