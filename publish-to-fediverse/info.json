@@ -4,7 +4,7 @@
   "script": "publish-to-fediverse.qml",
   "authors": ["@77nnit"],
   "platforms": ["linux", "windows"],
-  "version": "0.2.0",
+  "version": "0.3.0",
   "minAppVersion": "24.11.0",
   "description": "<p>Publish To Fediverse lets you publish your notes to your Mastodon-tish Fediverse Account.</p><p>This script works with servers that support Mastodon APIs, such as GoToSocial. If you test somenthing else let me know!</p><p>If you're looking for more detailed instructions to have this script work, please check the readme file in the script folder, or navigate to <a href='https://codeberg.org/77nn/QOwnNotes-personal-scripts/src/branch/main/publish-to-gts/readme.md'>my Codeberg's workshop</a>"
 }
