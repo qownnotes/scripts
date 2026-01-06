@@ -58,7 +58,7 @@ Here the process splits, depending on the authentication mechanism your instance
 
 - Application name: `QONP2F`
 - Redirect URI: ensure it is set to `urn:ietf:wg:oauth:2.0:oob`
-- Scopes: check`Read`, `Write` and `Profile`
+- Scopes: check`read`, `write` and `profile`
 
 3. Confirm and save the changes
 4. Copy the freshly generated `Your access token` value and paste it in the Script setting `Authorization Code` on QON.
