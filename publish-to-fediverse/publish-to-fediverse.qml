@@ -116,8 +116,125 @@ Script {
         msgText += `Press "<b>Cancel</b>" to continue editing your note.`;
         return (script.questionMessageBox(msgText, "P2F: confirm publishing", 0x00000400 | 0x00400000) == 1024);
     }
-    function customActionInvoked(identifier) {
 
+    // This function generates a Post Header with comments and default parameter values for the current note.
+    // if includeAdditional = true adds additional attributes (like created_at for already published notes)
+    function generateFrontmatter(includeAdditional) {
+        let frontMatter = "";
+        frontMatter += "***Publish to Fediverse - frontmatter***\n";
+        frontMatter += "\n";
+        frontMatter += "#Edit the values to adjust the post settings.\n";
+        frontMatter += "#Missing properties will be defaulted as per script settings.\n";
+        frontMatter += "#Confirmation will be asked before publishing.\n";
+        frontMatter += "#This section will not be published.\n";
+        frontMatter += "\n";
+        // checking all post parameters in currentParams against user settings params
+        Object.keys(currentParams).forEach(function (key) {
+            // using .every to break out the cycle
+            settingsVariables.every(function (varObj) {
+                if (key == varObj.identifier) {
+                    // the eval used here is safe, as the variable it evaluates contains always a string value.
+                    frontMatter += `${key}: ${eval(varObj.identifier)}${"\n"}`;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        });
+        if (includeAdditional) {
+            Object.keys(additionalParams).forEach(function (key) {
+                frontMatter += `${key}: ${additionalParams[key]}${"\n"}`;
+            });
+        }
+        return frontMatter;
+    }
+
+    // This function updates the Frontmatter found in a Post with current parameter values for the current note.
+    function updateFrontmatter() {
+        let current = script.currentNote();
+        let sections = current.noteText.split("---");
+        script.tagCurrentNote("P2F");
+        if (sections && sections[1]) {
+            script.triggerMenuAction("actionAllow_note_editing", 1);
+            mainWindow.focusNoteTextEdit();
+            script.noteTextEditSetCursorPosition(0);
+            script.noteTextEditSelectAll();
+            script.noteTextEditWrite([sections[0], ("---\n" + generateFrontmatter(true) + "\n---")].concat(sections.slice(2)).join(""));
+        }
+    }
+
+    // function that reads a Frontmatter section and populate the currentParams object
+    function decodeFrontmatter(){ 
+        let current = script.currentNote(); // current note    
+        let postParams = {};
+        let sections = current.noteText.split("---");
+        if  (sections && sections[1]){
+            sections[1].split("\n").forEach(function(param){
+                if (! param.startsWith("#")){
+                    let thisParam = param.split(":");
+                    if (thisParam[0] && thisParam[1]){
+                        postParams[thisParam[0].trim()]=param.split(":").slice(1).join("").trim();
+                    }
+                }
+            });
+            currentParams = postParams;
+            return true;
+        } else {
+            script.log("P2F: Current note does not have a valid frontmatter.");
+            return false;
+        }
+    }
+
+    // This function parses a string for bool values or returns the original string
+    function parseBool(val) {
+        if (Object.prototype.toString.call(val) == "[object String]") {
+            return val == "true" ? true : (val == "false" ? false : val);
+        } else {
+            return val === true || val === "true";
+        }
+    }
+
+    // This function performs all API endpoint requests and returns text responses
+    function request(verb, endpoint, aT, data) {
+        // create request
+        let xhr = new XMLHttpRequest();
+        let url = "https://" + serverInstance + endpoint;
+        // open synchronous request
+        xhr.open(verb, url, false);
+        // setting content type request header
+        xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        // is accessToken is provided in the function call adding the Authorization header
+        if (aT && aT.length > 0) {
+            xhr.setRequestHeader("Authorization", "Bearer " + aT);
+        }
+        // sending the request with data, if date is there
+        if (data) {
+            // xhr.setRequestHeader("Content-Length", JSON.stringify(data).length);
+            xhr.send(JSON.stringify(data));
+        } else {
+            xhr.send();
+        }
+        // since tha call is synchronous at this poit we already have the response
+        // the response body is returned
+        if (xhr.status == 200) {
+            return xhr.response;
+            // If the request is nor completed with a success code 200, write to che console the error and return null
+        } else {
+            script.log("P2F: Error: " + serverInstance + endpoint + " returned code " + xhr.status + " - " + xhr.statusText);
+            script.log (JSON.stringify(xhr.response));
+            script.log (xhr.getAllResponseHeaders());
+            return null;
+        }
+    }
+   
+    // This function wraps the verify credential call
+    function verifyCredentials(aT) {
+        // calling the request over the specific endpoint, passing the accessToken
+        let res = request("GET", "/api/v1/accounts/verify_credentials", aT);
+        return res && true;
+    }
+
+    function customActionInvoked(identifier) {
         //handler for newPost command
         if (identifier == "newPost") {
             let date = new Date();
@@ -135,7 +252,7 @@ Script {
         if (identifier == "publish") {
             // local variables init
             let clientName = "QONP2F";
-            let clientMode = "Read Write Profile";
+            let clientMode = "read write profile";
             let clientId = "";
             let clientSecret = "";
             let oobCode = "";
@@ -145,7 +262,7 @@ Script {
             let currentPost = ""; //current part of note that represents a post when frontmatter is stripped
             let instanceInfo = {};
             let maxCharsPerPost = 500; //default for Mastodon instances
-            script.log("mysignature: " + mySignature);
+            script.log("P2F: Applying signature to post - " + mySignature);
             if (!decodeFrontmatter()) {
                 let exitCondition = true;
                 let confirmResult = confirmFrontmatter();
@@ -196,7 +313,7 @@ Script {
 
             // If authCode (accessToken) is stored on user settings, recover and authenticate with it
             if (accessToken && accessToken.length > 0) {
-                // authorization conde was found, verifying credentials
+                // authorization code was found, verifying credentials
                 credentialsVerified = verifyCredentials(accessToken);
             } else {
                 // start oob registering process
@@ -294,60 +411,7 @@ Script {
             return;
         }
     }
-
-    // function that reads a Frontmatter section and populate the currentParams object
-    function decodeFrontmatter() {
-        let current = script.currentNote(); // current note
-        let postParams = {};
-        let sections = current.noteText.split("---");
-        if (sections && sections[1]) {
-            sections[1].split("\n").forEach(function (param) {
-                if (!param.startsWith("#")) {
-                    let thisParam = param.split(":");
-                    if (thisParam[0] && thisParam[1]) {
-                        postParams[thisParam[0].trim()] = param.split(":").slice(1).join("").trim();
-                    }
-                }
-            });
-            currentParams = postParams;
-            return true;
-        } else {
-            script.log("P2F: Current note does not have a valid frontmatter.");
-            return false;
-        }
-    }
-
-    // This function generates a Post Header with comments and default parameter values for the current note.
-    // if includeAdditional = true adds additional attributes (like created_at for already published notes)
-    function generateFrontmatter(includeAdditional) {
-        let frontMatter = "";
-        frontMatter += "***Publish to Fediverse - frontmatter***\n";
-        frontMatter += "\n";
-        frontMatter += "#Edit the values to adjust the post settings.\n";
-        frontMatter += "#Missing properties will be defaulted as per script settings.\n";
-        frontMatter += "#Confirmation will be asked before publishing.\n";
-        frontMatter += "#This section will not be published.\n";
-        frontMatter += "\n";
-        // checking all post parameters in currentParams against user settings params
-        Object.keys(currentParams).forEach(function (key) {
-            // using .every to break out the cycle
-            settingsVariables.every(function (varObj) {
-                if (key == varObj.identifier) {
-                    // the eval used here is safe, as the variable it evaluates contains always a string value.
-                    frontMatter += `${key}: ${eval(varObj.identifier)}${"\n"}`;
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-        });
-        if (includeAdditional) {
-            Object.keys(additionalParams).forEach(function (key) {
-                frontMatter += `${key}: ${additionalParams[key]}${"\n"}`;
-            });
-        }
-        return frontMatter;
-    }
+ 
     function init() {
         script.registerCustomAction("publish", "Publish to Fediverse", "", true, true, false);
         script.registerCustomAction("newPost", "New post for Fediverse", "", true, true, false);
@@ -358,64 +422,5 @@ Script {
         }
     }
 
-    // This function returns a true or a false or a string that doesn't match true or false
-    function parseBool(val) {
-        if (Object.prototype.toString.call(val) == "[object String]") {
-            return val == "true" ? true : (val == "false" ? false : val);
-        } else {
-            return val === true || val === "true";
-        }
-    }
 
-    // This function performs all API endpoint requests and returns text responses
-    function request(verb, endpoint, aT, data) {
-        // create request
-        let xhr = new XMLHttpRequest();
-        let url = "https://" + serverInstance + endpoint;
-        // open synchronous request
-        xhr.open(verb, url, false);
-        // setting content type request header
-        xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-        // is accessToken is provided in the function call adding the Authorization header
-        if (aT && aT.length > 0) {
-            xhr.setRequestHeader("Authorization", "Bearer " + aT);
-        }
-        // sending the request with data, if date is there
-        if (data) {
-            // xhr.setRequestHeader("Content-Length", JSON.stringify(data).length);
-            xhr.send(JSON.stringify(data));
-        } else {
-            xhr.send();
-        }
-        // since tha call is synchronous at this poit we already have the response
-        // the response body is returned
-        if (xhr.status == 200) {
-            return xhr.response;
-            // If the request is nor completed with a success code 200, write to che console the error and return null
-        } else {
-            script.log("P2F: Error: " + serverInstance + endpoint + " returned code " + xhr.status + " - " + xhr.statusText);
-            //script.log (JSON.stringify(xhr.response));
-            //script.log (xhr.getAllResponseHeaders());
-            return null;
-        }
-    }
-    function updateFrontmatter() {
-        let current = script.currentNote();
-        let sections = current.noteText.split("---");
-        script.tagCurrentNote("P2F");
-        if (sections && sections[1]) {
-            script.triggerMenuAction("actionAllow_note_editing", 1);
-            mainWindow.focusNoteTextEdit();
-            script.noteTextEditSetCursorPosition(0);
-            script.noteTextEditSelectAll();
-            script.noteTextEditWrite([sections[0], ("---\n" + generateFrontmatter(true) + "\n---")].concat(sections.slice(2)).join(""));
-        }
-    }
-
-    // This function wraps the "verify credential" call
-    function verifyCredentials(aT) {
-        // calling the request over the specific endpoint, passing the accessToken
-        let res = request("GET", "/api/v1/accounts/verify_credentials", aT);
-        return res && true;
-    }
 }
