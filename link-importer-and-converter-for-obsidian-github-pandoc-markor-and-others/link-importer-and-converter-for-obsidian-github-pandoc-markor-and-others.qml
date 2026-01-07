@@ -8,8 +8,8 @@ import QOwnNotesTypes 1.0
 
 Script {   
 		function init() {
-        script.registerCustomAction("URIdecodePage", "URI decode all text in current page", ) // Uncomment for debugging 
-        script.registerCustomAction("URIencodeText", "URI encode selected text to QOwnNotes specific format (show '[]' instead of '%5B' and '%5D')", ) // Uncomment for debugging 
+        // script.registerCustomAction("URIdecodePage", "URI decode all text in current page", ) // Uncomment for debugging 
+        // script.registerCustomAction("URIencodeText", "URI encode selected text to QOwnNotes specific format (show '[]' instead of '%5B' and '%5D')", ) // Uncomment for debugging 
         script.registerCustomAction("ObsidianImport", "ObsidianImport: URI encode all files to QOwnNotes specific format (show '[]' instead of '%5B' and '%5D')", "ObsidianImport") 
         script.registerCustomAction("GFMImport", "GFMImport: Convert heading fragments in all files from Github/Markor/Pandoc - format [note](note.md#heading-with-dashes) to QOwnNotes format", "GFMImport")
 		script.registerCustomAction("GFMExportAll", "GFMExportAll: Convert heading fragments in all files to Github/Markor/Pandoc - format [note](note.md#heading-with-dashes)", "GFMExportAll")  
@@ -21,7 +21,7 @@ Script {
         var markdown;
 		
 		// <<<<------- Uncomment for debugging to check for specific link parts in note
-        var currentSelectedText = script.noteTextEditSelectedText();
+        /* var currentSelectedText = script.noteTextEditSelectedText();
         if (action == "URIdecodePage") {
             text = script.noteTextEditSelectAll();
             text = script.noteTextEditSelectedText(); 
@@ -37,7 +37,7 @@ Script {
             encodedlink = encodedlink.replace(/\%5D/gm, "]");
             encodedlink = encodedlink.replace(/,/gm, "%2C");   // need to replace comma "," as with encodeURI comma remains untouched
             script.noteTextEditWrite(encodedlink);
-        }   
+        }   */
 		// Uncomment for debugging ------->>>>>>   
 		
 		// Define a function to decode a link first. But a lot of times there are malformed links. So use catch to account for this. 
@@ -68,7 +68,7 @@ Script {
 		function produceDashedLinks(markdown) {
                 // Identify and temporarily replace code blocks
                 var codeBlocks = [];
-				markdown.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
+				markdown = markdown.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
 				codeBlocks.push(match);
 				return "<<<CODE_BLOCK_" + (codeBlocks.length - 1) + ">>>";
 			});
@@ -120,8 +120,6 @@ Script {
 					//fragment = fragment.length > 0 ? safeDecodeURI(fragment).toLowerCase().replace(/[!-\/:-@[-`{-~]/g, '-').replace(/[\s-]+/g, '-').replace(/^-+|-+$/g, '') : '';
 					//fragment = fragment.length > 0 ? safeDecodeURI(fragment).toLowerCase().replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|[#*0-9]\uFE0F?\u20E3|[!"#$%&'()*+,.\/:;<=>?@\[\\\]^_`{|}~]/g, '').replace(/\s/g, '-').replace(/-+/g, '-') : '';
 					fragment = fragment.length > 0 ? safeDecodeURI(fragment).trim().toLowerCase().replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|[#*0-9]\uFE0F?\u20E3|[!"#$%&'()*+,.\/:;<=>?@\[\\\]^_`{|}~]/g, '').replace(/ /g, '-') : '';
-					
-					
 					
 					
 					// .replace(/\s+/g, "-").toLowerCase().replace(/[^\w\d\s_-]/g, "").replace(/[-_]+/g, "-").replace(/^-+|-+$/g, "").replace(/[\p{Emoji}\u200B-\u200D\uFE0F\u2B50\u20E3\u2122\u00AE]/gu, "");
@@ -186,7 +184,7 @@ Script {
 			function convertObsidianToQNLinks(markdown) {
 				// Identify and temporarily replace code blocks. Otherwise there might occur unwanted possible replacements in codeblocks (false positives).
 				var codeBlocks = [];
-				markdown.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
+				markdown = markdown.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
 				codeBlocks.push(match);
 				return "<<<CODE_BLOCK_" + (codeBlocks.length - 1) + ">>>";
 				});
@@ -279,7 +277,7 @@ Script {
 			var text = noteobject.noteText; //selects all text in current note
 			
 			var codeBlocks = [];
-			text.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
+			text = text.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
 				codeBlocks.push(match);
 				return "<<<CODE_BLOCK_" + (codeBlocks.length - 1) + ">>>";
 			});
@@ -389,7 +387,7 @@ Script {
 			function convertDashedLinksToQN(markdown) {
 					// Identify and temporarily replace code blocks
                     var codeBlocks = [];
-					markdown.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
+					markdown = markdown.replace(/(```[\s\S]*?```|`[^`]*`)/g, function (match) {
 						codeBlocks.push(match);
 						return "<<<CODE_BLOCK_" + (codeBlocks.length - 1) + ">>>";
 					});
@@ -527,4 +525,5 @@ Script {
 		}
 
         }
+
 }   
