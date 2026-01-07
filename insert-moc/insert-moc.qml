@@ -8,7 +8,7 @@ Script {
     }
 
     function customActionInvoked(action) {
-        if (action !== "indexpage") {
+        if (action !== "MOC") {
             return;
         }
 
