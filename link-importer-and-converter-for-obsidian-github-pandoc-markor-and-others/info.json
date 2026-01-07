@@ -12,6 +12,7 @@
     "windows"
   ],
   "version": "0.0.1",
-  "minAppVersion": "25.12.07",
+  "minAppVersion": "26.1.5",
   "description": "<h2> Intro</h2><p>This script imports and exports links from other editors such as <strong>Obsidian/VS Code/Github/Markor/Pandoc</strong> into QOwnNotes and vice versa. It allows for quick switching between markdown editors. Unfortunately markdown as a language is not as well defined as <i>orgmode</i> for instance. Especially heading Fragments and URL encoding of links differ quite significantly ([note](note.md#heading-fragment) vs. [note](note.md#Heading%20Fragment)). In practice, <strong>links to headings will break</strong> if one does not adapt the links to the specific needs of the editor. They might be readable by the editor, but renaming of notes / headings might break links silently, without you noticing.</p><h2>Usage</h2><p> Caution! Backup your data before you use this script as it might break all you links!</p><p>Simply copy files or folders into the QN Foldersystem. Then <strong>press the import/export button</strong> in the script menu, depending on which style you prefer. Done. For further info see <a href='https://github.com/pbek/QOwnNotes/issues/3225'>Ways to improve compatibility with other markdown editors</a>.</p>"
+
 }
