@@ -1,0 +1,9 @@
+{
+  "name": "OpenRouter AI backend integration",
+  "identifier": "openrouter-integration",
+  "script": "openrouter-integration.qml",
+  "version": "0.1.0",
+  "minAppVersion": "24.6.3",
+  "authors": ["@pbek"],
+  "description": "This script provides integration for <a href=\"https://openrouter.ai/\">OpenRouter</a>, a unified API for accessing multiple AI models including GPT, Claude, Gemini, and Llama. You'll need an API key from <a href=\"https://openrouter.ai/keys\">OpenRouter</a> to use this integration."
+}
