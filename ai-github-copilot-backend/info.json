@@ -1,0 +1,10 @@
+{
+  "name": "GitHub Models AI backend (via Copilot subscription)",
+  "identifier": "ai-github-copilot-backend",
+  "script": "ai-github-copilot-backend.qml",
+  "version": "0.0.1",
+  "minAppVersion": "24.6.3",
+  "authors": ["@nagelp"],
+  "platforms": ["linux", "macos", "windows"],
+  "description": "This script adds a <a href=\"https://github.com/marketplace/models\">GitHub</a> AI backend to QOwnNotes, allowing you to use AI models via your GitHub Copilot subscription through the GitHub Models inference API. You'll need a GitHub Personal Access Token (create at <a href=\"https://github.com/settings/tokens\">GitHub Settings</a>) with 'Models: Read' permission."
+}
