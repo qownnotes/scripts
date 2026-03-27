@@ -577,24 +577,32 @@ QtObject {
 
             // download matched GitHub url
             var output = script.downloadUrlToString(text);
-            // script.log(output);
+            script.log(output);
 
             // parse the headline
-            var re2 = /<bdi class="[^"]+markdown-title"[^>]*>\s*(.+?)\s*<\/bdi>/im;
-            var result2 = re2.exec(output);
+            var headline = "";
+            var headlinePatterns = [
+                // current GitHub data sources
+                /"headline":"((?:\\.|[^"])*)"/im, /<bdi[^>]*class="[^"]*\bmarkdown-title\b[^"]*"[^>]*>\s*([\s\S]+?)\s*<\/bdi>/im,
 
-            if (result2 == null) {
-                var re2 = /<bdi class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/bdi>/im;
-                var result2 = re2.exec(output);
+                // legacy selectors kept as explicit fallbacks
+                /<bdi class="[^"]+markdown-title"[^>]*>\s*(.+?)\s*<\/bdi>/im, /<bdi class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/bdi>/im, /<span class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/span>/im,
+
+                // generic last-resort fallbacks
+                /<meta[^>]*property="og:title"[^>]*content="([^"]+)"/im, /<title>([^<]+)<\/title>/im];
+
+            for (var i = 0; i < headlinePatterns.length; ++i) {
+                var result2 = headlinePatterns[i].exec(output);
+
+                if (result2 !== null) {
+                    headline = result2[1].trim();
+                    break;
+                }
             }
 
-            if (result2 == null) {
-                re2 = /<span class="\s*js-issue-title[^"]+"[^>]*>\s*(.+?)\s*<\/span>/im;
-                result2 = re2.exec(output);
-            }
-
-            if (result2 !== null) {
-                var headline = entityToHtml(result2[1].trim());
+            if (headline !== "") {
+                headline = headline.replace(/\\"/g, '"').replace(/\\u003c/g, "<").replace(/\\u003e/g, ">").replace(/\s+[·-]\s+(Issue|Pull Request)\s+#\d+\s+·\s+.+$/i, "").replace(/\s+[·-]\s+(Issue|Pull Request)\s+#\d+$/i, "");
+                headline = entityToHtml(headline.trim());
                 script.log("Found headline: " + headline);
 
                 // generate markdown to paste
