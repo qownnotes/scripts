@@ -1,0 +1,10 @@
+{
+  "name": "URL to Markdown Link",
+  "identifier": "url2markup",
+  "script": "url2markup.qml",
+  "authors": ["@rkratky"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.1.0",
+  "minAppVersion": "20.0.0",
+  "description": "Converts bare URLs to proper Markdown links <code>[Page Title](url)</code> by fetching each page's <code>&lt;title&gt;</code> tag.<br><br><b>Function 1 — selection to links</b><br>Select text containing bare URLs, then right-click › <i>Convert URLs in selection to Markdown links</i> (or assign a shortcut such as <i>Ctrl+Shift+K</i> in Settings › Shortcuts).<br><br><b>Function 2 — clipboard URL to link</b><br>Copy a URL to the clipboard, then invoke <i>Paste clipboard URL as Markdown link</i> (suggested shortcut: <i>Ctrl+Shift+W</i>, assign in Settings › Shortcuts) to insert a resolved Markdown link at the cursor position.<br><br>Smart title trimming is applied:<br>• Site-name suffixes (<i>Article – Site</i>, <i>Article | Site</i>, etc.) are stripped.<br>• GitHub / GitLab / Bitbucket / Codeberg issue and pull-request metadata (<i>by user · PR #N · owner/repo</i>) is removed, leaving only the actual issue or PR title."
+}
