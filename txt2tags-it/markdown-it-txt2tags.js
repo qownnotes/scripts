@@ -246,6 +246,75 @@
       }
     );
 
+    // ── Inline: bare URLs ────────────────────────────────────────────────────
+    // Matches scheme://... URLs that appear without brackets.
+    // Registered BEFORE the text rule so the text rule doesn't consume the
+    // leading letters (it stops at '/' but would first consume e.g. "http:").
+    md.inline.ruler.before(
+      "text",
+      "txt2tags_autolink",
+      function (state, silent) {
+        var pos = state.pos;
+        var src = state.src;
+        // Must start with a URL scheme (letters then "://")
+        var match = /^[a-zA-Z][\w+\-.]*:\/\/[^\s\]]*/.exec(src.slice(pos));
+        if (!match) return false;
+        var url = match[0];
+        // Strip trailing punctuation that is unlikely to be part of the URL
+        url = url.replace(/[.,;:!?)]+$/, "");
+        if (!url) return false;
+        if (!silent) {
+          var token = state.push("link_open", "a", 1);
+          token.attrs = [["href", url]];
+          token.markup = "autolink";
+          state.push("text", "", 0).content = url;
+          state.push("link_close", "a", -1).markup = "autolink";
+        }
+        state.pos = pos + url.length;
+        return true;
+      }
+    );
+
+    // ── Inline: [[wikilink]] and [[wikilink|description]] ────────────────────
+    // Registered BEFORE 'txt2tags_link' (and therefore before 'link') so that
+    // the double-bracket syntax is consumed before any single-bracket rule.
+    md.inline.ruler.before(
+      "txt2tags_link",
+      "txt2tags_wikilink",
+      function (state, silent) {
+        var pos = state.pos;
+        var src = state.src;
+        // Must start with [[
+        if (src.charCodeAt(pos) !== 0x5B || src.charCodeAt(pos + 1) !== 0x5B) return false;
+        var closePos = src.indexOf("]]", pos + 2);
+        if (closePos < 0) return false;
+        var content = src.slice(pos + 2, closePos);
+        if (!content) return false;
+        // Split on first '|' to get optional description
+        var pipePos = content.indexOf("|");
+        var target, label;
+        if (pipePos >= 0) {
+          target = content.slice(0, pipePos);
+          label  = content.slice(pipePos + 1);
+        } else {
+          target = content;
+          label  = content;
+        }
+        if (!target) return false;
+        // Append .md so the QOwnNotes hook resolves to a note file path
+        var href = /\.md$/i.test(target) ? target : (target + ".md");
+        if (!silent) {
+          var token = state.push("link_open", "a", 1);
+          token.attrs = [["href", href]];
+          token.markup = "wikilink";
+          state.push("text", "", 0).content = label;
+          state.push("link_close", "a", -1).markup = "wikilink";
+        }
+        state.pos = closePos + 2;
+        return true;
+      }
+    );
+
     // ── Inline: --strikethrough-- ─────────────────────────────────────────────
     md.inline.ruler.push(
       "txt2tags_strike",
@@ -257,9 +326,9 @@
         var end = src.indexOf("--", start);
         if (end < 0 || end === start) return false;
         if (!silent) {
-          state.push("txt2tags_del_open", "del", 1);
+          state.push("txt2tags_s_open", "s", 1);
           state.push("text", "", 0).content = src.slice(start, end);
-          state.push("txt2tags_del_close", "del", -1);
+          state.push("txt2tags_s_close", "s", -1);
         }
         state.pos = end + 2;
         return true;
