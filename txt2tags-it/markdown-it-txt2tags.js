@@ -1,23 +1,13 @@
 /*! markdown-it-txt2tags - txt2tags syntax support for markdown-it */
+// Top-level var makes markdownitTxt2tags accessible as MarkdownItTxt2tags.markdownitTxt2tags in QML (Qt5 + Qt6).
+var markdownitTxt2tags;
 (function (f) {
   if (typeof exports === "object" && typeof module !== "undefined") {
     module.exports = f();
   } else if (typeof define === "function" && define.amd) {
     define([], f);
   } else {
-    var g;
-    if (typeof window !== "undefined") {
-      g = window;
-    } else if (typeof global !== "undefined") {
-      g = global;
-    } else if (typeof self !== "undefined") {
-      g = self;
-    } else if (typeof globalThis !== "undefined") {
-      g = globalThis;
-    } else {
-      g = this;
-    }
-    g.markdownitTxt2tags = f();
+    markdownitTxt2tags = f();
   }
 })(function () {
   "use strict";

@@ -1,7 +1,5 @@
 import QOwnNotesTypes 1.0
 import QtQml 2.0
-import "markdown-it-deflist.js" as MarkdownItDeflist
-import "markdown-it-katex.js" as MarkdownItKatex
 import "markdown-it-txt2tags.js" as MarkdownItTxt2tags
 import "markdown-it.js" as MarkdownIt
 
@@ -15,21 +13,7 @@ QtObject {
             "name": "Markdown-it options",
             "description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/main/lib/presets'>markdown-it presets</a>.",
             "type": "text",
-            "default": "{" + "\n" + "    html:          true,         // Enable HTML tags in source" + "\n" + "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)" + "\n" + "    //breaks:       false,        // Convert '\\n' in paragraphs into <br>" + "\n" + "    //langPrefix:   'language-',  // CSS language prefix for fenced blocks" + "\n" + "    //linkify:      false,        // autoconvert URL-like texts to links" + "\n" + "" + "\n" + "    // Enable some language-neutral replacements + quotes beautification" + "\n" + "    //typographer:  false," + "\n" + "" + "\n" + "    // Double + single quotes replacement pairs, when typographer enabled," + "\n" + "    // and smartquotes on. Could be either a String or an Array." + "\n" + "    //" + "\n" + "    // For example, you can use '«»„“' for Russian, '„“‚‘' for German," + "\n" + "    // and ['«\\xA0', '\\xA0»', '‹\\xA0', '\\xA0›'] for French (including nbsp)." + "\n" + "    //quotes: '\\u201c\\u201d\\u2018\\u2019', /* “”‘’ */" + "\n" + "" + "\n" + "    // Highlighter function. Should return escaped HTML," + "\n" + "    // or '' if the source string is not changed and should be escaped externaly." + "\n" + "    // If result starts with <pre... internal wrapper is skipped." + "\n" + "    //" + "\n" + "    // function (/*str, lang*/) { return ''; }" + "\n" + "    //" + "\n" + "    //highlight: null," + "\n" + "" + "\n" + "    //maxNesting:   100            // Internal protection, recursion limit" + "\n" + "}"
-        },
-        {
-            "identifier": "useDeflistPlugin",
-            "name": "Definition lists",
-            "text": "Enable the Markdown-it definition list (<dl>) plugin",
-            "type": "boolean",
-            "default": false
-        },
-        {
-            "identifier": "useKatexPlugin",
-            "name": "LaTeX Support",
-            "text": "Enable the Markdown-it definition list KaTeX plugin",
-            "type": "boolean",
-            "default": false
+            "default": "{" + "\n" + "    html:          true,         // Enable HTML tags in source" + "\n" + "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)" + "\n" + "    //breaks:       false,        // Convert '\\n' in paragraphs into <br>" + "\n" + "    //langPrefix:   'language-',  // CSS language prefix for fenced blocks" + "\n" + "    //linkify:      false,        // autoconvert URL-like texts to links" + "\n" + "" + "\n" + "    // Enable some language-neutral replacements + quotes beautification" + "\n" + "    //typographer:  false," + "\n" + "" + "\n" + "    //maxNesting:   100            // Internal protection, recursion limit" + "\n" + "}"
         },
         {
             "identifier": "useTxt2tagsPlugin",
@@ -53,26 +37,17 @@ QtObject {
             "default": null
         }
     ]
-    property bool useDeflistPlugin
-    property bool useKatexPlugin
     property bool useTxt2tagsPlugin
     property bool useEditorHighlighting
 
     function init() {
         var optionsObj = eval("(" + options + ")");
-        // UMD modules export via `g = globalThis || this` in the JS files.
-        // Qt5: `this` at module top-level = QML component scope → this.xxx works.
-        // Qt6: `this` at module top-level = undefined (strict mode) → globalThis used → access via globalThis.xxx.
-        var _g = (typeof globalThis !== "undefined") ? globalThis : this;
-        md = new _g.markdownit(optionsObj);
-        if (useDeflistPlugin)
-            md.use(_g.markdownitDeflist);
-
-        if (useKatexPlugin)
-            _g.markdownItKatex(md, { "output": "mathml" });
+        // MarkdownIt.markdownit is a top-level var in markdown-it.js — accessible
+        // via the module qualifier in both Qt5 and Qt6 QML.
+        md = new MarkdownIt.markdownit(optionsObj);
 
         if (useTxt2tagsPlugin)
-            md.use(_g.markdownitTxt2tags);
+            md.use(MarkdownItTxt2tags.markdownitTxt2tags);
 
         if (useTxt2tagsPlugin && useEditorHighlighting) {
             // Headings: = H1 =  == H2 ==  …
@@ -129,32 +104,16 @@ QtObject {
             path = "/" + path;
 
         mdHtml = mdHtml.replace(/(\b(?:src|href|data-[\w-]+)\s*=\s*["'])([^"']+)["']/gi, (_, prefix, rawPath) => {
-            // Convert backslashes to forward slashes for URL
-
             if (isProtocolUrl(rawPath))
                 return `${prefix}${rawPath}"`;
 
             let finalPath;
             if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath))
-                // Absolute path (Unix or Windows)
                 finalPath = rawPath.replace(/\\/g, '/');
             else
-                // Relative path → resolve against base
                 finalPath = resolvePath(path, rawPath.replace(/^\.\/+/, ''));
             return `${prefix}file://${finalPath}"`;
         });
-        // Don't attempt to render in the preview, it doesn't support mathml or complex css
-        if (!forExport && useKatexPlugin)
-            mdHtml = mdHtml.replace(/(<math\b[^>]*>)([\s\S]*?)(<\/math>)/gi, (fullMatch, openMathTag, mathInner, closeMathTag) => {
-                let blockPresent = /\bdisplay="block"/i.test(openMathTag);
-                let out = blockPresent ? '<br><i>' + openMathTag : '&nbsp;<i>' + openMathTag;
-                out += mathInner.replace(/(<semantics\b[^>]*>)([\s\S]*?)(<\/semantics>)/gi, (semiMatch, openSemi, semiInner, closeSemi) => {
-                    const cleaned = semiInner.replace(/<mrow\b[^>]*>[\s\S]*?<\/mrow>/gi, '');
-                    return openSemi + cleaned + closeSemi;
-                });
-                out += blockPresent ? closeMathTag + '</i><br>' : closeMathTag + '</i>&nbsp;';
-                return out;
-            });
 
         //Get original styles
         var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];

@@ -1,4 +1,7 @@
-/*! markdown-it 8.4.2 https://github.com//markdown-it/markdown-it @license MIT */ (function (
+/*! markdown-it 8.4.2 https://github.com//markdown-it/markdown-it @license MIT */
+// Top-level var makes markdownit accessible as MarkdownIt.markdownit in QML (Qt5 + Qt6).
+var markdownit;
+(function (
   f,
 ) {
   if (typeof exports === "object" && typeof module !== "undefined") {
@@ -6,19 +9,7 @@
   } else if (typeof define === "function" && define.amd) {
     define([], f);
   } else {
-    var g;
-    if (typeof window !== "undefined") {
-      g = window;
-    } else if (typeof global !== "undefined") {
-      g = global;
-    } else if (typeof self !== "undefined") {
-      g = self;
-    } else if (typeof globalThis !== "undefined") {
-      g = globalThis;
-    } else {
-      g = this;
-    }
-    g.markdownit = f();
+    markdownit = f();
   }
 })(function () {
   var define, module, exports;
