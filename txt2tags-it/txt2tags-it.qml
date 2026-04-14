@@ -39,6 +39,13 @@ QtObject {
             "default": true
         },
         {
+            "identifier": "useEditorHighlighting",
+            "name": "txt2tags editor highlighting",
+            "text": "Enable txt2tags heading syntax highlighting in the editor",
+            "type": "boolean",
+            "default": true
+        },
+        {
             "identifier": "customStylesheet",
             "name": "Custom stylesheet",
             "description": "Please enter your custom stylesheet:",
@@ -49,6 +56,7 @@ QtObject {
     property bool useDeflistPlugin
     property bool useKatexPlugin
     property bool useTxt2tagsPlugin
+    property bool useEditorHighlighting
 
     function init() {
         var optionsObj = eval("(" + options + ")");
@@ -63,6 +71,22 @@ QtObject {
 
         if (useTxt2tagsPlugin)
             md.use(this.markdownitTxt2tags);
+
+        if (useTxt2tagsPlugin && useEditorHighlighting) {
+            // Headings: = H1 =  == H2 ==  …
+            script.addHighlightingRule("^= +.+? +=\\s*$",         "=", 12);
+            script.addHighlightingRule("^== +.+? +==\\s*$",       "=", 13);
+            script.addHighlightingRule("^=== +.+? +===\\s*$",     "=", 14);
+            script.addHighlightingRule("^==== +.+? +====\\s*$",   "=", 15);
+            script.addHighlightingRule("^===== +.+? +=====\\s*$", "=", 16);
+            // Inline: //italic//  __underline__  --strikethrough--
+            script.addHighlightingRule("//.+?//",  "//", 7);
+            script.addHighlightingRule("__.+?__",  "__", 31);
+            script.addHighlightingRule("--.+?--", "--", -1, 0, 0,
+                { foregroundColor: "#888888" });
+            // Comment: % until end of line
+            script.addHighlightingRule("^%.*$", "%", 11);
+        }
 
         //Allow file:// url scheme
         var validateLinkOrig = md.validateLink;
@@ -96,10 +120,7 @@ QtObject {
      * @return {string} the modified html or an empty string if nothing should be modified
      */
     function noteToMarkdownHtmlHook(note, html, forExport) {
-        // Strip HTML comments (<!-- ... -->) before rendering: with html:false
-        // (default) markdown-it escapes them as visible text instead of hiding them.
-        var noteText = note.noteText.replace(/<!--[\s\S]*?-->/g, '');
-        var mdHtml = md.render(noteText);
+        var mdHtml = md.render(note.noteText);
         //Insert root folder in attachments and media relative urls
         var path = script.currentNoteFolderPath();
         if (script.platformIsWindows())
@@ -136,10 +157,7 @@ QtObject {
         //Get original styles
         var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
         //Add custom styles
-        var css = "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;} del {text-decoration: line-through;}";
-        if (customStylesheet)
-            css += customStylesheet;
-        head = head.replace("</style>", css + "</style>");
+        head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;} del {text-decoration: line-through;}" + customStylesheet + "</style>");
         mdHtml = "<html>" + head + "<body>" + mdHtml + "</body></html>";
         return mdHtml;
     }
