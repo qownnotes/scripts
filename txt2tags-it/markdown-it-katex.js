@@ -220,7 +220,8 @@ function _toPrimitive(t, r) {
   return ("string" === r ? String : Number)(t);
 }
 (function (factory) {
-  this.markdownItKatex = factory();
+  var g = (typeof globalThis !== "undefined") ? globalThis : this;
+  g.markdownItKatex = factory();
 })(function () {
   var escapeHtml = function escapeHtml(unsafeHTML) {
     return unsafeHTML

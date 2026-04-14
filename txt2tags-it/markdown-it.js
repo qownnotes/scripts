@@ -13,6 +13,8 @@
       g = global;
     } else if (typeof self !== "undefined") {
       g = self;
+    } else if (typeof globalThis !== "undefined") {
+      g = globalThis;
     } else {
       g = this;
     }

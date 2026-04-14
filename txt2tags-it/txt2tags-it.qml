@@ -60,28 +60,19 @@ QtObject {
 
     function init() {
         var optionsObj = eval("(" + options + ")");
-        // Qt5: module `this` = QML global → constructor lands on component scope → this.markdownit works
-        // Qt6: module `this` = module namespace → constructor lands on MarkdownIt.markdownit
-        var markdownitCtor = (typeof MarkdownIt !== "undefined" && MarkdownIt.markdownit)
-                             ? MarkdownIt.markdownit : this.markdownit;
-        md = new markdownitCtor(optionsObj);
-        if (useDeflistPlugin) {
-            var deflistPlugin = (typeof MarkdownItDeflist !== "undefined" && MarkdownItDeflist.markdownitDeflist)
-                                ? MarkdownItDeflist.markdownitDeflist : this.markdownitDeflist;
-            md.use(deflistPlugin);
-        }
+        // UMD modules export via `g = globalThis || this` in the JS files.
+        // Qt5: `this` at module top-level = QML component scope → this.xxx works.
+        // Qt6: `this` at module top-level = undefined (strict mode) → globalThis used → access via globalThis.xxx.
+        var _g = (typeof globalThis !== "undefined") ? globalThis : this;
+        md = new _g.markdownit(optionsObj);
+        if (useDeflistPlugin)
+            md.use(_g.markdownitDeflist);
 
-        if (useKatexPlugin) {
-            var katexFn = (typeof MarkdownItKatex !== "undefined" && MarkdownItKatex.markdownItKatex)
-                          ? MarkdownItKatex.markdownItKatex : this.markdownItKatex;
-            katexFn(md, { "output": "mathml" });
-        }
+        if (useKatexPlugin)
+            _g.markdownItKatex(md, { "output": "mathml" });
 
-        if (useTxt2tagsPlugin) {
-            var txt2tagsPlugin = (typeof MarkdownItTxt2tags !== "undefined" && MarkdownItTxt2tags.markdownitTxt2tags)
-                                 ? MarkdownItTxt2tags.markdownitTxt2tags : this.markdownitTxt2tags;
-            md.use(txt2tagsPlugin);
-        }
+        if (useTxt2tagsPlugin)
+            md.use(_g.markdownitTxt2tags);
 
         if (useTxt2tagsPlugin && useEditorHighlighting) {
             // Headings: = H1 =  == H2 ==  …
