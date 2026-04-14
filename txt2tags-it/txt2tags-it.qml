@@ -60,17 +60,28 @@ QtObject {
 
     function init() {
         var optionsObj = eval("(" + options + ")");
-        md = new this.markdownit(optionsObj);
-        if (useDeflistPlugin)
-            md.use(this.markdownitDeflist);
+        // Qt5: module `this` = QML global → constructor lands on component scope → this.markdownit works
+        // Qt6: module `this` = module namespace → constructor lands on MarkdownIt.markdownit
+        var markdownitCtor = (typeof MarkdownIt !== "undefined" && MarkdownIt.markdownit)
+                             ? MarkdownIt.markdownit : this.markdownit;
+        md = new markdownitCtor(optionsObj);
+        if (useDeflistPlugin) {
+            var deflistPlugin = (typeof MarkdownItDeflist !== "undefined" && MarkdownItDeflist.markdownitDeflist)
+                                ? MarkdownItDeflist.markdownitDeflist : this.markdownitDeflist;
+            md.use(deflistPlugin);
+        }
 
-        if (useKatexPlugin)
-            this.markdownItKatex(md, {
-                "output": "mathml"
-            });
+        if (useKatexPlugin) {
+            var katexFn = (typeof MarkdownItKatex !== "undefined" && MarkdownItKatex.markdownItKatex)
+                          ? MarkdownItKatex.markdownItKatex : this.markdownItKatex;
+            katexFn(md, { "output": "mathml" });
+        }
 
-        if (useTxt2tagsPlugin)
-            md.use(this.markdownitTxt2tags);
+        if (useTxt2tagsPlugin) {
+            var txt2tagsPlugin = (typeof MarkdownItTxt2tags !== "undefined" && MarkdownItTxt2tags.markdownitTxt2tags)
+                                 ? MarkdownItTxt2tags.markdownitTxt2tags : this.markdownitTxt2tags;
+            md.use(txt2tagsPlugin);
+        }
 
         if (useTxt2tagsPlugin && useEditorHighlighting) {
             // Headings: = H1 =  == H2 ==  …
