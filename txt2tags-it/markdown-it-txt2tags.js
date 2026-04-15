@@ -226,9 +226,11 @@ var markdownitTxt2tags;
         if (!label || !url) return false;
         // URL must start with a recognised scheme or /
         if (!/^[a-zA-Z][\w+\-.]*:\/\/|^\//.test(url)) return false;
+        if (!md.validateLink(url)) return false;
+        var normalizedUrl = md.normalizeLink(url);
         if (!silent) {
           var token = state.push("link_open", "a", 1);
-          token.attrs = [["href", url]];
+          token.attrs = [["href", normalizedUrl]];
           token.markup = "txt2tags";
           state.push("text", "", 0).content = label;
           state.push("link_close", "a", -1).markup = "txt2tags";
