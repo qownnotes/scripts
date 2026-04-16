@@ -6,6 +6,20 @@
 {
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
+    php-cs-fixer = {
+      enable = true;
+      entry = pkgs.lib.mkForce "${pkgs.phpPackages."php-cs-fixer"}/bin/php-cs-fixer fix";
+      args = [
+        "--config"
+        "./.php-cs-fixer.dist.php"
+      ];
+      language = "system";
+      pass_filenames = true;
+      require_serial = true;
+      stages = [ "pre-commit" ];
+      types = [ "php" ];
+    };
+
     # Custom pre-commit hook to format justfile
     qmlformat = {
       enable = true;
