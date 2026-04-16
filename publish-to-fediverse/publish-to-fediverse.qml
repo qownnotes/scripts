@@ -164,16 +164,16 @@ Script {
     }
 
     // function that reads a Frontmatter section and populate the currentParams object
-    function decodeFrontmatter(){ 
-        let current = script.currentNote(); // current note    
+    function decodeFrontmatter() {
+        let current = script.currentNote(); // current note
         let postParams = {};
         let sections = current.noteText.split("---");
-        if  (sections && sections[1]){
-            sections[1].split("\n").forEach(function(param){
-                if (! param.startsWith("#")){
+        if (sections && sections[1]) {
+            sections[1].split("\n").forEach(function (param) {
+                if (!param.startsWith("#")) {
                     let thisParam = param.split(":");
-                    if (thisParam[0] && thisParam[1]){
-                        postParams[thisParam[0].trim()]=param.split(":").slice(1).join("").trim();
+                    if (thisParam[0] && thisParam[1]) {
+                        postParams[thisParam[0].trim()] = param.split(":").slice(1).join("").trim();
                     }
                 }
             });
@@ -221,12 +221,12 @@ Script {
             // If the request is nor completed with a success code 200, write to che console the error and return null
         } else {
             script.log("P2F: Error: " + serverInstance + endpoint + " returned code " + xhr.status + " - " + xhr.statusText);
-            script.log (JSON.stringify(xhr.response));
-            script.log (xhr.getAllResponseHeaders());
+            script.log(JSON.stringify(xhr.response));
+            script.log(xhr.getAllResponseHeaders());
             return null;
         }
     }
-   
+
     // This function wraps the verify credential call
     function verifyCredentials(aT) {
         // calling the request over the specific endpoint, passing the accessToken
@@ -411,7 +411,7 @@ Script {
             return;
         }
     }
- 
+
     function init() {
         script.registerCustomAction("publish", "Publish to Fediverse", "", true, true, false);
         script.registerCustomAction("newPost", "New post for Fediverse", "", true, true, false);
@@ -421,6 +421,4 @@ Script {
             serverInstance = serverInstance.match(/(?!(\w+:\/\/))(\w+.)*(\w+)/g)[0];
         }
     }
-
-
 }

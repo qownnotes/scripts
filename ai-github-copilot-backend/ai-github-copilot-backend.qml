@@ -15,7 +15,7 @@ import QOwnNotesTypes 1.0
  *
  */
 Script {
-    property string githubToken;
+    property string githubToken
 
     property variant settingsVariables: [
         {
@@ -23,9 +23,9 @@ Script {
             "name": "GitHub Personal Access Token",
             "description": "Enter your GitHub PAT (create at https://github.com/settings/tokens).\nFine-grained: enable 'Models: Read' permission.\nClassic: the 'models' scope is needed.",
             "type": "string-secret",
-            "default": "",
+            "default": ""
         }
-    ];
+    ]
 
     function openAiBackendsHook() {
         if (!githubToken || githubToken === "") {
@@ -38,32 +38,7 @@ Script {
                 "name": "GitHub",
                 "baseUrl": "https://models.inference.ai.azure.com/chat/completions",
                 "apiKey": githubToken,
-                "models": [
-                    "gpt-4o",
-                    "gpt-4o-mini",
-                    "gpt-4.1",
-                    "gpt-4.1-mini",
-                    "gpt-4.1-nano",
-                    "gpt-5",
-                    "gpt-5-mini",
-                    "gpt-5-nano",
-                    "o4-mini",
-                    "o3",
-                    "o3-mini",
-                    "o1",
-                    "o1-mini",
-                    "deepseek-r1",
-                    "deepseek-r1-0528",
-                    "deepseek-v3-0324",
-                    "llama-4-scout-17b-16e-instruct",
-                    "llama-4-maverick-17b-128e-instruct-fp8",
-                    "llama-3.3-70b-instruct",
-                    "grok-3",
-                    "grok-3-mini",
-                    "mistral-small-2503",
-                    "phi-4",
-                    "phi-4-reasoning",
-                ],
+                "models": ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano", "gpt-5", "gpt-5-mini", "gpt-5-nano", "o4-mini", "o3", "o3-mini", "o1", "o1-mini", "deepseek-r1", "deepseek-r1-0528", "deepseek-v3-0324", "llama-4-scout-17b-16e-instruct", "llama-4-maverick-17b-128e-instruct-fp8", "llama-3.3-70b-instruct", "grok-3", "grok-3-mini", "mistral-small-2503", "phi-4", "phi-4-reasoning",]
             }
         ];
     }

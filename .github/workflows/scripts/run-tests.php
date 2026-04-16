@@ -10,10 +10,10 @@ foreach ($dirs as $dir) {
 
 $errors = $testHelper->errors;
 if (count($errors) > 0) {
-    foreach($errors as $dir => $scriptErrors) {
+    foreach ($errors as $dir => $scriptErrors) {
         print "Directory '$dir'\n";
 
-        foreach($scriptErrors as $error) {
+        foreach ($scriptErrors as $error) {
             print "  $error\n";
         }
     }
@@ -24,13 +24,15 @@ if (count($errors) > 0) {
 print "No errors were found\n";
 exit(0);
 
-class TestHelper {
+class TestHelper
+{
     public $errors = [];
 
     /**
      * Tests the files in a directory
      */
-    public function testDirectory($dir) {
+    public function testDirectory($dir)
+    {
         $errors = [];
 
         if (preg_match('/[^a-z0-9\-]/', $dir)) {
@@ -87,7 +89,7 @@ class TestHelper {
                 $errors[] = "'platforms' has to be an array!";
             } else {
                 foreach ($data["platforms"] as $platform) {
-                    if (!in_array($platform, array("linux", "macos", "windows"))) {
+                    if (!in_array($platform, ["linux", "macos", "windows"])) {
                         $errors[] = "Unsupported platform '$platform', only 'linux', 'macos' and 'windows' are allowed!";
                     }
                 }
