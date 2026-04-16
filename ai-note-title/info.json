@@ -1,0 +1,10 @@
+{
+  "name": "AI Note Title",
+  "identifier": "ai-note-title",
+  "script": "ai-note-title.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "26.4.14",
+  "description": "Creates a custom action that uses the AI completer to suggest a note title from the first lines of the current note, lets you edit it, and then updates the note title in the text."
+}
