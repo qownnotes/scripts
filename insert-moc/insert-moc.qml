@@ -27,15 +27,9 @@ Script {
             var relDir = noteObj.relativeNoteFileDirPath;
 
             // Construct filePath and encoded path
-            var filePath = relDir && relDir.length > 0
-                ? relDir + "/" + name + "." + ext         
-                : name + "." + ext;
-            var rawLink = (relDir && relDir.length > 0
-                ? relDir + "/" + name
-                : name);
-            var encoded = encodeURIComponent(rawLink)
-                .replace(/%2F/g, "/")
-                .replace(/%2E/g, ".") + "." + ext;
+            var filePath = relDir && relDir.length > 0 ? relDir + "/" + name + "." + ext : name + "." + ext;
+            var rawLink = (relDir && relDir.length > 0 ? relDir + "/" + name : name);
+            var encoded = encodeURIComponent(rawLink).replace(/%2F/g, "/").replace(/%2E/g, ".") + "." + ext;
 
             // Format line
             var line = "|" + filePath + "  | --->  [" + name + "." + ext + "](" + encoded + ")|   ";
