@@ -166,7 +166,7 @@ Script {
         // returning an empty string indicates that nothing has to be changed
         case "add":
             // check if tag already exists
-            if (noteText.search(tagRegExp) > 0) {
+            if (noteText.search(tagRegExp) !== -1) {
                 return "";
             }
 
