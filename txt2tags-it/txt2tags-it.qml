@@ -57,6 +57,15 @@ QtObject {
         if (useTxt2tagsPlugin)
             md.use(MarkdownItTxt2tags.markdownitTxt2tags, { useSetextHeadings: useSetextHeadings });
 
+        if (useTxt2tagsPlugin) {
+            script.registerCustomAction("txt2tags-italic",        qsTr("Italic (txt2tags)"),        qsTr("Italic"),        "format-text-italic",        true, false, false);
+            script.registerCustomAction("txt2tags-strikethrough", qsTr("Strikethrough (txt2tags)"), qsTr("Strike"),        "format-text-strikethrough", true, false, false);
+            script.registerCustomAction("txt2tags-underline",     qsTr("Underline (txt2tags)"),     qsTr("Underline"),     "format-text-underline",     true, false, false);
+            script.registerCustomAction("txt2tags-h1",            qsTr("Heading 1 (txt2tags)"),     qsTr("H1"),            "format-text-header",        true, false, false);
+            script.registerCustomAction("txt2tags-h2",            qsTr("Heading 2 (txt2tags)"),     qsTr("H2"),            "format-text-header",        true, false, false);
+            script.registerCustomAction("txt2tags-h3",            qsTr("Heading 3 (txt2tags)"),     qsTr("H3"),            "format-text-header",        true, false, false);
+        }
+
         if (useTxt2tagsPlugin && useEditorHighlighting) {
             // Headings: = H1 =  == H2 ==  …
             script.addHighlightingRule("^= +.+? +=\\s*$",         "=", 12);
@@ -90,6 +99,53 @@ QtObject {
     }
     function isWindowsAbsolute(path) {
         return /^[a-zA-Z]:[\\/]/.test(path);
+    }
+
+    function wrapInline(marker) {
+        var selectedText = script.noteTextEditSelectedText();
+        if (selectedText.length > 0) {
+            script.noteTextEditWrite(marker + selectedText + marker);
+        } else {
+            script.noteTextEditWrite(marker + marker);
+            script.noteTextEditSetCursorPosition(script.noteTextEditCursorPosition() - marker.length);
+        }
+    }
+
+    function applyHeading(level) {
+        var markers = "";
+        for (var i = 0; i < level; i++) markers += "=";
+
+        var noteText = script.currentNote().noteText;
+        var pos = script.noteTextEditCursorPosition();
+        var lineStart = noteText.lastIndexOf('\n', pos - 1) + 1;
+        var lineEnd = noteText.indexOf('\n', pos);
+        if (lineEnd === -1) lineEnd = noteText.length;
+
+        var line = noteText.substring(lineStart, lineEnd);
+
+        // Extract bare content, stripping any existing txt2tags heading
+        var headingMatch = line.match(/^(=+)\s+(.*?)\s+\1\s*$/);
+        var content = headingMatch ? headingMatch[2] : line.trim();
+
+        // Toggle off if already this heading level, otherwise apply
+        var sameLevelRe = new RegExp("^" + markers + "\\s+.*?\\s+" + markers + "\\s*$");
+        var newLine = sameLevelRe.test(line)
+            ? content
+            : markers + " " + content + " " + markers;
+
+        script.noteTextEditSetSelection(lineStart, lineEnd);
+        script.noteTextEditWrite(newLine);
+    }
+
+    function customActionInvoked(identifier) {
+        switch (identifier) {
+            case "txt2tags-italic":        wrapInline("//"); break;
+            case "txt2tags-strikethrough": wrapInline("--"); break;
+            case "txt2tags-underline":     wrapInline("__"); break;
+            case "txt2tags-h1":            applyHeading(1);  break;
+            case "txt2tags-h2":            applyHeading(2);  break;
+            case "txt2tags-h3":            applyHeading(3);  break;
+        }
     }
 
     /**
