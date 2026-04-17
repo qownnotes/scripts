@@ -4,8 +4,6 @@
   "script": "txt2tags-it.qml",
   "resources": [
     "markdown-it.js",
-    "markdown-it-deflist.js",
-    "markdown-it-katex.js",
     "markdown-it-txt2tags.js"
   ],
   "authors": ["@luginf"],
