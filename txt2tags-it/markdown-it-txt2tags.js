@@ -109,7 +109,8 @@ var markdownitTxt2tags;
         if (silent) return true;
         state.line = startLine + 1;
         return true;
-      }
+      },
+      { alt: ["paragraph"] }
     );
 
     // ── Block: + numbered list ───────────────────────────────────────────────
