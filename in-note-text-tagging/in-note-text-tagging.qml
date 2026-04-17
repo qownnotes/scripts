@@ -66,6 +66,11 @@ Script {
     property string tagMarker2
     property int maxTagLength
 
+    // Returns the preferred marker for writing new tags: primary if enabled, otherwise secondary
+    function writeMarker() {
+        return (useMarker1 && tagMarker) ? tagMarker : tagMarker2;
+    }
+
     // Returns an array of currently active tag markers
     function allMarkers() {
         var markers = [];
@@ -157,8 +162,8 @@ Script {
 
         var noteText = note.noteText;
         // Match a specific known tag with any active marker.
-        // Group 1 captures the leading space/newline so it is preserved on replace.
-        var tagRegExp = RegExp("(^|\\s)%1%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m");
+        // Group 1: leading space/newline, preserved on replace. Group 2: the matched marker.
+        var tagRegExp = RegExp("(^|\\s)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m");
 
         switch (action) {
         // adds the tag "tagName" to the note
@@ -170,7 +175,7 @@ Script {
                 return "";
             }
 
-            var tag = tagMarker + tagName.replace(/ /g, "_");
+            var tag = writeMarker() + tagName.replace(/ /g, "_");
 
             // add the tag to the beginning or to the end of the note
             if (putToBeginning) {
@@ -217,7 +222,7 @@ Script {
         // the new note text has to be returned so that the note can be updated
         // returning an empty string indicates that nothing has to be changed
         case "rename":
-            return noteText.replace(tagRegExp, "$1" + tagMarker + newTagName.replace(/ /g, "_"));
+            return noteText.replace(tagRegExp, "$1$2" + newTagName.replace(/ /g, "_"));
 
         // returns a list of all tag names of the note
         case "list":
