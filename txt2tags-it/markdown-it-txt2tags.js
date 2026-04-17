@@ -268,9 +268,11 @@ var markdownitTxt2tags;
         // Strip trailing punctuation that is unlikely to be part of the URL
         url = url.replace(/[.,;:!?)]+$/, "");
         if (!url) return false;
+        if (!md.validateLink(url)) return false;
+        var normalizedUrl = md.normalizeLink(url);
         if (!silent) {
           var token = state.push("link_open", "a", 1);
-          token.attrs = [["href", url]];
+          token.attrs = [["href", normalizedUrl]];
           token.markup = "autolink";
           state.push("text", "", 0).content = url;
           state.push("link_close", "a", -1).markup = "autolink";
@@ -331,9 +333,9 @@ var markdownitTxt2tags;
         var end = src.indexOf("--", start);
         if (end < 0 || end === start) return false;
         if (!silent) {
-          state.push("txt2tags_s_open", "s", 1);
+          state.push("txt2tags_s_open", "del", 1);
           state.push("text", "", 0).content = src.slice(start, end);
-          state.push("txt2tags_s_close", "s", -1);
+          state.push("txt2tags_s_close", "del", -1);
         }
         state.pos = end + 2;
         return true;

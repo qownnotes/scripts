@@ -13,7 +13,7 @@ QtObject {
             "name": "Markdown-it options",
             "description": "For available options and default values see <a href='https://github.com/markdown-it/markdown-it/blob/main/lib/presets'>markdown-it presets</a>.",
             "type": "text",
-            "default": "{" + "\n" + "    html:          true,         // Enable HTML tags in source" + "\n" + "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)" + "\n" + "    //breaks:       false,        // Convert '\\n' in paragraphs into <br>" + "\n" + "    //langPrefix:   'language-',  // CSS language prefix for fenced blocks" + "\n" + "    //linkify:      false,        // autoconvert URL-like texts to links" + "\n" + "" + "\n" + "    // Enable some language-neutral replacements + quotes beautification" + "\n" + "    //typographer:  false," + "\n" + "" + "\n" + "    //maxNesting:   100            // Internal protection, recursion limit" + "\n" + "}"
+            "default": "{" + "\n" + "    html:          false,         // Enable HTML tags in source" + "\n" + "    //xhtmlOut:     false,        // Use '/' to close single tags (<br />)" + "\n" + "    //breaks:       false,        // Convert '\\n' in paragraphs into <br>" + "\n" + "    //langPrefix:   'language-',  // CSS language prefix for fenced blocks" + "\n" + "    //linkify:      false,        // autoconvert URL-like texts to links" + "\n" + "" + "\n" + "    // Enable some language-neutral replacements + quotes beautification" + "\n" + "    //typographer:  false," + "\n" + "" + "\n" + "    //maxNesting:   100            // Internal protection, recursion limit" + "\n" + "}"
         },
         {
             "identifier": "useTxt2tagsPlugin",
@@ -183,7 +183,7 @@ QtObject {
         //Get original styles
         var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
         //Add custom styles
-        head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;} del {text-decoration: line-through;}" + customStylesheet + "</style>");
+        head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;} del {text-decoration: line-through;}" + (customStylesheet || "") + "</style>");
         mdHtml = "<html>" + head + "<body>" + mdHtml + "</body></html>";
         return mdHtml;
     }
