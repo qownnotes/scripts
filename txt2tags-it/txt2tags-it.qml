@@ -30,6 +30,13 @@ QtObject {
             "default": true
         },
         {
+            "identifier": "useSetextHeadings",
+            "name": "Setext headings",
+            "text": "Enable markdown setext headings (Title followed by === or ---)",
+            "type": "boolean",
+            "default": false
+        },
+        {
             "identifier": "customStylesheet",
             "name": "Custom stylesheet",
             "description": "Please enter your custom stylesheet:",
@@ -39,6 +46,7 @@ QtObject {
     ]
     property bool useTxt2tagsPlugin
     property bool useEditorHighlighting
+    property bool useSetextHeadings
 
     function init() {
         var optionsObj = eval("(" + options + ")");
@@ -47,7 +55,7 @@ QtObject {
         md = new MarkdownIt.markdownit(optionsObj);
 
         if (useTxt2tagsPlugin)
-            md.use(MarkdownItTxt2tags.markdownitTxt2tags);
+            md.use(MarkdownItTxt2tags.markdownitTxt2tags, { useSetextHeadings: useSetextHeadings });
 
         if (useTxt2tagsPlugin && useEditorHighlighting) {
             // Headings: = H1 =  == H2 ==  …
@@ -63,6 +71,11 @@ QtObject {
                 { foregroundColor: "#888888" });
             // Comment: % until end of line
             script.addHighlightingRule("^%.*$", "%", 11);
+        }
+
+        if (useEditorHighlighting && useSetextHeadings) {
+            script.addHighlightingRule("^={2,}\\s*$", "=", 12);
+            script.addHighlightingRule("^-{2,}\\s*$", "-", 13);
         }
 
         //Allow file:// url scheme

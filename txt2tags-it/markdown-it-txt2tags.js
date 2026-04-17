@@ -23,8 +23,18 @@ var markdownitTxt2tags;
    *   //italic//     →  <em>italic</em>
    *   __underline__  →  <u>underline</u>
    *   --strikethrough--  →  <del>strikethrough</del>
+   *
+   * Options:
+   *   useSetextHeadings {boolean} — enable markdown setext headings (Title\n===).
+   *                                    Default: false.
    */
-  function txt2tagsPlugin(md) {
+  function txt2tagsPlugin(md, options) {
+    options = Object.assign({ useSetextHeadings: false }, options);
+
+    if (!options.useSetextHeadings) {
+      md.block.ruler.disable("lheading");
+    }
+
 
     // ── Override text rule to also stop at / (needed for //italic//) ─────────
     // markdown-it's built-in text rule stops at isTerminatorChar characters.
