@@ -103,16 +103,16 @@ QtObject {
         if (script.platformIsWindows())
             path = "/" + path;
 
-        mdHtml = mdHtml.replace(/(\b(?:src|href|data-[\w-]+)\s*=\s*["'])([^"']+)["']/gi, (_, prefix, rawPath) => {
+        mdHtml = mdHtml.replace(/(\b(?:src|href|data-[\w-]+)\s*=\s*)(["'])([^"']+)\2/gi, (_, attr, quote, rawPath) => {
             if (isProtocolUrl(rawPath))
-                return `${prefix}${rawPath}"`;
+                return `${attr}${quote}${rawPath}${quote}`;
 
             let finalPath;
             if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath))
                 finalPath = rawPath.replace(/\\/g, '/');
             else
                 finalPath = resolvePath(path, rawPath.replace(/^\.\/+/, ''));
-            return `${prefix}file://${finalPath}"`;
+            return `${attr}${quote}file://${finalPath}${quote}`;
         });
 
         //Get original styles
