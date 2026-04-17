@@ -73,10 +73,6 @@ QtObject {
             script.addHighlightingRule("^%.*$", "%", 11);
         }
 
-        if (useEditorHighlighting && useSetextHeadings) {
-            script.addHighlightingRule("^={2,}\\s*$", "=", 12);
-            script.addHighlightingRule("^-{2,}\\s*$", "-", 13);
-        }
 
         //Allow file:// url scheme
         var validateLinkOrig = md.validateLink;
