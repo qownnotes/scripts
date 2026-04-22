@@ -18,7 +18,7 @@ QtObject {
      * @return {string} the headline of the note
      */
     function handleNewNoteHeadlineHook(headline) {
-        var text = "# " + headline + "\n";
+        var text = "# " + headline;
 
         return text;
     }
