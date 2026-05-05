@@ -1,7 +1,7 @@
 {
   "name": "Zettelkasten",
   "identifier": "zettelkasten",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "script": "zettelkasten.qml",
   "authors": ["@luginf"],
   "platforms": ["linux", "macos", "windows"],
