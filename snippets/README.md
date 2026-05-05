@@ -7,6 +7,16 @@ Insert reusable text snippets into your notes via a selection dialog.
 - **Scripting › Insert snippet** — choose a snippet from the list and insert it at the cursor
 - **Scripting › Manage snippets** — add, edit, or delete snippets
 
+You can also link those actions to a custom shortcut.
+
+## Actions
+
+One toolbar button is registered:
+
+| Button      | Action                                                     |
+| ----------- | ---------------------------------------------------------- |
+| **Snippet** | choose a snippet from the list and insert it at the cursor |
+
 ## Placeholders
 
 Placeholders are replaced at insertion time.

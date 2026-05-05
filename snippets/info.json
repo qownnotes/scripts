@@ -1,12 +1,12 @@
 {
   "name": "Text Snippets",
   "identifier": "snippets",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "script": "snippets.qml",
   "authors": ["@luginf"],
   "platforms": ["linux", "macos", "windows"],
   "minAppVersion": "26.4.11",
-  "description": "Insert and manage reusable text snippets with placeholders ($CURRENT_YEAR, $CURRENT_DATE, $UUID…) into notes.",
+  "description": "Insert and manage reusable text snippets.\n\n<b>Usage</b>\nYou can create templates of reusable text snippets from the custom actions menu 'Manage Snippets'. Then add them to your notes with 'insert snippets' from the same menu. \nYou can also use placeholders ($CURRENT_YEAR, $CURRENT_DATE, $UUID...) which will be replaced at insertion time.",
   "resources": [
     "InsertSnippetDialog.qml",
     "ManageSnippetsDialog.qml",

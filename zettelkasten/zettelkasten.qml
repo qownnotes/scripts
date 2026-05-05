@@ -92,17 +92,12 @@ Script {
     }
 
     // Returns the link target string for [[target|id]] given a note object.
+    // QOwnNotes resolves wiki-links by filename only, regardless of subfolder,
+    // so we never include the relative directory path.
     function noteLinkTarget(note) {
         var name = note && note.name ? note.name : "";
-        if (name) {
-            var relativeDir = note.relativeNoteFileDirPath || "";
-            if (relativeDir) {
-                relativeDir = relativeDir.replace(/[\/\\]+$/, "");
-                return relativeDir ? relativeDir + "/" + name : name;
-            }
+        if (name)
             return name;
-        }
-
         return /\.txt$/i.test(note.fileName) ? note.fileName.slice(0, note.fileName.length - 4) : note.fileName;
     }
 

@@ -6,7 +6,15 @@ A QOwnNotes script that adds [Zettelkasten](https://en.wikipedia.org/wiki/Zettel
 
 In the Zettelkasten method, each note carries a **permanent unique ID** embedded in its content or filename. Links between notes are based on this ID, not on the filename. This means a note can be renamed freely without breaking any link pointing to it.
 
-This script implements that principle inside QOwnNotes using the native `[[filename|id]]` wiki-link format.
+This script implements that principle inside QOwnNotes using the native `[[filename|id]]` wiki-link format. You will need to activate Settings>Interface>Editor>'Enable wiki-style link support [[note name]]'.
+
+## Usage
+
+- **Scripting › Insert Zettelkasten ID** — Insert a new unique ZK ID at the cursor position
+- **Scripting › insert Zettelkasten link** — Open a searchable dialog to pick a note and insert a `[[filename\|id]]` link
+- **Scripting › Repair Zettelkasten links** — can all notes and repair every link whose filename is out of date
+
+You can also link those actions to a custom shortcut.
 
 ## Link format
 
@@ -14,12 +22,12 @@ This script implements that principle inside QOwnNotes using the native `[[filen
 [[MyNote|20260430143012]]
 ```
 
-- The left part (`MyNote`) is what QOwnNotes uses to resolve the link (Ctrl+click to open).
+- The left part (`MyNote`) is what QOwnNotes uses to resolve the link (Ctrl+click to open). Only the note name is used — subfolder paths are never included, because QOwnNotes resolves wiki-links by filename regardless of the folder the note is in.
 - The right part (`20260430143012`) is the permanent ZK ID, used by this script to repair links when the filename changes.
 
 ## Actions
 
-Three toolbar buttons are registered:
+Three toolbar buttons are registered, following the custom actions listed above:
 
 | Button      | Action                                                                       |
 | ----------- | ---------------------------------------------------------------------------- |

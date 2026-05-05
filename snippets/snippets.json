@@ -1,10 +1,10 @@
 [
   {
-    "content": "## Reference\n\nid$CURRENT_YEAR$CURRENT_MONTH$CURRENT_DATEx$CURRENT_HOUR$CURRENT_MINUTE$CURRENT_SECOND\n\n\nSee also:\n- \n- \n\n#tag",
-    "name": "Reference"
+    "content": "## References \n\n$CURRENT_YEAR$CURRENT_MONTH$CURRENT_DATE$CURRENT_HOUR$CURRENT_MINUTE$CURRENT_SECOND\n\n\nSee also:\n- \n- \n\n#tag",
+    "name": "References"
   },
   {
-    "content": "id$CURRENT_YEAR$CURRENT_MONTH$CURRENT_DATEx$CURRENT_HOUR$CURRENT_MINUTE$CURRENT_SECOND",
+    "content": "$ZK_ID\n\n",
     "name": "Zettelkasten_id"
   }
 ]

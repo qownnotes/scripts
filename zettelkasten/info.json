@@ -1,11 +1,11 @@
 {
   "name": "Zettelkasten",
   "identifier": "zettelkasten",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "script": "zettelkasten.qml",
   "authors": ["@luginf"],
   "platforms": ["linux", "macos", "windows"],
   "minAppVersion": "26.4.11",
-  "description": "Zettelkasten support: generates configurable note IDs and inserts [[filename|ID]] wiki-links to notes detected by a configurable ECMAScript ID pattern.",
+  "description": "Generates configurable note IDs and inserts links supporting those IDs using the Zettelkasten method. \n\n<b>Usage</b>\nSelect 'Insert Zettelkasten ID' from the custom actions menu will create a unique ID into your file. You can configure the ID pattern to your liking in the script options, using an ECMAScript regeg. \nThen you can insert from an other document a link to the first one, using the 'insert Zettelkasten link' from the custom actions menu. You can select the correct link using a filter from filename or the ID, and it will create a [[filename|ID]] wiki-links to notes. The detection pattern has also to be configured into the plugin options, to match the ID generation (the default option will match the preconfigured ID pattern anyway).\nIf you later rename your note, using from the custom actions menu 'Repair Zettelkasten links' will automatically search and rename every link whose filename is out of date, based on the correct ID.",
   "resources": ["ZkLinkDialog.qml"]
 }
