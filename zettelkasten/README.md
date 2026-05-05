@@ -10,7 +10,7 @@ This script implements that principle inside QOwnNotes using the native `[[filen
 
 ## Usage
 
-- **Scripting › Insert Zettelkasten ID** —  Insert a new unique ZK ID at the cursor position   
+- **Scripting › Insert Zettelkasten ID** — Insert a new unique ZK ID at the cursor position
 - **Scripting › insert Zettelkasten link** — Open a searchable dialog to pick a note and insert a `[[filename\|id]]` link
 - **Scripting › Repair Zettelkasten links** — can all notes and repair every link whose filename is out of date
 

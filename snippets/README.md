@@ -9,15 +9,13 @@ Insert reusable text snippets into your notes via a selection dialog.
 
 You can also link those actions to a custom shortcut.
 
-
 ## Actions
 
 One toolbar button is registered:
 
-| Button      | Action                                                                       |
-| ----------- | ---------------------------------------------------------------------------- |
-| **Snippet**   | choose a snippet from the list and insert it at the cursor 
-
+| Button      | Action                                                     |
+| ----------- | ---------------------------------------------------------- |
+| **Snippet** | choose a snippet from the list and insert it at the cursor |
 
 ## Placeholders
 
