@@ -59,12 +59,20 @@ Script {
             "type": "boolean",
             "default": "false"
         },
+        {
+            "identifier": "tagsAtLineStartOnly",
+            "name": "Only detect tags at the beginning of a line",
+            "description": "If enabled, only tags placed at the very start of a line are recognized (tags inline within text are ignored)",
+            "type": "boolean",
+            "default": "true"
+        },
     ]
     property bool useMarker1
     property string tagMarker
     property bool useMarker2
     property string tagMarker2
     property int maxTagLength
+    property bool tagsAtLineStartOnly
 
     // Returns the preferred marker for writing new tags: primary if enabled, otherwise secondary
     function writeMarker() {
@@ -168,8 +176,10 @@ Script {
 
         var noteText = note.noteText;
         // Match a specific known tag with any active marker.
-        // Group 1: leading space/newline, preserved on replace. Group 2: the matched marker.
-        var tagRegExp = RegExp("(^|\\s)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m");
+        // When tagsAtLineStartOnly is enabled: only matches at the start of a line.
+        // Otherwise: also matches tags preceded by whitespace (inline tags).
+        // Group 1: leading anchor/whitespace, preserved on replace. Group 2: the matched marker.
+        var tagRegExp = tagsAtLineStartOnly ? RegExp("(^)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m") : RegExp("(^|\\s)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m");
 
         switch (action) {
         // adds the tag "tagName" to the note
@@ -237,7 +247,8 @@ Script {
             // a letter (including accented/Unicode) as first char.
             // Max length is controlled by tagBodyQuantifier().
             var excludedChars = allMarkers().map(escapeRegExp).join("");
-            var re = new RegExp("(?:^|\\s)" + pattern + "([a-zA-Z" + "\\u00C0-\\u024F" +   // Latin Extended A+B
+            var linePrefix = tagsAtLineStartOnly ? "^" : "(?:^|\\s)";
+            var re = new RegExp(linePrefix + pattern + "([a-zA-Z" + "\\u00C0-\\u024F" +   // Latin Extended A+B
             "\\u0250-\\u02AF" +   // IPA Extensions
             "\\u0370-\\u03FF" +   // Greek and Coptic
             "\\u0400-\\u052F" +   // Cyrillic + Supplement
