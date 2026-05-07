@@ -179,9 +179,7 @@ Script {
         // When tagsAtLineStartOnly is enabled: only matches at the start of a line.
         // Otherwise: also matches tags preceded by whitespace (inline tags).
         // Group 1: leading anchor/whitespace, preserved on replace. Group 2: the matched marker.
-        var tagRegExp = tagsAtLineStartOnly
-            ? RegExp("(^)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m")
-            : RegExp("(^|\\s)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m");
+        var tagRegExp = tagsAtLineStartOnly ? RegExp("(^)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m") : RegExp("(^|\\s)(%1)%2(?=($|\\s)) ?".arg(pattern).arg(escapeRegExp(tagName).replace(/ /g, "_")), "m");
 
         switch (action) {
         // adds the tag "tagName" to the note
