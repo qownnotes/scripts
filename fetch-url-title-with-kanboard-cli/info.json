@@ -1,0 +1,10 @@
+{
+  "name": "Fetch URL Title with Kanboard CLI",
+  "identifier": "fetch-url-title-with-kanboard-cli",
+  "script": "fetch-url-title-with-kanboard-cli.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "26.5.10",
+  "description": "Fetches Kanboard task titles for matching task URLs in the link dialog by using <a href='https://github.com/digital-blueprint/kanboard-cli'>kanboard-cli</a>."
+}
