@@ -283,7 +283,10 @@ var markdownitTxt2tags;
       function (state, silent) {
         var pos = state.pos;
         var src = state.src;
-        // Must start with a URL scheme (letters then "://")
+        // Fast-fail: scheme must start with an ASCII letter
+        var ch = src.charCodeAt(pos);
+        if (!((ch >= 0x41 && ch <= 0x5a) || (ch >= 0x61 && ch <= 0x7a)))
+          return false;
         var match = /^[a-zA-Z][\w+\-.]*:\/\/[^\s\]]*/.exec(src.slice(pos));
         if (!match) return false;
         var url = match[0];
