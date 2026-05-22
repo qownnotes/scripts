@@ -47,6 +47,10 @@ QtObject {
     property bool useTxt2tagsPlugin
     property bool useEditorHighlighting
     property bool useSetextHeadings
+    property bool _isWindows: false
+    property variant _headRe
+    property variant _urlAttrRe
+    property string _cssInject: "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;} del {text-decoration: line-through;}"
 
     function init() {
         var optionsObj = eval("(" + options + ")");
@@ -84,6 +88,10 @@ QtObject {
             // Comment: % until end of line
             script.addHighlightingRule("^%.*$", "%", 11);
         }
+
+        _isWindows = script.platformIsWindows();
+        _headRe = /<head>[\s\S]*?<\/head>/;
+        _urlAttrRe = /(\b(?:src|href|data-[\w-]+)\s*=\s*)(["'])([^"']+)\2/gi;
 
         //Allow file:// url scheme
         var validateLinkOrig = md.validateLink;
@@ -160,6 +168,7 @@ QtObject {
             applyHeading(3);
             break;
         }
+        mainWindow.focusNoteTextEdit();
     }
 
     /**
@@ -179,10 +188,11 @@ QtObject {
         var mdHtml = md.render(note.noteText);
         //Insert root folder in attachments and media relative urls
         var path = script.currentNoteFolderPath();
-        if (script.platformIsWindows())
+        if (_isWindows)
             path = "/" + path;
 
-        mdHtml = mdHtml.replace(/(\b(?:src|href|data-[\w-]+)\s*=\s*)(["'])([^"']+)\2/gi, (_, attr, quote, rawPath) => {
+        _urlAttrRe.lastIndex = 0;
+        mdHtml = mdHtml.replace(_urlAttrRe, (_, attr, quote, rawPath) => {
             if (isProtocolUrl(rawPath))
                 return `${attr}${quote}${rawPath}${quote}`;
 
@@ -194,10 +204,8 @@ QtObject {
             return `${attr}${quote}file://${finalPath}${quote}`;
         });
 
-        //Get original styles
-        var head = html.match(new RegExp("<head>(?:.|\n)*?</head>"))[0];
-        //Add custom styles
-        head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;} del {text-decoration: line-through;}" + (customStylesheet || "") + "</style>");
+        var head = html.match(_headRe)[0];
+        head = head.replace("</style>", _cssInject + (customStylesheet || "") + "</style>");
         mdHtml = "<html>" + head + "<body>" + mdHtml + "</body></html>";
         return mdHtml;
     }
