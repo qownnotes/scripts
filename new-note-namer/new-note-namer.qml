@@ -7,28 +7,13 @@ import QOwnNotesTypes 1.0
  Avoids cumbersome renaming and title editing.
  */
 QtObject {
-    property bool extraDialogForFileName
-    property bool underlineHeading
     property bool useSearchTermAsName
-    property string searchTermHeadingStyle
+    property bool extraDialogForFileName
+    property string headingStyle
     property string customHeadingOpen
     property string customHeadingClose
     property string _pendingSearchTerm: ""
     property variant settingsVariables: [
-        {
-            'identifier': 'extraDialogForFileName',
-            'name': 'Extra dialog for note title',
-            'description': 'Show an additional dialog window so user can write a file name different to the note title.',
-            'type': 'boolean',
-            'default': 'false'
-        },
-        {
-            'identifier': 'underlineHeading',
-            'name': 'Setext Markdown underline heading',
-            'description': 'Use Setext heading style (Title / =====) for the dialog flow; if unchecked, use ATX (# Title).',
-            'type': 'boolean',
-            'default': 'false'
-        },
         {
             'identifier': 'useSearchTermAsName',
             'name': 'Name note from search term',
@@ -37,27 +22,34 @@ QtObject {
             'default': 'false'
         },
         {
-            'identifier': 'searchTermHeadingStyle',
-            'name': 'Search term note – heading style',
-            'description': 'Title format when creating a note from the search term.',
+            'identifier': 'extraDialogForFileName',
+            'name': 'Extra dialog for note title',
+            'description': 'Show an additional dialog window so user can write a file name different to the note title.',
+            'type': 'boolean',
+            'default': 'false'
+        },
+        {
+            'identifier': 'headingStyle',
+            'name': 'Heading style',
+            'description': 'Title format for new notes.',
             'type': 'selection',
             'default': '0',
             'items': {
                 '0': 'ATX Markdown heading (# Title)',
-                '1': 'Setext Markdown underline heading (Title / =====)',
+                '1': 'Setext Markdown heading (Title / =====)',
                 '2': 'Custom heading (opening and closing tags)'
             }
         },
         {
             'identifier': 'customHeadingOpen',
-            'name': 'Search term note – custom heading opening tag',
+            'name': 'Custom heading – opening tag',
             'description': 'Text inserted before the note name (only used when heading style is "Custom").',
             'type': 'string',
             'default': ''
         },
         {
             'identifier': 'customHeadingClose',
-            'name': 'Search term note – custom heading closing tag',
+            'name': 'Custom heading – closing tag',
             'description': 'Text inserted after the note name (only used when heading style is "Custom").',
             'type': 'string',
             'default': ''
@@ -71,20 +63,34 @@ QtObject {
             return headline; // noteOpenedHook will replace content with the chosen heading style
         }
 
-        var newName = newNamer("New note", "New note title", "Title");
-        if (underlineHeading) {
-            return newName + "\n" + "=".repeat(newName.length);
-        }
-        return "# " + newName;
+        // If QOwnNotes already provided a headline (its own dialog, or a search term),
+        // apply the chosen style directly rather than asking again.
+        var name = headline !== "" ? headline : newNamer("New note", "New note title", "Title");
+        return buildHeadline(name);
     }
     function buildHeadline(name) {
-        if (searchTermHeadingStyle === "2") {
+        if (headingStyle === "2") {
             return customHeadingOpen + name + customHeadingClose;
         }
-        if (searchTermHeadingStyle === "1") {
+        if (headingStyle === "1") {
             return name + "\n" + "=".repeat(name.length);
         }
         return "# " + name; // "0" (ATX) or unset
+    }
+    function extractTitle(noteText) {
+        var firstLine = (noteText || "").split("\n")[0];
+        if (headingStyle === "2") {
+            var t = firstLine.slice(customHeadingOpen.length);
+            var closeLen = customHeadingClose.length;
+            if (closeLen > 0 && t.slice(-closeLen) === customHeadingClose) {
+                t = t.slice(0, t.length - closeLen);
+            }
+            return t;
+        }
+        if (headingStyle === "1") {
+            return firstLine; // setext: first line is the bare title
+        }
+        return firstLine.slice(2); // ATX: remove "# "
     }
     function handleNoteTextFileNameHook(note) {
         // right when a note is created, the fileCreated property value is 'Invalid Date'
@@ -94,20 +100,17 @@ QtObject {
         }
 
         if (useSearchTermAsName && _pendingSearchTerm !== "") {
-            return _pendingSearchTerm; // set by handleNewNoteHeadlineHook
+            if (extraDialogForFileName) {
+                return newNamer("New note", "New file name", _pendingSearchTerm);
+            }
+            return _pendingSearchTerm;
         }
 
         if (extraDialogForFileName) {
-            return newNamer("New note", "New file name", "File name");
+            return newNamer("New note", "New file name", extractTitle(note.noteText));
         }
 
-        var noteLines = (note.noteText || "").split("\n");
-        var firstLine = noteLines[0];
-        var noteTitle = firstLine.slice(2); // Remove the preceding "# "
-        if (underlineHeading) {
-            noteTitle = firstLine;
-        }
-        return noteTitle;
+        return extractTitle(note.noteText);
     }
     function noteOpenedHook(note) {
         if (_pendingSearchTerm === "") {
