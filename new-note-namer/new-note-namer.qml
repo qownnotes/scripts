@@ -7,20 +7,11 @@ import QOwnNotesTypes 1.0
  Avoids cumbersome renaming and title editing.
  */
 QtObject {
-    property bool useSearchTermAsName
     property bool extraDialogForFileName
     property string headingStyle
     property string customHeadingOpen
     property string customHeadingClose
-    property string _pendingSearchTerm: ""
     property variant settingsVariables: [
-        {
-            'identifier': 'useSearchTermAsName',
-            'name': 'Name note from search term',
-            'description': 'Skip the title dialog and use the current search term as the note name.',
-            'type': 'boolean',
-            'default': 'false'
-        },
         {
             'identifier': 'extraDialogForFileName',
             'name': 'Extra dialog for note title',
@@ -58,13 +49,7 @@ QtObject {
 
     function handleNewNoteHeadlineHook(headline) {
         // 'headline' is a plain string (the search term or default text), not a Note object.
-        if (useSearchTermAsName) {
-            _pendingSearchTerm = headline;
-            return headline; // noteOpenedHook will replace content with the chosen heading style
-        }
-
-        // If QOwnNotes already provided a headline (its own dialog, or a search term),
-        // apply the chosen style directly rather than asking again.
+        // If already provided (search term or QOwnNotes own dialog), use it directly.
         var name = headline !== "" ? headline : newNamer("New note", "New note title", "Title");
         return buildHeadline(name);
     }
@@ -99,28 +84,11 @@ QtObject {
             return "";
         }
 
-        if (useSearchTermAsName && _pendingSearchTerm !== "") {
-            if (extraDialogForFileName) {
-                return newNamer("New note", "New file name", _pendingSearchTerm);
-            }
-            return _pendingSearchTerm;
-        }
-
         if (extraDialogForFileName) {
             return newNamer("New note", "New file name", extractTitle(note.noteText));
         }
 
         return extractTitle(note.noteText);
-    }
-    function noteOpenedHook(note) {
-        if (_pendingSearchTerm === "") {
-            return;
-        }
-        var name = _pendingSearchTerm;
-        _pendingSearchTerm = "";
-        script.noteTextEditSetSelection(0, (note.noteText || "").length);
-        script.noteTextEditWrite(buildHeadline(name));
-        mainWindow.focusNoteTextEdit();
     }
     function init() {
         script.log("New-note-namer active");
