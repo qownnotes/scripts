@@ -7,15 +7,24 @@ import QOwnNotesTypes 1.0
  Avoids cumbersome renaming and title editing.
  */
 QtObject {
+    property bool extraDialogForTitle
     property bool extraDialogForFileName
     property string headingStyle
+    property string _searchTerm: ""
     property string customHeadingOpen
     property string customHeadingClose
     property variant settingsVariables: [
         {
+            'identifier': 'extraDialogForTitle',
+            'name': 'Show a dialog to define the note title',
+            'description': 'If checked, ask for a custom note title.',
+            'type': 'boolean',
+            'default': 'false'
+        },
+        {
             'identifier': 'extraDialogForFileName',
-            'name': 'Extra dialog for note title',
-            'description': 'Show an additional dialog window so user can write a file name different to the note title.',
+            'name': 'Show a dialog to define the file name',
+            'description': 'If checked, ask for a custom file name.',
             'type': 'boolean',
             'default': 'false'
         },
@@ -49,8 +58,16 @@ QtObject {
 
     function handleNewNoteHeadlineHook(headline) {
         // 'headline' is a plain string (the search term or default text), not a Note object.
-        // If already provided (search term or QOwnNotes own dialog), use it directly.
-        var name = headline !== "" ? headline : newNamer("New note", "New note title", "Title");
+        // Strip QOwnNotes search filter prefixes (e.g. "n:" for name-only search).
+        _searchTerm = headline.replace(/^n:/i, "");
+        var name;
+        if (extraDialogForTitle || _searchTerm === "") {
+            // Show dialog: pre-fill with the search term if available, otherwise a placeholder.
+            name = newNamer("New note", "New note title", _searchTerm !== "" ? _searchTerm : "Title");
+        } else {
+            // If already provided (search term or QOwnNotes own dialog), use it directly.
+            name = _searchTerm;
+        }
         return buildHeadline(name);
     }
     function buildHeadline(name) {
@@ -84,11 +101,14 @@ QtObject {
             return "";
         }
 
+        // Default file name: search term if available, otherwise derived from the title.
+        var defaultName = _searchTerm !== "" ? _searchTerm : extractTitle(note.noteText);
+
         if (extraDialogForFileName) {
-            return newNamer("New note", "New file name", extractTitle(note.noteText));
+            return newNamer("New note", "New file name", defaultName);
         }
 
-        return extractTitle(note.noteText);
+        return defaultName;
     }
     function init() {
         script.log("New-note-namer active");
