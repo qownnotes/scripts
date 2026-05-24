@@ -20,11 +20,11 @@ The two dialog options are independent: each defaults to the search term, regard
 | Source           | Dialog: note title | Dialog: file name | Title                        | File name                                   |
 | ---------------- | ------------------ | ----------------- | ---------------------------- | ------------------------------------------- |
 | Search "foo"     | ☐                  | ☐                 | `# foo`                      | `foo`                                       |
-| Search "foo"     | ☑                  | ☐                 | dialog pre-filled with `foo` | `foo` (search term, independent from title) |
-| Search "foo"     | ☐                  | ☑                 | `# foo`                      | dialog pre-filled with `foo`                |
-| Search "foo"     | ☑                  | ☑                 | dialog pre-filled with `foo` | dialog pre-filled with `foo`                |
+| Search "foo"     | ☑                 | ☐                 | dialog pre-filled with `foo` | `foo` (search term, independent from title) |
+| Search "foo"     | ☐                  | ☑                | `# foo`                      | dialog pre-filled with `foo`                |
+| Search "foo"     | ☑                 | ☑                | dialog pre-filled with `foo` | dialog pre-filled with `foo`                |
 | Menu (no search) | —                  | ☐                 | dialog (no pre-fill)         | = entered title                             |
-| Menu (no search) | —                  | ☑                 | dialog (no pre-fill)         | dialog pre-filled with entered title        |
+| Menu (no search) | —                  | ☑                | dialog (no pre-fill)         | dialog pre-filled with entered title        |
 
 > **Note:** the `n:` search prefix (name-only filter) is automatically stripped from the note name.
 
