@@ -43,10 +43,10 @@ This was replaced by the **Heading style** selection in v0.0.3.
 
 Your stored preference is migrated automatically:
 
-| v0.0.2 setting | Effective heading style after upgrade |
-| -------------- | ------------------------------------- |
-| Unchecked (default) | ATX (`# Title`) — no change |
-| Checked | Setext (`Title / =====`) — preserved via the deprecated toggle |
+| v0.0.2 setting      | Effective heading style after upgrade                          |
+| ------------------- | -------------------------------------------------------------- |
+| Unchecked (default) | ATX (`# Title`) — no change                                    |
+| Checked             | Setext (`Title / =====`) — preserved via the deprecated toggle |
 
 The deprecated **Underline heading (deprecated)** entry remains visible in the script settings so QOwnNotes can still read your stored value.
 Once you have set **Heading style** to your preferred option you can safely uncheck the deprecated toggle.
