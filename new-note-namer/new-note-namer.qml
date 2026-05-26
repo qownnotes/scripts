@@ -13,6 +13,7 @@ QtObject {
     property string _searchTerm: ""
     property string customHeadingOpen
     property string customHeadingClose
+    property bool underlineHeading  // deprecated — kept so existing stored settings still load
     property variant settingsVariables: [
         {
             'identifier': 'extraDialogForTitle',
@@ -54,6 +55,13 @@ QtObject {
             'type': 'string',
             'default': ''
         },
+        {
+            'identifier': 'underlineHeading',
+            'name': 'Underline heading (deprecated)',
+            'description': 'Deprecated: use "Heading style" above instead. Kept so that users upgrading from v0.0.2 automatically keep their Setext-heading preference without needing to change settings.',
+            'type': 'boolean',
+            'default': 'false'
+        },
     ]
 
     function handleNewNoteHeadlineHook(headline) {
@@ -70,18 +78,28 @@ QtObject {
         }
         return buildHeadline(name);
     }
+    // Migration helper: underlineHeading=true from v0.0.2 maps to Setext ("1").
+    // headingStyle "1" or "2" set explicitly always wins.
+    function effectiveHeadingStyle() {
+        if (headingStyle === "0" && underlineHeading) {
+            return "1";
+        }
+        return headingStyle;
+    }
     function buildHeadline(name) {
-        if (headingStyle === "2") {
+        var style = effectiveHeadingStyle();
+        if (style === "2") {
             return customHeadingOpen + name + customHeadingClose;
         }
-        if (headingStyle === "1") {
+        if (style === "1") {
             return name + "\n" + "=".repeat(name.length);
         }
         return "# " + name; // "0" (ATX) or unset
     }
     function extractTitle(noteText) {
         var firstLine = (noteText || "").split("\n")[0];
-        if (headingStyle === "2") {
+        var style = effectiveHeadingStyle();
+        if (style === "2") {
             var t = firstLine.slice(customHeadingOpen.length);
             var closeLen = customHeadingClose.length;
             if (closeLen > 0 && t.slice(-closeLen) === customHeadingClose) {
@@ -89,7 +107,7 @@ QtObject {
             }
             return t;
         }
-        if (headingStyle === "1") {
+        if (style === "1") {
             return firstLine; // setext: first line is the bare title
         }
         return firstLine.slice(2); // ATX: remove "# "

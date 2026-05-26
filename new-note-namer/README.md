@@ -35,3 +35,18 @@ The two dialog options are independent: each defaults to the search term, regard
 - Check only _title_ to write a custom heading while keeping the file name equal to the search term.
 - The heading style applies in all cases, including when no dialog is shown.
 - All settings require a **script engine reload** to take effect after being changed.
+
+## Upgrading from v0.0.2
+
+v0.0.2 had a single boolean setting **Underline heading** that chose between ATX (`# Title`) and Setext (`Title / =====`).
+This was replaced by the **Heading style** selection in v0.0.3.
+
+Your stored preference is migrated automatically:
+
+| v0.0.2 setting | Effective heading style after upgrade |
+| -------------- | ------------------------------------- |
+| Unchecked (default) | ATX (`# Title`) — no change |
+| Checked | Setext (`Title / =====`) — preserved via the deprecated toggle |
+
+The deprecated **Underline heading (deprecated)** entry remains visible in the script settings so QOwnNotes can still read your stored value.
+Once you have set **Heading style** to your preferred option you can safely uncheck the deprecated toggle.
