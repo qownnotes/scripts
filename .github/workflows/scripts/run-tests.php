@@ -34,54 +34,55 @@ class TestHelper
     public function testDirectory($dir)
     {
         $errors = [];
+        $infoJson = $dir . "/info.json";
 
         if (preg_match('/[^a-z0-9\-]/', $dir)) {
-            $errors[] = "Invalid characters were found in directory name '$dir'!";
+            $errors[] = "$dir: Invalid characters were found in directory name '$dir'! Only lowercase letters, numbers and hyphens are allowed.";
         }
 
-        $jsonData = file_get_contents($dir . "/info.json");
+        $jsonData = file_get_contents($infoJson);
         $data = json_decode($jsonData, true);
 
         if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-            $errors[] = "Failed to parse info.json: " . json_last_error_msg();
+            $errors[] = "$infoJson: Failed to parse info.json: " . json_last_error_msg();
             $this->errors[$dir] = $errors;
             return;
         }
 
         if (!is_array($data)) {
-            $errors[] = "info.json does not contain a valid object!";
+            $errors[] = "$infoJson: info.json does not contain a valid object!";
             $this->errors[$dir] = $errors;
             return;
         }
 
         if (!isset($data["name"]) || $data["name"] == "") {
-            $errors[] = "No name was entered!";
+            $errors[] = "$infoJson: No name was entered!";
         }
 
         $identifier = $data["identifier"] ?? "";
         if ($identifier == "") {
-            $errors[] = "No identifier was entered!";
+            $errors[] = "$infoJson: No identifier was entered!";
         } elseif (preg_match('/[^a-z0-9\-]/', $identifier)) {
-            $errors[] = "Invalid characters were found in identifier '$identifier'!";
+            $errors[] = "$infoJson: Invalid characters were found in identifier '$identifier'!";
         }
 
         if ($identifier != $dir) {
-            $errors[] = "Identifier and directory name do not match!";
+            $errors[] = "$infoJson: Identifier and directory name do not match!";
         }
 
         if (!isset($data["description"]) || $data["description"] == "") {
-            $errors[] = "No description was entered!";
+            $errors[] = "$infoJson: No description was entered!";
         }
 
         $script = $data["script"] ?? "";
         if ($script == "") {
-            $errors[] = "No script was entered!";
+            $errors[] = "$infoJson: No script was entered!";
         } elseif (!file_exists($dir . "/" . $script)) {
-            $errors[] = "Script '$script' doesn't exist!";
+            $errors[] = "$dir/$script: Script '$script' doesn't exist!";
         }
 
         if (!isset($data["version"]) || $data["version"] == "") {
-            $errors[] = "No version was entered!";
+            $errors[] = "$infoJson: No version was entered!";
         }
 
         // Check that extra .qml and .js files are listed in "resources"
@@ -94,30 +95,30 @@ class TestHelper
 
         $resources = $data["resources"] ?? [];
         if (!is_array($resources)) {
-            $errors[] = "'resources' has to be an array!";
+            $errors[] = "$infoJson: 'resources' has to be an array!";
         } else {
             foreach ($extraFiles as $extraFile) {
                 $basename = basename($extraFile);
                 if (!in_array($basename, $resources)) {
-                    $errors[] = "File '$basename' is not listed in 'resources' in info.json!";
+                    $errors[] = "$extraFile: File '$basename' is not listed in 'resources' in info.json!";
                 }
             }
 
             // Check that every file listed in "resources" actually exists
             foreach ($resources as $resource) {
                 if (!file_exists($dir . "/" . $resource)) {
-                    $errors[] = "Resource '$resource' listed in info.json doesn't exist!";
+                    $errors[] = "$dir/$resource: Resource '$resource' listed in info.json doesn't exist!";
                 }
             }
         }
 
         if (isset($data["platforms"])) {
             if (!is_array($data["platforms"])) {
-                $errors[] = "'platforms' has to be an array!";
+                $errors[] = "$infoJson: 'platforms' has to be an array!";
             } else {
                 foreach ($data["platforms"] as $platform) {
                     if (!in_array($platform, ["linux", "macos", "windows"])) {
-                        $errors[] = "Unsupported platform '$platform', only 'linux', 'macos' and 'windows' are allowed!";
+                        $errors[] = "$infoJson: Unsupported platform '$platform', only 'linux', 'macos' and 'windows' are allowed!";
                     }
                 }
             }
