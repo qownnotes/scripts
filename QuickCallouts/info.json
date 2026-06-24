@@ -1,0 +1,10 @@
+{
+  "name": "QuickCallouts",
+  "identifier": "quickcallouts",
+  "script": "QuickCallouts.qml",
+  "authors": ["@CIN-DEV-netizen"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "26.06.7",
+  "description": "QuickCallouts is a plugin for the QOwnNotes markdown editor designed to streamline the insertion of callout blocks. Instead of manually typing complex syntax, users can instantly add Note, Info, and Warning blocks directly from the script menu. This tool helps organize and highlight critical information, tips, and alerts within your notes with a single click, making your documentation clearer and more structured.",
+}
