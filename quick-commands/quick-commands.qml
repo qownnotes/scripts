@@ -1,5 +1,6 @@
 import QtQml 2.0
 import QOwnNotesTypes 1.0
+import "command-parser.js" as CommandParser
 
 /**
  * This script creates some easy to access commands that leverage the autocomplete functionalities to add more predefined
@@ -23,7 +24,7 @@ Script {
         {
             "identifier": "customCommands",
             "name": "Custom Commands",
-            "description": "Custom quick commands. Each line is a separate command, with the options split by space and the first word being the command name. For example: 'myName first first-last last-first'",
+            "description": "Custom quick commands. Each line starts with a command name followed by replacement values separated by spaces. Enclose multi-word values in double quotes. For example: 'myName first \"first last\" last-first'",
             "type": "text",
             "default": ""
         }
@@ -125,14 +126,12 @@ Script {
 
         var customRows = customCommands.split("\n");
         for (let i = 0; i < customRows.length; i++) {
-            var customCommandDetails = customRows[i].split(" ");
-            var customCommandName = customCommandDetails[0];
-            var customCommandValues = [];
-            for (let j = 1; j < customCommandDetails.length; j++) {
-                customCommandValues.push(customCommandDetails[j]);
+            var customCommand = CommandParser.parseCommandLine(customRows[i]);
+            if (customCommand === null) {
+                continue;
             }
 
-            commands[customCommandName] = customCommandValues;
+            commands[customCommand.name] = customCommand.values;
         }
     }
 }
