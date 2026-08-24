@@ -85,6 +85,11 @@ class TestHelper
             $errors[] = "$infoJson: No version was entered!";
         }
 
+        $errors = array_merge(
+            $errors,
+            $this->testChangelog($dir, $data["version"] ?? "")
+        );
+
         // Check that extra .qml and .js files are listed in "resources"
         $extraFiles = array_filter(
             array_merge(glob($dir . "/*.qml"), glob($dir . "/*.js")),
@@ -127,5 +132,65 @@ class TestHelper
         if (count($errors) > 0) {
             $this->errors[$dir] = $errors;
         }
+    }
+
+    /**
+     * Tests that a script has a correctly formatted changelog for its current version
+     */
+    private function testChangelog($dir, $currentVersion)
+    {
+        $errors = [];
+        $changelogFile = $dir . "/CHANGELOG.md";
+
+        if (!is_file($changelogFile)) {
+            return ["$changelogFile: Changelog doesn't exist!"];
+        }
+
+        $content = file_get_contents($changelogFile);
+        if ($content === false) {
+            return ["$changelogFile: Changelog could not be read!"];
+        }
+
+        $content = str_replace("\r\n", "\n", $content);
+        if (!preg_match('/\A# Changelog\n(?:\n|$)/', $content)) {
+            $errors[] = "$changelogFile: Changelog must start with a '# Changelog' heading!";
+        }
+
+        preg_match_all('/^## (\S+) - (\d{4})-(\d{2})-(\d{2})$/m', $content, $releases, PREG_OFFSET_CAPTURE);
+        preg_match_all('/^## .*$/m', $content, $releaseHeadings);
+
+        if (count($releases[0]) === 0) {
+            $errors[] = "$changelogFile: No release entries were found! Expected '## VERSION - YYYY-MM-DD'.";
+            return $errors;
+        }
+
+        if (count($releases[0]) !== count($releaseHeadings[0])) {
+            $errors[] = "$changelogFile: Every release heading must use the format '## VERSION - YYYY-MM-DD'.";
+        }
+
+        $latestVersion = $releases[1][0][0];
+        if ($currentVersion !== "" && $latestVersion !== $currentVersion) {
+            $errors[] = "$changelogFile: Latest changelog version '$latestVersion' does not match info.json version '$currentVersion'!";
+        }
+
+        foreach ($releases[0] as $index => $release) {
+            $year = (int) $releases[2][$index][0];
+            $month = (int) $releases[3][$index][0];
+            $day = (int) $releases[4][$index][0];
+            if (!checkdate($month, $day, $year)) {
+                $errors[] = "$changelogFile: Release '{$release[0]}' contains an invalid date!";
+            }
+
+            $sectionStart = $release[1] + strlen($release[0]);
+            $sectionEnd = isset($releases[0][$index + 1])
+                ? $releases[0][$index + 1][1]
+                : strlen($content);
+            $section = substr($content, $sectionStart, $sectionEnd - $sectionStart);
+            if (!preg_match('/^- \S.*$/m', $section)) {
+                $errors[] = "$changelogFile: Release '{$release[0]}' must contain at least one bullet entry!";
+            }
+        }
+
+        return $errors;
     }
 }
