@@ -9,6 +9,7 @@ Each script lives in its own subdirectory and consists of at minimum:
 
 - A `.qml` file — the script implementation
 - An `info.json` file — metadata describing the script
+- A `CHANGELOG.md` file — dated release notes for the script
 
 ## Repository structure
 
@@ -16,6 +17,7 @@ Each script lives in its own subdirectory and consists of at minimum:
 <script-name>/          # One directory per script, kebab-case name
     <script-name>.qml   # Main QML script file (same name as directory)
     info.json           # Script metadata
+    CHANGELOG.md        # Script release history
     tests/              # Optional Qt Quick Test suite
 example-script/         # Template/reference for new scripts
 .shared/                # Shared just recipes
@@ -28,7 +30,8 @@ justfile                # Task runner (just)
 1. **Copy** the `example-script/` directory and rename it to a descriptive kebab-case name (e.g. `my-new-feature/`).
 2. **Rename** `example-script.qml` inside the folder to match the folder name (e.g. `my-new-feature.qml`).
 3. **Edit** `info.json` to fill in the metadata (see below).
-4. **Implement** the script in the `.qml` file.
+4. **Create** `CHANGELOG.md` with an entry for the initial release.
+5. **Implement** the script in the `.qml` file.
 
 ### info.json fields
 
@@ -49,6 +52,20 @@ justfile                # Task runner (just)
 - `script` must match the `.qml` filename exactly.
 - `minAppVersion`: use the [current QOwnNotes version](https://github.com/pbek/QOwnNotes/blob/main/src/version.h) if unsure.
 - `platforms`: include only platforms the script is tested/supported on.
+
+### Changelog
+
+Every user-facing script change must increment the version in `info.json` and add a matching dated entry to the script's `CHANGELOG.md`. Use this format:
+
+```markdown
+# Changelog
+
+## 0.0.2 - 2026-08-24
+
+- Describe the user-facing change and link the related issue or pull request when available.
+```
+
+Keep the newest release first. New scripts must start their changelog with an initial release entry.
 
 ### QML script structure
 
