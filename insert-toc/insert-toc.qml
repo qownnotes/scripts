@@ -30,7 +30,9 @@ Script {
             var toc = extractTOC(lines);
             toc = normalizeDepths(toc);
 
-            script.noteTextEditWrite("\n" + tocTitle + "\n\n");
+            if (tocTitle !== "") {
+                script.noteTextEditWrite("\n" + tocTitle + "\n\n");
+            }
             var indexByDepth = {};
             for (var n = 0; n < toc.length; n++) {
                 indexByDepth[toc[n].depth] = 0;
