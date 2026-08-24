@@ -42,9 +42,17 @@ Script {
         var command = word.substr(1);
 
         var availableCommands = commands[command];
-        if (availableCommands == null) {
+        if (availableCommands == null || availableCommands.length === 0) {
             return [];
         }
+
+        // QOwnNotes replaces only word characters during completion, so remove
+        // the command prefix separately to keep it out of the result.
+        var cursorPosition = script.noteTextEditCursorPosition();
+        var commandStart = cursorPosition - word.length;
+        script.noteTextEditSetSelection(commandStart, commandStart + 1);
+        script.noteTextEditWrite("");
+        script.noteTextEditSetCursorPosition(cursorPosition - 1);
 
         return availableCommands;
     }
