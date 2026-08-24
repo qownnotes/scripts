@@ -5,6 +5,14 @@
 
 {
   packages = [ pkgs.qt6.qtdeclarative ];
+  env.QML_TEST_FONTCONFIG_FILE = pkgs.writeText "qml-test-fonts.conf" ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+    <fontconfig>
+      <dir>${pkgs.dejavu_fonts}/share/fonts/truetype</dir>
+      <cachedir prefix="xdg">fontconfig</cachedir>
+    </fontconfig>
+  '';
   env.QML_TEST_IMPORT_PATH = "${pkgs.qt6.qtdeclarative}/lib/qt-6/qml";
 
   # https://devenv.sh/git-hooks/

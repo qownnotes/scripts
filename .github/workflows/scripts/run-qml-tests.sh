@@ -15,6 +15,10 @@ if [[ -n "${QML_TEST_IMPORT_PATH:-}" ]]; then
   qml_import_arguments=(-import "$QML_TEST_IMPORT_PATH")
 fi
 
+if [[ -n "${QML_TEST_FONTCONFIG_FILE:-}" ]]; then
+  export FONTCONFIG_FILE="$QML_TEST_FONTCONFIG_FILE"
+fi
+
 if ((${#test_directories[@]} == 0)); then
   printf 'No QML tests were found\n'
   exit 0
