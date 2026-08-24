@@ -3,6 +3,7 @@ import QtQml 2.0
 import "markdown-it-deflist.js" as MarkdownItDeflist
 import "markdown-it-katex.js" as MarkdownItKatex
 import "markdown-it.js" as MarkdownIt
+import "url-helper.js" as UrlHelper
 
 QtObject {
     property string customStylesheet
@@ -60,16 +61,6 @@ QtObject {
             return GOOD_PROTO_RE.test(str) ? true : validateLinkOrig(url);
         };
     }
-    function isProtocolUrl(url) {
-        return /^[a-zA-Z][\w+.-]*:\/\//.test(url);
-    }
-    function isUnixAbsolute(path) {
-        return path.startsWith('/');
-    }
-    function isWindowsAbsolute(path) {
-        return /^[a-zA-Z]:[\\/]/.test(path);
-    }
-
     /**
      * This function is called when the markdown html of a note is generated
      *
@@ -85,26 +76,7 @@ QtObject {
      */
     function noteToMarkdownHtmlHook(note, html, forExport) {
         var mdHtml = md.render(note.noteText);
-        //Insert root folder in attachments and media relative urls
-        var path = script.currentNoteFolderPath();
-        if (script.platformIsWindows())
-            path = "/" + path;
-
-        mdHtml = mdHtml.replace(/(\b(?:src|href|data-[\w-]+)\s*=\s*["'])([^"']+)["']/gi, (_, prefix, rawPath) => {
-            // Convert backslashes to forward slashes for URL
-
-            if (isProtocolUrl(rawPath))
-                return `${prefix}${rawPath}"`;
-
-            let finalPath;
-            if (isUnixAbsolute(rawPath) || isWindowsAbsolute(rawPath))
-                // Absolute path (Unix or Windows)
-                finalPath = rawPath.replace(/\\/g, '/');
-            else
-                // Relative path → resolve against base
-                finalPath = resolvePath(basePath, rawPath.replace(/^\.\/+/, ''));
-            return `${prefix}file://${finalPath}"`;
-        });
+        mdHtml = UrlHelper.rewriteLocalUrls(mdHtml, note.fullNoteFileDirPath, script.currentNoteFolderPath(), script.platformIsWindows());
         // Don't attempt to render in the preview, it doesn't support mathml or complex css
         if (!forExport && useKatexPlugin)
             mdHtml = mdHtml.replace(/(<math\b[^>]*>)([\s\S]*?)(<\/math>)/gi, (fullMatch, openMathTag, mathInner, closeMathTag) => {
@@ -124,16 +96,5 @@ QtObject {
         head = head.replace("</style>", "table {border-spacing: 0; border-style: solid; border-width: 1px; border-collapse: collapse; margin-top: 0.5em;} th, td {padding: 0 5px;}" + customStylesheet + "</style>");
         mdHtml = "<html>" + head + "<body>" + mdHtml + "</body></html>";
         return mdHtml;
-    }
-    function resolvePath(base, relative) {
-        const baseParts = base.replace(/\/+$/, '').split('/');
-        const relParts = relative.replace(/^\.\/+/, '').split('/');
-        for (const part of relParts) {
-            if (part === '..')
-                baseParts.pop();
-            else if (part !== '.' && part !== '')
-                baseParts.push(part);
-        }
-        return baseParts.join('/');
     }
 }
