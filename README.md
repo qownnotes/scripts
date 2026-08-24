@@ -27,6 +27,7 @@ To bring your script into the **script repository** you just have to do the foll
 - **edit** the **`info.json`** to add your meta data and describe what your script is doing
   - you can use [example script info.json](https://jsoneditoronline.org/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fqownnotes%2Fscripts%2Fmaster%2Fexample-script%2Finfo.json) to help you with the json encoding
   - if you are not sure which `minAppVersion` the commands you are using needs take the [current version](https://github.com/pbek/QOwnNotes/blob/main/src/version.h) of _QOwnNotes_
+- **add a `CHANGELOG.md`** with an initial release entry matching the version in `info.json`
 - **commit and push** your changes to your repository
 - create a **[pull request](https://help.github.com/articles/creating-a-pull-request/)** to get your script merged into the QOwnNotes script repository
 
@@ -51,4 +52,5 @@ When editing an existing script in the GitHub web interface, do the following:
   - Fill out the Commit changes fields.
   - If this is a personal fork, select 'Commit directly to main branch'.
   - Click **Commit changes** button.
+- Add an entry for the new version to the script's `CHANGELOG.md`, creating the file if it does not exist.
 - Create a pull request to qownnotes/scripts on the main branch.
