@@ -16,6 +16,7 @@ Each script lives in its own subdirectory and consists of at minimum:
 <script-name>/          # One directory per script, kebab-case name
     <script-name>.qml   # Main QML script file (same name as directory)
     info.json           # Script metadata
+    tests/              # Optional Qt Quick Test suite
 example-script/         # Template/reference for new scripts
 .shared/                # Shared just recipes
 justfile                # Task runner (just)
@@ -77,7 +78,7 @@ Key recipes:
 
 | Recipe                  | Description                             |
 | ----------------------- | --------------------------------------- |
-| `just test`             | Run the test suite (PHP-based)          |
+| `just test`             | Run metadata validation and QML tests   |
 | `just format`           | Format all files using pre-commit hooks |
 | `just git-create-patch` | Create a patch from staged changes      |
 | `just git-apply-patch`  | Apply a saved patch                     |
@@ -100,7 +101,57 @@ To format everything manually: `just format`
 just test
 ```
 
-Tests are run by `.github/workflows/scripts/run-tests.php` and validate `info.json` files and script structure across all script directories.
+The test command runs:
+
+- `.github/workflows/scripts/run-tests.php` to validate `info.json` files and script structure.
+- `.github/workflows/scripts/run-qml-tests.sh` to discover `<script-name>/tests` directories and run them with `qmltestrunner`.
+
+### Writing script tests
+
+Use [Qt Quick Test](https://doc.qt.io/qt-6/qtquicktest-index.html) for script-specific tests. Place test files in the script's `tests/` directory and name them `tst_*.qml` so `qmltestrunner` discovers them automatically:
+
+```text
+<script-name>/
+    helper.js
+    <script-name>.qml
+    info.json
+    tests/
+        tst_helper.qml
+```
+
+Prefer extracting parsing and transformation logic into a side-effect-free JavaScript resource. Import the same resource from both the production script and its test:
+
+```qml
+import QtQuick 2.0
+import QtTest 1.3
+import "../helper.js" as Helper
+
+TestCase {
+    name: "Helper"
+
+    function test_example() {
+        compare(Helper.transform("input"), "expected");
+    }
+}
+```
+
+Additional `.js` files used by a script must be listed in the script's `info.json` under `resources`:
+
+```json
+{
+  "resources": ["helper.js"]
+}
+```
+
+Keep unit tests deterministic and avoid depending on the live QOwnNotes application. If application interaction must be tested, isolate calls to the global `script` object behind an injectable property and provide a small mock object in the test.
+
+Run one script's tests directly with:
+
+```sh
+QT_QPA_PLATFORM=offscreen qmltestrunner -import "$QML_TEST_IMPORT_PATH" -input <script-name>/tests
+```
+
+Run `just test` before submitting changes; CI executes the same command in the devenv environment.
 
 ## Scripting API reference
 
