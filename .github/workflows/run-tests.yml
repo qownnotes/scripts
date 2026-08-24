@@ -8,6 +8,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: "🧰 Checkout code"
+        uses: actions/checkout@v6
+      - name: "⚙️ Install Nix"
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: "🔒 Cache dependencies"
+        uses: cachix/cachix-action@v16
+        with:
+          name: devenv
+      - name: "🔧 Install devenv.sh"
+        run: nix profile add nixpkgs#devenv
       - name: "✅ Run tests"
-        run: php ./.github/workflows/scripts/run-tests.php
+        run: devenv shell "just test"

@@ -27,3 +27,4 @@ git-apply-patch:
 [group('test')]
 @test:
     php ./.github/workflows/scripts/run-tests.php
+    bash ./.github/workflows/scripts/run-qml-tests.sh

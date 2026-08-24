@@ -4,6 +4,9 @@
 }:
 
 {
+  packages = [ pkgs.qt6.qtdeclarative ];
+  env.QML_TEST_IMPORT_PATH = "${pkgs.qt6.qtdeclarative}/lib/qt-6/qml";
+
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
     php-cs-fixer = {
