@@ -4,7 +4,8 @@
   "script": "insert-toc.qml",
   "authors": ["@flopp", "@toindev"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.0.4",
+  "version": "0.0.5",
   "minAppVersion": "17.06.2",
-  "description": "This script scans the current note for headlines, generates a table of contents, and inserts a the TOC into the note."
+  "description": "This script scans the current note for headlines, generates a table of contents, and inserts a the TOC into the note.",
+  "resources": ["toc.js"]
 }

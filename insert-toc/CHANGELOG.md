@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5 - 2026-08-24
+
+- Preserve valid list nesting when headings skip levels ([#294](https://github.com/qownnotes/scripts/issues/294)).
+
 ## 0.0.4 - 2026-08-24
 
 - Allow the table of contents title and its surrounding whitespace to be omitted by clearing the title setting ([#295](https://github.com/qownnotes/scripts/issues/295)).

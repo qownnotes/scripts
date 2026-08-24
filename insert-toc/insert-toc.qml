@@ -1,5 +1,6 @@
 import QtQml 2.2
 import QOwnNotesTypes 1.0
+import "toc.js" as Toc
 
 /// Extract a 'table of contents' from the current note's headings and insert
 /// it into the note.
@@ -28,7 +29,7 @@ Script {
         if (action == "insertToc") {
             var lines = script.currentNote().noteText.split("\n");
             var toc = extractTOC(lines);
-            toc = normalizeDepths(toc);
+            toc = Toc.normalizeDepths(toc);
 
             if (tocTitle !== "") {
                 script.noteTextEditWrite("\n" + tocTitle + "\n\n");
@@ -86,19 +87,5 @@ Script {
     }
     function init() {
         script.registerCustomAction("insertToc", "Insert TOC", "TOC", "", true);
-    }
-    function normalizeDepths(toc) {
-        var min = -1;
-        for (var n = 0; n < toc.length; n++) {
-            var depth = toc[n].depth;
-            if (min < 0 || depth < min) {
-                min = depth;
-            }
-        }
-        for (var n = 0; n < toc.length; n++) {
-            toc[n].depth -= min;
-        }
-
-        return toc;
     }
 }
