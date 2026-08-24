@@ -40,7 +40,7 @@ QtObject {
             "name": "Executable",
             "description": "Please enter a path to KLatexFormula",
             "type": "file",
-            "default": "/usr/bin/klatexformula"
+            "default": "klatexformula"
         },
         {
             "identifier": "formulaPrefix",
@@ -103,29 +103,17 @@ QtObject {
         script.regenerateNotePreview();
     }
 
-    /**
-     * This function invokes a bash command
-     * @param cmdList 0-cmdNumber, 1-path, 2-cmd
-     * @return the result or [true/false] if detached = true
-     */
-    function execBashList(cmdList) {
-        const linuxExec = "bash";
+    function execProcessList(cmdList) {
         log("got cmds: " + cmdList.length);
         if (cmdList.length > 0) {
             const cmd = cmdList.pop();
-            const exec = script.platformIsWindows() ? cmd[2] : linuxExec;
-            const param = script.platformIsWindows() ? [] : ["-c", cmd[2]];
-            log("exec" + cmd[0] + ": " + exec);
-            script.startDetachedProcess(exec, param, "callback-latex-math", cmdList);
+            log("exec" + cmd[0] + ": " + cmd[2] + " " + JSON.stringify(cmd[3]));
+            script.startDetachedProcess(cmd[2], cmd[3], "callback-latex-math", cmdList);
         }
     }
-    function getBashCmd(path, latexBase64) {
-        const exec = executable;
+    function getProcessParameters(path, latexBase64) {
         const preamble = toBase64(getPreamble());
-        const quiet = " --quiet 1"; // --quiet OFF does not work (klatexformula bug?)
-        const cmd = `"${exec}" -f "${formulaColor}" -b "${formulaBgColor}" --base64arg --preamble="${preamble}" --base64arg --latexinput="${latexBase64}" --dpi ${settingDPI} ${quiet} --output ${path}`;
-        //log("cmd: "+cmd)
-        return cmd;
+        return ["-f", formulaColor, "-b", formulaBgColor, "--base64arg", "--preamble=" + preamble, "--base64arg", "--latexinput=" + latexBase64, "--dpi", settingDPI, "--quiet", "1", "--output", path];
     }
     function getPreamble() {
         var packages = usepackages.split(',');
@@ -239,9 +227,7 @@ QtObject {
             if (!script.fileExists(path)) {
                 // performance: do not create the same formula twice
                 count++;
-                var bashCmd = getBashCmd(path, latexBase64);
-                //execBashDetached(bashCmd, true)
-                cmdList.push([count, path, bashCmd]);
+                cmdList.push([count, path, executable, getProcessParameters(path, latexBase64)]);
             }
 
             // we need third slash after file:// if path contains drive letter (e.g. c:) in Windows
@@ -250,7 +236,7 @@ QtObject {
             return `<img style='vertical-align: bottom;' height='${imageSize}' src="file://${thirdSlash}${path}" alt="LaTex">`; //style='vertical-align: middle;'
         });
         if (cmdList.length > 0) {
-            execBashList(cmdList); // use a 'thread pool'
+            execProcessList(cmdList);
         }
         return html;
     }
@@ -267,9 +253,13 @@ QtObject {
     function onDetachedProcessCallback(callbackIdentifier, resultSet, cmd, thread) {
         if (callbackIdentifier == "callback-latex-math") {
             log("remaining: " + thread[1]);
+            if (cmd[2] !== 0) {
+                script.log("[LaTex] KLatexFormula failed with exit code " + cmd[2] + ": " + resultSet);
+                return;
+            }
             if (thread[0].length > 0) {
                 log("more to do");
-                execBashList(thread[0]);
+                execProcessList(thread[0]);
             } else {
                 log("done");
                 script.regenerateNotePreview();
