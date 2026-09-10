@@ -92,8 +92,8 @@ QtObject {
         // tag the current note
         script.tagCurrentNote("todo");
 
-    // workaround because the parsers don't seem to work every time
-    //         script.reloadScriptingEngine();
+        // workaround because the parsers don't seem to work every time
+        //         script.reloadScriptingEngine();
     }
     /**
      * Initializes the custom action

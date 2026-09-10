@@ -190,7 +190,7 @@ QtObject {
         var params = ["-jar", plantumlJarPath, "-o", script.toNativeDirSeparators(script.getPersistentVariable("renderPlantUML/workDir")), "-t" + svgOrPng, additionalParams].concat(plantumlFiles);
         var result = script.startDetachedProcess(javaExePath, params, "plantuml-callback-" + noteId + "-" + timeStamp, 0, html);
         script.setPersistentVariable("renderPlantUML/pumlRunning/" + noteId, "running");
-    //script.log("launching PUML: " + noteId + "-" + timeStamp);
+        //script.log("launching PUML: " + noteId + "-" + timeStamp);
     }
     function init() {
         script.registerCustomAction("insertPumlDiagram", "PUML: insert Diagram", "", "", 1);

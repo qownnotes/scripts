@@ -11026,7 +11026,6 @@ module.exports = function text(state, silent) {
                 for (
                   index = basic > 0 ? basic + 1 : 0;
                   index < inputLength /* no final expression */;
-
                 ) {
                   // `index` is the index of the next character to be consumed.
                   // Decode a generalized variable-length integer into `delta`,

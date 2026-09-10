@@ -35,7 +35,7 @@ QtObject {
             'items': {
                 'cycleIndividually': 'Cycle all lines individually.',
                 'synchronizeChecked': 'Set all checkboxes to checked when the selection contains at least one checked checkbox. Otherwise cycle.'
-                // 'synchronizeFirst': 'Set all checkboxes to the value of the first checkox in the selection.',
+            // 'synchronizeFirst': 'Set all checkboxes to the value of the first checkox in the selection.',
             }
         }
     ]

@@ -46,14 +46,14 @@ Script {
             "default": "0",
             "items": qownStyles
         }//,
-        // {
-        // 	"identifier": "styleForCitationBrackets",
-        // 	"name": "Highlight style for the Zotero Citation Brackets",
-        // 	"description": "Please select a style for the Citation Brackets",
-        // 	"type": "selection",
-        // 	"default": "24",
-        // 	"items": qownStyles
-        // 	}
+    // {
+    // 	"identifier": "styleForCitationBrackets",
+    // 	"name": "Highlight style for the Zotero Citation Brackets",
+    // 	"description": "Please select a style for the Citation Brackets",
+    // 	"type": "selection",
+    // 	"default": "24",
+    // 	"items": qownStyles
+    // 	}
     ]
     property string styleForCitationBrackets
     property string styleForCitationText
