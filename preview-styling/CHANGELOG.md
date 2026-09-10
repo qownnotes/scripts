@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6 - 2026-09-10
+
+- Replaced outdated Qt rich-text documentation references with litehtml's HTML and CSS support documentation.
+
 ## 0.0.5 - 2020-05-31
 
 - Updated the HTML hook signature for QOwnNotes 20.6.0 and export-aware preview processing.

@@ -31,8 +31,8 @@ QtObject {
      * @return {string} the modified html or an empty string if nothing should be modified
      */
     function noteToMarkdownHtmlHook(note, html, forExport) {
-        // see http://doc.qt.io/qt-5/richtext-html-subset.html for a list of
-        // supported css styles
+        // See https://github.com/litehtml/litehtml#support-for-html-and-css-standards
+        // for information about supported styling features.
         html = html.replace("</style>", customStylesheet + "</style>");
         return html;
     }
