@@ -11,6 +11,7 @@ QtObject {
     property bool extraDialogForFileName
     property string headingStyle
     property string _searchTerm: ""
+    property bool _isNewNote: false
     property string customHeadingOpen
     property string customHeadingClose
     property bool underlineHeading  // deprecated — kept so existing stored settings still load
@@ -66,6 +67,11 @@ QtObject {
 
     function handleNewNoteHeadlineHook(headline) {
         // 'headline' is a plain string (the search term or default text), not a Note object.
+        // Only this hook fires for a genuine new-note creation, right before
+        // handleNoteTextFileNameHook — used below to gate the rename/prompt logic
+        // instead of note.fileCreated, which also reads "Invalid Date" the first
+        // time a pre-existing, not-yet-indexed note file is edited and saved.
+        _isNewNote = true;
         // Strip QOwnNotes search filter prefixes (e.g. "n:" for name-only search).
         _searchTerm = headline.replace(/^n:/i, "");
         var name;
@@ -113,11 +119,15 @@ QtObject {
         return firstLine.slice(2); // ATX: remove "# "
     }
     function handleNoteTextFileNameHook(note) {
-        // right when a note is created, the fileCreated property value is 'Invalid Date'
-        // this blocks the hook from further changing the note file name if the note title is changed
-        if (note.fileCreated != "Invalid Date") {
+        // Only act right after handleNewNoteHeadlineHook fired for THIS note
+        // creation (see hook order note above). note.fileCreated == "Invalid Date"
+        // was used previously, but it also reads "Invalid Date" the first time a
+        // pre-existing, not-yet-indexed note file is edited and saved — which made
+        // this hook wrongly fire (and prompt) on existing notes (issue #300).
+        if (!_isNewNote) {
             return "";
         }
+        _isNewNote = false; // consume the flag: only the note just created gets renamed
 
         // Default file name: search term if available, otherwise derived from the title.
         var defaultName = _searchTerm !== "" ? _searchTerm : extractTitle(note.noteText);

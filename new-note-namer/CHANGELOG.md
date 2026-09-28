@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5 - 2026-09-28
+
+- Fixed the file-name prompt wrongly firing when an existing, not-yet-indexed note is edited and saved for the first time (#300). The rename logic now gates on a flag set only by the genuine new-note creation hook, instead of `note.fileCreated`.
+
 ## 0.0.4 - 2026-05-26
 
 - Added independent title and filename dialog settings, with search terms used directly when dialogs are disabled.
