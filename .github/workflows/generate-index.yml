@@ -6,6 +6,9 @@ on:
 
 jobs:
   build:
+    # the "metadata-index" release this uploads to only exists on the upstream
+    # repo; forks don't get GitHub Releases via git, so skip there.
+    if: github.repository == 'qownnotes/scripts'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
