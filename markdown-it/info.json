@@ -9,7 +9,7 @@
     "url-helper.js"
   ],
   "authors": ["@milan-rusev", "@bessw", "@cjendantix"],
-  "version": "1.6",
+  "version": "1.7",
   "minAppVersion": "20.6.0",
   "description": "This script replaces the default markdown renderer with markdown-it and allows for optional LaTeX rendering support with the Markdown-It KaTeX plugin. (NOTE: LaTeX defaults to rendering with MathML ONLY). \n\n<b>Dependencies</b>\n<a href=\"https://github.com/markdown-it/markdown-it\">markdown-it.js</a> (v8.4.2 bundled with the script)\n<a href=\"https://github.com/mdit-plugins/mdit-plugins/tree/main/packages/katex\">Markdown-It KaTeX plugin</a> (v0.18.0 bundled with the script)\n\n<b>Usage</b>\nFor the possible configuration options check <a href=\"https://github.com/markdown-it/markdown-it/tree/main/lib/presets\">here</a>."
 }

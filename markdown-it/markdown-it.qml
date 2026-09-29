@@ -44,12 +44,16 @@ QtObject {
 
     function init() {
         var optionsObj = eval("(" + options + ")");
-        md = new this.markdownit(optionsObj);
+        // The bundled libraries register themselves on the JavaScript global
+        // object. Newer Qt versions no longer bind "this" to the global object
+        // inside QML functions, so look them up as globals first.
+        var markdownItLib = typeof markdownit !== "undefined" ? markdownit : this.markdownit;
+        md = new markdownItLib(optionsObj);
         if (useDeflistPlugin)
-            md.use(this.markdownitDeflist);
+            md.use(typeof markdownitDeflist !== "undefined" ? markdownitDeflist : this.markdownitDeflist);
 
         if (useKatexPlugin)
-            this.markdownItKatex(md, {
+            (typeof markdownItKatex !== "undefined" ? markdownItKatex : this.markdownItKatex)(md, {
                 "output": "mathml"
             });
 

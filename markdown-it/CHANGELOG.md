@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7 - 2026-09-29
+
+- Fix the script failing to load with `TypeError: Type error` on newer Qt versions, which caused the preview to fall back to the default renderer ([#303](https://github.com/qownnotes/scripts/issues/303)).
+
 ## 1.6 - 2026-08-24
 
 - Fix local images and attachments in the preview for both current and legacy link formats ([#77](https://github.com/qownnotes/scripts/issues/77)).
