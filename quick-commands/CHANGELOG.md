@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 - 2026-10-02
+
+- Reworked for simplicity, efficiency and functionality.
+- Custom commands can now have actual date/time values substituted by
+  using {dd}, {hh} and so on.
+- Added README.md with extensive information.
+
 ## 0.2.0 - 2026-08-24
 
 - Support quoted multi-word custom command values ([#297](https://github.com/qownnotes/scripts/issues/297)).
