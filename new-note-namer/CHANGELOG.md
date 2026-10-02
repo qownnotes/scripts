@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6 - 2026-10-02
+
+- Added a _Derive the file name from the note title_ setting, so the (default) file name follows the note title instead of the search term (#304).
+
 ## 0.0.5 - 2026-09-28
 
 - Fixed the file-name prompt wrongly firing when an existing, not-yet-indexed note is edited and saved for the first time (#300). The rename logic now gates on a flag set only by the genuine new-note creation hook, instead of `note.fileCreated`.

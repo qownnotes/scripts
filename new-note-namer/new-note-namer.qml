@@ -9,8 +9,10 @@ import QOwnNotesTypes 1.0
 QtObject {
     property bool extraDialogForTitle
     property bool extraDialogForFileName
+    property bool fileNameFromTitle
     property string headingStyle
     property string _searchTerm: ""
+    property string _title: ""
     property bool _isNewNote: false
     property string customHeadingOpen
     property string customHeadingClose
@@ -27,6 +29,13 @@ QtObject {
             'identifier': 'extraDialogForFileName',
             'name': 'Show a dialog to define the file name',
             'description': 'If checked, ask for a custom file name.',
+            'type': 'boolean',
+            'default': 'false'
+        },
+        {
+            'identifier': 'fileNameFromTitle',
+            'name': 'Derive the file name from the note title',
+            'description': 'If checked, the (default) file name is taken from the note title instead of the search term. Useful together with the title dialog.',
             'type': 'boolean',
             'default': 'false'
         },
@@ -82,6 +91,7 @@ QtObject {
             // If already provided (search term or QOwnNotes own dialog), use it directly.
             name = _searchTerm;
         }
+        _title = name;
         return buildHeadline(name);
     }
     // Migration helper: underlineHeading=true from v0.0.2 maps to Setext ("1").
@@ -129,8 +139,11 @@ QtObject {
         }
         _isNewNote = false; // consume the flag: only the note just created gets renamed
 
-        // Default file name: search term if available, otherwise derived from the title.
-        var defaultName = _searchTerm !== "" ? _searchTerm : extractTitle(note.noteText);
+        // Default file name: the note title if "fileNameFromTitle" is enabled,
+        // otherwise the search term if available, otherwise derived from the title.
+        var title = _title !== "" ? _title : extractTitle(note.noteText);
+        var defaultName = (fileNameFromTitle || _searchTerm === "") ? title : _searchTerm;
+        _title = "";
 
         if (extraDialogForFileName) {
             return newNamer("New note", "New file name", defaultName);

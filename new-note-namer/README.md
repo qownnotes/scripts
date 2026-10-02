@@ -5,15 +5,17 @@ Especially useful when the _Allow note file name to be different from note title
 
 ## Settings
 
-| Setting                                    | Description                                                                         |
-| ------------------------------------------ | ----------------------------------------------------------------------------------- |
-| **Show a dialog to define the note title** | If checked, a dialog asks for a custom title (pre-filled with the search term).     |
-| **Show a dialog to define the file name**  | If checked, a dialog asks for a custom file name (pre-filled with the search term). |
-| **Heading style**                          | Format applied to the title: ATX (`# Title`), Setext (`Title / =====`), or Custom.  |
-| **Custom heading – opening tag**           | Text inserted before the title (Custom style only).                                 |
-| **Custom heading – closing tag**           | Text inserted after the title (Custom style only).                                  |
+| Setting                                      | Description                                                                         |
+| -------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Show a dialog to define the note title**   | If checked, a dialog asks for a custom title (pre-filled with the search term).     |
+| **Show a dialog to define the file name**    | If checked, a dialog asks for a custom file name (pre-filled with the search term). |
+| **Derive the file name from the note title** | If checked, the (default) file name is the note title instead of the search term.   |
+| **Heading style**                            | Format applied to the title: ATX (`# Title`), Setext (`Title / =====`), or Custom.  |
+| **Custom heading – opening tag**             | Text inserted before the title (Custom style only).                                 |
+| **Custom heading – closing tag**             | Text inserted after the title (Custom style only).                                  |
 
 The two dialog options are independent: each defaults to the search term, regardless of the other.
+Enable **Derive the file name from the note title** to have the file name (or the pre-filled value of the file name dialog) follow the entered title instead.
 
 ## Behaviour
 
@@ -25,6 +27,8 @@ The two dialog options are independent: each defaults to the search term, regard
 | Search "foo"     | ☑                  | ☑                 | dialog pre-filled with `foo` | dialog pre-filled with `foo`                |
 | Menu (no search) | —                  | ☐                 | dialog (no pre-fill)         | = entered title                             |
 | Menu (no search) | —                  | ☑                 | dialog (no pre-fill)         | dialog pre-filled with entered title        |
+
+With **Derive the file name from the note title** enabled, the file name (or the file name dialog pre-fill) is always the entered title, e.g. search "foo" + title dialog → enter `Foo Bar` → file name `Foo Bar` (or dialog pre-filled with `Foo Bar`).
 
 > **Note:** the `n:` search prefix (name-only filter) is automatically stripped from the note name.
 
