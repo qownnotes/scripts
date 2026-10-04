@@ -1,4 +1,4 @@
-# `jv-quick-commands`
+# `quick-commands`
 
 This is an augmented re-implementation of the QOwnNotes `quick-commands` script.
 
@@ -6,13 +6,14 @@ This is an augmented re-implementation of the QOwnNotes `quick-commands` script.
 
 When this script is enabled, you can use the QOwnNotes auto-completion feature with a number of predefined completions.
 
-| key          | value                                |
-| :----------- | :----------------------------------- |
-| `\today`     | Formatted current date and time      |
-| `\tomorrow`  | Formatted date and time of tomorrow  |
-| `\yesterday` | Formatted date and time of yesterday |
-| `\week`      | Formatted week               |
-| `\now`       | 2026-10-01T17:04:01                  |
+| key          | value                                    |
+|:-------------|:-----------------------------------------|
+| `\today`     | Formatted current date and time          |
+| `\tomorrow`  | Formatted date and time of tomorrow      |
+| `\yesterday` | Formatted date and time of yesterday     |
+| `\week`      | Formatted week                           |
+| `\now`       | 2026-10-01T17:04:01                      |
+| `\u`_XXXX_   | Unicode character with code point _XXXX_ |
 
 For date and time, a popup will allow choosing one of:
 * `01-10` (day month)
@@ -24,6 +25,8 @@ For date and time, a popup will allow choosing one of:
 For week, a popup will allow choosing one of:
 * `40-2026` (ISO week number and year)
 * `w40-2026` (ISO week number and year)
+
+For Unicode code points, the value _XXXX_ must be exactly four hexadecimal characters.
 
 ## Custom completions
 
@@ -42,6 +45,11 @@ App  qownnotes
 Now `\App` will complete to `Qownnotes`. Yes, you see that good, if
 the command starts with an uppercase letter the result will have its
 first letter uppercased too.
+
+Custom completions may contain escaped newline and Unicode characters, e.g.
+```
+smile smile\u263a\nand again
+```
 
 ### Placeholders
 

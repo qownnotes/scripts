@@ -4,8 +4,8 @@
   "script": "quick-commands.qml",
     "authors": ["@LockeBirdsey","@sciurius"],
   "platforms": ["linux", "macos", "windows"],
-  "version": "0.3.0",
+  "version": "0.3.1",
   "minAppVersion": "25.4.1",
-  "description": "Short commands to help with repetive and/or annoying things to write frequently such as timestamps.\n\nEach command starts with a backslash (\\) and a single word for the command. Select the autocomplete option you desire and the command text will be replace.\n\nDefault commands are: today, tomorrow, yesterday, now, week.\n\nCustom commands can also be specified. Each line starts with the command name followed by one or more replacement values separated by spaces. Enclose multi-word values in double quotes, for example: myname \"Firstname Lastname\". Date and time values can be substituted with {dd}, {MM} and so on.",
+  "description": "Short commands to help with repetive and/or annoying things to write frequently such as timestamps.\n\nEach command starts with a backslash (\\) and a single word for the command. Select the autocomplete option you desire and the command text will be replace.\n\nDefault commands are: today, tomorrow, yesterday, now, week.\n\nCustom commands can also be specified. Each line starts with the command name followed by one or more replacement values separated by spaces. Enclose multi-word values in double quotes, for example: myname \"Firstname Lastname\". Date and time values can be substituted with {dd}, {MM} and so on.\n\nReplacement values may have escaped newlines \"\\n\" and Unicode characters in the form \"\\uXXXX\".",
   "resources": ["command-parser.js"]
 }
