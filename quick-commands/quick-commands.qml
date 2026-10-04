@@ -63,19 +63,27 @@ Script {
 	// script.log("command: " + command);
 	const av = commands[command];
 	if ( av == null || av.length === 0 ) {
-            return [];
-        }
-	// script.log("commands: " + av);
-
-	// Substitute actual values.
-	const ucfirst = command.match( /^[A-Z]/ ); // should use POSIX
-	for ( let i = 0; i < av.length; i++ ) {
-	    if ( ucfirst ) {
-		availableCommands.push(capitalizeFirstLetter(substitute(av[i])));
+	    // Try Unicode literal \uXXXX.
+	    if ( command.match( /^u[0-9a-fA-F]{4}$/ ) ) {
+		availableCommands = [ unescapeUnicode(word) ];
 	    }
 	    else {
-		availableCommands.push(substitute(av[i]));
-	    }		
+		return [];
+	    }
+        }
+	else {
+	    // script.log("commands: " + av);
+
+	    // Substitute actual values.
+	    const ucfirst = command.match( /^[A-Z]/ ); // should use POSIX
+	    for ( let i = 0; i < av.length; i++ ) {
+		if ( ucfirst ) {
+		    availableCommands.push(capitalizeFirstLetter(substitute(av[i])));
+		}
+		else {
+		    availableCommands.push(substitute(av[i]));
+		}		
+	    }	
 	}	
 
         // QOwnNotes replaces only word characters during completion, so remove
@@ -136,6 +144,9 @@ Script {
 
     // Perform the substitutions.
     function substitute(format) {
+
+	// Handle newline and unicode escapes.
+	format = unescapeUnicode(format.replace( /\\n/g, "\n"));
 
 	// Break out the {...} elements.
 	let m = format.split( /(\{.*?\})/g );
@@ -228,6 +239,13 @@ Script {
     // Helper: Capitalize first letter of a string.
     function capitalizeFirstLetter(string) {
         return string[0].toUpperCase() + string.slice(1);
+    }
+
+    // Helper: Return UTF8 character from a \uXXXX string.
+    // Simplified version of https://mojoauth.com/dev-guides/unicode-escaping-in-javascript-in-browser#how-to-convert-between-characters-and-code-points-at-runtime.
+    function unescapeUnicode(str) {
+	return str.replace( /\\u([0-9a-fA-F]{4})/g,
+			    (_, hex) => String.fromCodePoint(parseInt(hex, 16)) );
     }
 
 }

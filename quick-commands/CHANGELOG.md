@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 - 2026-10-04
+
+- `\u`_XXXX_ will complete to the Unicode character whose code point is
+  given by hexadecimal _XXXX_.
+- Autocompletions can now have escaped newlines `\n` and Unicode
+  characters in `\u`_XXXX_ notation.
+
 ## 0.3.0 - 2026-10-02
 
 - Reworked for simplicity, efficiency and functionality.
