@@ -55,28 +55,30 @@ smile smile\u263a\nand again
 
  In the completions you can use a number of _placeholders_ to obtain substitutions for actual date and time values (table adapted from [QOwnNotes](https://www.qownnotes.org/scripting/methods-and-objects.html#formatting-dates-and-times):
 
-| Placeholder   | Meaning | Example                                |
-| :----------- | :---------------------|:-------------- |
-| `{yyyy}`        | Year with four digits                 | 2026      |
-| `{yy}`          | Year with two digits                  | 26        |
-| `{MM}`          | Month with leading zero               | 09        |
-| `{M}`           | Month without leading zero            | 9         |
-| `{MMM}`         | Abbreviated localized month name      | Sep       |
-| `{MMMM}`        | Full localized month name             | September |
-| `{dd}`          | Day with leading zero                 | 05        |
-| `{d}`           | Day without leading zero              | 5         |
-| `{ddd}`         | Abbreviated localized day name        | Tue       |
-| `{dddd}`        | Full localized day name               | Tuesday   |
-| `{HH}`          | Hour (0-23) with leading zero         | 07        |
-| `{hh}`          | Hour with leading zero (1-12 with AP) | 07        |
-| `{mm}`          | Minute with leading zero              | 04        |
-| `{ss}`          | Second with leading zero              | 09        |
-| `{AP}` / `{ap}` | AM/PM or am/pm                        | AM        |
-| `{w}` | ISO week number without leadign zero | 5 |
-| `{ww}` | ISO week number with leadign zero | 05 |
-| `{LC:locale}` | Use the given locale | `{LC:nl_NL}`|
-| `{+:offset}` | Offsets the date to the future | `{+:1D}` |
-| `{-:offset}` | Offsets the date to the past | `{-:1D}` |
+| Placeholder       | Meaning                               | Example                   |
+|:------------------|:--------------------------------------|:--------------------------|
+| `{yyyy}`          | Year with four digits                 | 2026                      |
+| `{yy}`            | Year with two digits                  | 26                        |
+| `{MM}`            | Month with leading zero               | 09                        |
+| `{M}`             | Month without leading zero            | 9                         |
+| `{MMM}`           | Abbreviated localized month name      | Sep                       |
+| `{MMMM}`          | Full localized month name             | September                 |
+| `{dd}`            | Day with leading zero                 | 05                        |
+| `{d}`             | Day without leading zero              | 5                         |
+| `{ddd}`           | Abbreviated localized day name        | Tue                       |
+| `{dddd}`          | Full localized day name               | Tuesday                   |
+| `{HH}`            | Hour (0-23) with leading zero         | 07                        |
+| `{hh}`            | Hour with leading zero (1-12 with AP) | 07                        |
+| `{mm}`            | Minute with leading zero              | 04                        |
+| `{ss}`            | Second with leading zero              | 09                        |
+| `{AP}` / `{ap}`   | AM/PM or am/pm                        | AM                        |
+| `{w}`             | ISO week number without leadign zero  | 5                         |
+| `{ww}`            | ISO week number with leadign zero     | 05                        |
+| `{LC:locale}`     | Use the given locale                  | `{LC:nl_NL}`              |
+| `{+:offset}`      | Offsets the date to the future        | `{+:1D}`                  |
+| `{-:offset}`      | Offsets the date to the past          | `{-:1D}`                  |
+| `{input:msg}`     | Asks the user for an answer to _msg_. | `{input:What colour}`     |
+| `{input:msg:def}` | Same, but with a default value.       | `{input:What colour:red}` |
 
 The date offsets may be a number of days, as shown above, or a number of milliseconds. `1D` is equivalent to `86400000`.
 
