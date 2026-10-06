@@ -175,7 +175,7 @@ Script {
 
 		    if ( x.length == 2 ) { // ctrl:value 
 			const ctrl  = x[0].toLowerCase();
-			const value = x[1];
+			let value = x[1];
 
 			if ( ctrl == "lc" ) {
 			    // Set a locale for substitutions.
