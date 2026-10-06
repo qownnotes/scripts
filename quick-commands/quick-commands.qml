@@ -174,10 +174,10 @@ Script {
 		    // script.log("x:" + x);
 
 		    if ( x.length == 2 ) { // ctrl:value 
-			let ctrl   = x[0];
+			const ctrl  = x[0].toLowerCase();
 			let value = x[1];
 
-			if ( ctrl.toLowerCase() == "lc" ) {
+			if ( ctrl == "lc" ) {
 			    // Set a locale for substitutions.
 			    locale = Qt.locale(value);
 			    script.log("locale:" + locale);
@@ -186,19 +186,38 @@ Script {
 
 			if ( ctrl == "+" || ctrl == "-" ) {
 			    // Date offset, millisecs or nnD.
-			    let now = new Date().getTime();
+			    const now = new Date().getTime();
 			    if ( value.endsWith("D") ) {
 				value = parseInt(value) * 24*60*60*1000;
 			    }
 			    else {
 				value = parseInt(value);
 			    }
-			    date = new Date( now + value );
+			    date = new Date( ctrl == "+" ? now + value : now - value );
 			    //script.log("date " + date);
 			    continue;
 			}
+
+			if ( ctrl == 'input' ) {
+			    result +=
+				script.inputDialogGetText("Query", value, "" );
+			    continue;
+			}
 		    }
-		    console.error("Invalid substitution control: " + m[0]);
+
+		    else if ( x.length == 3 ) { // ctrl:value:arg
+			const ctrl  = x[0].toLowerCase();
+			const value = x[1];
+			const arg   = x[2];
+
+			if ( ctrl == 'input' ) {
+			    result +=
+				script.inputDialogGetText("Query", value, arg );
+			    continue;
+			}
+		    }
+
+		    console.error("Invalid substitution control: " + m[i]);
 		    continue;	// makes sense?
 		}
 		// Perform the substition.

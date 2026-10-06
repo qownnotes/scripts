@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 - 2026-10-06
+
+- Placeholders can now ask the user for a value to substitute. This
+  makes it possible to quickly add larger pieces of text where some
+  parts are dynamic.
+
 ## 0.3.1 - 2026-10-04
 
 - `\u`_XXXX_ will complete to the Unicode character whose code point is
