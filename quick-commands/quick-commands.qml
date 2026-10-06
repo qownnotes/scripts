@@ -193,7 +193,7 @@ Script {
 			    else {
 				value = parseInt(value);
 			    }
-			    date = new Date( now + value );
+			    date = new Date( ctrl == "+" ? now + value : now - value );
 			    //script.log("date " + date);
 			    continue;
 			}
