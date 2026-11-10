@@ -1,0 +1,10 @@
+{
+  "name": "Move cursor to end of note",
+  "identifier": "move-cursor-to-end",
+  "script": "move-cursor-to-end.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "macos", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "26.11.6",
+  "description": "Automatically move the cursor to the end of every note when opening it. Useful for journals, running logs, and append-only notes. Overrides the restored cursor position while the script is enabled."
+}
