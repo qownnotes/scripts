@@ -20,7 +20,7 @@ Script {
             "identifier": "apiKey",
             "name": "API Key",
             "description": "Your OpenRouter API key. Get one at https://openrouter.ai/keys",
-            "type": "string",
+            "type": "string-secret",
             "default": ""
         },
         {

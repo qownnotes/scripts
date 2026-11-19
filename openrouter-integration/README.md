@@ -22,6 +22,14 @@ This script provides integration for [OpenRouter](https://openrouter.ai/), a uni
    - **Site Name** (optional): Your app name for OpenRouter rankings
    - **Site URL** (optional): Your app URL for OpenRouter rankings
 
+## Upgrading from 0.1.0
+
+Version 0.1.0 stored the API key as a plain script setting, which could appear in QOwnNotes debug reports. Version 0.1.1 stores new keys as secrets but does not migrate the old value.
+
+1. Revoke the old key in [OpenRouter](https://openrouter.ai/keys) and create a replacement.
+2. Note any custom settings you want to keep (other than the old key), then remove the script in **Settings → Scripting** to clear its saved settings.
+3. Reinstall the script from the script repository and enter the replacement key and any custom settings.
+
 ## Model Configuration
 
 You can configure which models to use in the script settings. Here are some popular models:
