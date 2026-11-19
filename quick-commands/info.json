@@ -2,7 +2,7 @@
   "name": "Quick Commands",
   "identifier": "quick-commands",
   "script": "quick-commands.qml",
-    "authors": ["@LockeBirdsey","@sciurius"],
+  "authors": ["@LockeBirdsey", "@sciurius"],
   "platforms": ["linux", "macos", "windows"],
   "version": "0.3.2",
   "minAppVersion": "25.4.1",

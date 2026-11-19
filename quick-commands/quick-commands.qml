@@ -30,61 +30,57 @@ Script {
             type: "text",
             default: ""
         }
-    ];
-    property string customCommands;
+    ]
+    property string customCommands
 
     // Common date formats for today and friends.
-    readonly property string _DDMM:     "{dd}-{MM}";
-    readonly property string _DDMMYYYY: "{dd}-{MM}-{yyyy}";
-    readonly property string _FULL:     "{yyyy}-{MM}-{dd}T{HH}:{mm}:{ss}";
-    readonly property string _YYYYMMDD: "{yyyy}-{MM}-{dd}";
-    readonly property string _VERYFULL: "{dddd} {d} {MMMM} {yyyy} {HH}:{mm}:{ss}";
+    readonly property string _DDMM: "{dd}-{MM}"
+    readonly property string _DDMMYYYY: "{dd}-{MM}-{yyyy}"
+    readonly property string _FULL: "{yyyy}-{MM}-{dd}T{HH}:{mm}:{ss}"
+    readonly property string _YYYYMMDD: "{yyyy}-{MM}-{dd}"
+    readonly property string _VERYFULL: "{dddd} {d} {MMMM} {yyyy} {HH}:{mm}:{ss}"
 
     // Common date formats for week and friends.
-    readonly property string _WEEKWWYYYY: "w{ww}-{yyyy}";
-    readonly property string _WWYYYY:     "{ww}-{yyyy}";
+    readonly property string _WEEKWWYYYY: "w{ww}-{yyyy}"
+    readonly property string _WWYYYY: "{ww}-{yyyy}"
 
     // Command list is static, runtime values are substituted at completion time.
-    property var commands: initCommands();
+    property var commands: initCommands()
 
     function autocompletionHook() {
-
         const word = script.noteTextEditCurrentWord(true);
-    
+
         if (!word.startsWith("\\")) {
             return [];
         }
 
-	const command = word.substr(1);
+        const command = word.substr(1);
 
-	// Find the possible candidates.
-	let availableCommands = [];
+        // Find the possible candidates.
+        let availableCommands = [];
 
-	// script.log("command: " + command);
-	const av = commands[command];
-	if ( av == null || av.length === 0 ) {
-	    // Try Unicode literal \uXXXX.
-	    if ( command.match( /^u[0-9a-fA-F]{4}$/ ) ) {
-		availableCommands = [ unescapeUnicode(word) ];
-	    }
-	    else {
-		return [];
-	    }
+        // script.log("command: " + command);
+        const av = commands[command];
+        if (av == null || av.length === 0) {
+            // Try Unicode literal \uXXXX.
+            if (command.match(/^u[0-9a-fA-F]{4}$/)) {
+                availableCommands = [unescapeUnicode(word)];
+            } else {
+                return [];
+            }
+        } else {
+            // script.log("commands: " + av);
+
+            // Substitute actual values.
+            const ucfirst = command.match(/^[A-Z]/); // should use POSIX
+            for (let i = 0; i < av.length; i++) {
+                if (ucfirst) {
+                    availableCommands.push(capitalizeFirstLetter(substitute(av[i])));
+                } else {
+                    availableCommands.push(substitute(av[i]));
+                }
+            }
         }
-	else {
-	    // script.log("commands: " + av);
-
-	    // Substitute actual values.
-	    const ucfirst = command.match( /^[A-Z]/ ); // should use POSIX
-	    for ( let i = 0; i < av.length; i++ ) {
-		if ( ucfirst ) {
-		    availableCommands.push(capitalizeFirstLetter(substitute(av[i])));
-		}
-		else {
-		    availableCommands.push(substitute(av[i]));
-		}		
-	    }	
-	}	
 
         // QOwnNotes replaces only word characters during completion, so remove
         // the command prefix separately to keep it out of the result.
@@ -99,13 +95,13 @@ Script {
 
     // Initialze the list of commands.
     function initCommands() {
-	var commands = {
-	    today:     buildList(0),
-            tomorrow:  buildList(1),
-	    yesterday: buildList(-1),
-            week:      [ _WWYYYY, _WEEKWWYYYY ],
-            now:       [ _FULL ],
-	};
+        var commands = {
+            today: buildList(0),
+            tomorrow: buildList(1),
+            yesterday: buildList(-1),
+            week: [_WWYYYY, _WEEKWWYYYY],
+            now: [_FULL]
+        };
 
         var customRows = customCommands.split("\n");
         for (let i = 0; i < customRows.length; i++) {
@@ -117,131 +113,116 @@ Script {
             commands[customCommand.name] = customCommand.values;
         }
 
-	return commands;
+        return commands;
     }
 
     // Build the list of candidates (for initCommands()).
     function buildList(offset) {
 
-	// If it is not today, add a magic modifier item.
-	let mod = "";
-	if ( offset < 0 ) {
-	    offset = -offset;
-	    mod = "{-:" + offset.toString() + "D}";
-	}
-	else if ( offset > 0 ) {
-	    mod = "{+:" + offset.toString() + "D}";
-	}
+        // If it is not today, add a magic modifier item.
+        let mod = "";
+        if (offset < 0) {
+            offset = -offset;
+            mod = "{-:" + offset.toString() + "D}";
+        } else if (offset > 0) {
+            mod = "{+:" + offset.toString() + "D}";
+        }
 
-        return [
-	    mod + _DDMM,
-	    mod + _YYYYMMDD,
-	    mod + _DDMMYYYY,
-	    mod + _FULL,
-	    mod + _VERYFULL
-	];
+        return [mod + _DDMM, mod + _YYYYMMDD, mod + _DDMMYYYY, mod + _FULL, mod + _VERYFULL];
     }
 
     // Perform the substitutions.
     function substitute(format) {
 
-	// Handle newline and unicode escapes.
-	format = unescapeUnicode(format.replace( /\\n/g, "\n"));
+        // Handle newline and unicode escapes.
+        format = unescapeUnicode(format.replace(/\\n/g, "\n"));
 
-	// Break out the {...} elements.
-	let m = format.split( /(\{.*?\})/g );
-	if ( m.length == 1 ) {
-	    return format;	// nothing to substitute
-	}
-	// script.log("split: " + m + " (" + m.length + " matches)");
+        // Break out the {...} elements.
+        let m = format.split(/(\{.*?\})/g);
+        if (m.length == 1) {
+            return format;	// nothing to substitute
+        }
+        // script.log("split: " + m + " (" + m.length + " matches)");
 
-	let date = new Date();
-	let locale;
-	let result = "";
+        let date = new Date();
+        let locale;
+        let result = "";
 
-	for( let i = 0; i < m.length; i++ ) {
-	    let arg = m[i];
-	    // script.log("arg" + i + ": " + arg);
+        for (let i = 0; i < m.length; i++) {
+            let arg = m[i];
+            // script.log("arg" + i + ": " + arg);
 
-	    // Is it a substitution element?
-	    if ( arg.startsWith("{") && arg.endsWith("}") ) {
-		let target = arg.slice(1,-1);
-		
-		// Check for {LC:locale} or {+:offset}.
-		if ( target.indexOf(":") > 0 ) {
-		    // script.log("opt: " + target);
-		    let x = target.split(":");
-		    // script.log("x:" + x);
+            // Is it a substitution element?
+            if (arg.startsWith("{") && arg.endsWith("}")) {
+                let target = arg.slice(1, -1);
 
-		    if ( x.length == 2 ) { // ctrl:value 
-			const ctrl  = x[0].toLowerCase();
-			let value = x[1];
+                // Check for {LC:locale} or {+:offset}.
+                if (target.indexOf(":") > 0) {
+                    // script.log("opt: " + target);
+                    let x = target.split(":");
+                    // script.log("x:" + x);
 
-			if ( ctrl == "lc" ) {
-			    // Set a locale for substitutions.
-			    locale = Qt.locale(value);
-			    script.log("locale:" + locale);
-			    continue;
-			}
+                    if (x.length == 2) { // ctrl:value
+                        const ctrl = x[0].toLowerCase();
+                        let value = x[1];
 
-			if ( ctrl == "+" || ctrl == "-" ) {
-			    // Date offset, millisecs or nnD.
-			    const now = new Date().getTime();
-			    if ( value.endsWith("D") ) {
-				value = parseInt(value) * 24*60*60*1000;
-			    }
-			    else {
-				value = parseInt(value);
-			    }
-			    date = new Date( ctrl == "+" ? now + value : now - value );
-			    //script.log("date " + date);
-			    continue;
-			}
+                        if (ctrl == "lc") {
+                            // Set a locale for substitutions.
+                            locale = Qt.locale(value);
+                            script.log("locale:" + locale);
+                            continue;
+                        }
 
-			if ( ctrl == 'input' ) {
-			    result +=
-				script.inputDialogGetText("Query", value, "" );
-			    continue;
-			}
-		    }
+                        if (ctrl == "+" || ctrl == "-") {
+                            // Date offset, millisecs or nnD.
+                            const now = new Date().getTime();
+                            if (value.endsWith("D")) {
+                                value = parseInt(value) * 24 * 60 * 60 * 1000;
+                            } else {
+                                value = parseInt(value);
+                            }
+                            date = new Date(ctrl == "+" ? now + value : now - value);
+                            //script.log("date " + date);
+                            continue;
+                        }
 
-		    else if ( x.length == 3 ) { // ctrl:value:arg
-			const ctrl  = x[0].toLowerCase();
-			const value = x[1];
-			const arg   = x[2];
+                        if (ctrl == 'input') {
+                            result += script.inputDialogGetText("Query", value, "");
+                            continue;
+                        }
+                    } else if (x.length == 3) { // ctrl:value:arg
+                        const ctrl = x[0].toLowerCase();
+                        const value = x[1];
+                        const arg = x[2];
 
-			if ( ctrl == 'input' ) {
-			    result +=
-				script.inputDialogGetText("Query", value, arg );
-			    continue;
-			}
-		    }
+                        if (ctrl == 'input') {
+                            result += script.inputDialogGetText("Query", value, arg);
+                            continue;
+                        }
+                    }
 
-		    console.error("Invalid substitution control: " + m[i]);
-		    continue;	// makes sense?
-		}
-		// Perform the substition.
-		if ( target == "w" ) {
-		    result += getWeekNumber(date);
-		}
-		else if ( target == "ww" ) {
-		    result += getWeekNumber(date).toString().padStart(2,"0");
-		}
-		else if ( locale != null ) {
-		    result += date.toLocaleString( locale, target );
-		}
-		else {
-		    result += Qt.formatDateTime( date, target );
-		}
-	    }
+                    console.error("Invalid substitution control: " + m[i]);
+                    continue;	// makes sense?
+                }
+                // Perform the substition.
+                if (target == "w") {
+                    result += getWeekNumber(date);
+                } else if (target == "ww") {
+                    result += getWeekNumber(date).toString().padStart(2, "0");
+                } else if (locale != null) {
+                    result += date.toLocaleString(locale, target);
+                } else {
+                    result += Qt.formatDateTime(date, target);
+                }
+            } else
 
-	    // Else append to result.
-	    else {
-		result += arg;
-	    }
-	}
+            // Else append to result.
+            {
+                result += arg;
+            }
+        }
 
-	return result;
+        return result;
     }
 
     // Helper: Calculate ISO stnadard week number.
@@ -263,8 +244,6 @@ Script {
     // Helper: Return UTF8 character from a \uXXXX string.
     // Simplified version of https://mojoauth.com/dev-guides/unicode-escaping-in-javascript-in-browser#how-to-convert-between-characters-and-code-points-at-runtime.
     function unescapeUnicode(str) {
-	return str.replace( /\\u([0-9a-fA-F]{4})/g,
-			    (_, hex) => String.fromCodePoint(parseInt(hex, 16)) );
+        return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
     }
-
 }
