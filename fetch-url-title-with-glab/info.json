@@ -1,0 +1,10 @@
+{
+  "name": "Fetch URL Title with glab",
+  "identifier": "fetch-url-title-with-glab",
+  "script": "fetch-url-title-with-glab.qml",
+  "authors": ["@pbek"],
+  "platforms": ["linux", "windows"],
+  "version": "0.0.1",
+  "minAppVersion": "26.5.10",
+  "description": "Uses <a href='https://docs.gitlab.com/cli/'>glab</a> to fill in the link title with the GitLab project name. Configure one GitLab server URL per line in the script settings. To look up private projects, first authenticate with <code>glab auth login --hostname HOST</code>."
+}
