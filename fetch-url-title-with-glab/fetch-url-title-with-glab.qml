@@ -33,24 +33,17 @@ QtObject {
         var api = scriptApi || script;
         var args = ["api", "--hostname", target.host];
 
-        if (target.workItemIid) {
+        if (target.kind === "work_items") {
             var query = "query($path: ID!, $iid: String!) { namespace(fullPath: $path) { workItem(iid: $iid) { title } } }";
-            args.push("graphql", "-f", "query=" + query, "-f", "path=" + target.path, "-f", "iid=" + target.workItemIid);
+            args.push("graphql", "-f", "query=" + query, "-f", "path=" + target.path, "-f", "iid=" + target.id);
         } else {
-            args.push("projects/" + encodeURIComponent(target.path));
+            args.push(projectEndpoint(target));
         }
 
         try {
             var result = api.startSynchronousProcess(glabPath, args);
             var data = JSON.parse(String(result));
-            var title;
-
-            if (target.workItemIid) {
-                var scope = data && data.data && data.data.namespace;
-                title = scope && scope.workItem && scope.workItem.title;
-            } else {
-                title = data && data.name;
-            }
+            var title = titleFromResponse(target, data);
 
             if (typeof title === "string" && title.trim() !== "") {
                 return title;
@@ -63,6 +56,44 @@ QtObject {
         return "";
     }
 
+    function projectEndpoint(target) {
+        var project = "projects/" + encodeURIComponent(target.path);
+
+        switch (target.kind) {
+        case "project":
+            return project;
+        case "commit":
+            return project + "/repository/commits/" + target.id;
+        case "milestones":
+            // The web URL uses a project-local IID, not the API's global milestone ID.
+            return project + "/milestones?iids%5B%5D=" + target.id;
+        default:
+            return project + "/" + target.kind + "/" + encodeURIComponent(target.id);
+        }
+    }
+
+    function titleFromResponse(target, data) {
+        if (!data) {
+            return "";
+        }
+
+        switch (target.kind) {
+        case "project":
+            return data.name;
+        case "work_items":
+            var scope = data.data && data.data.namespace;
+            return scope && scope.workItem && scope.workItem.title;
+        case "releases":
+            return typeof data.name === "string" && data.name.trim() !== "" ? data.name : data.tag_name;
+        case "commit":
+            return typeof data.message === "string" ? data.message.split(/\r?\n/, 1)[0] : data.title;
+        case "milestones":
+            return Array.isArray(data) && data[0] ? data[0].title : "";
+        default:
+            return data.title;
+        }
+    }
+
     function targetFromUrl(url) {
         var match = /^(https?:\/\/([a-z0-9][a-z0-9.-]*)(?::\d+)?)\/([^?#]*)(?:[?#].*)?$/i.exec(url.trim());
 
@@ -70,15 +101,38 @@ QtObject {
             return null;
         }
 
-        // Handle work item URLs explicitly; other /-/ subpages are not project URLs.
         var path = match[3].replace(/\/$/, "");
-        var workItem = /\/-\/work_items\/([1-9]\d*)$/.exec(path);
+        var kind = "project";
+        var id = "";
+        var subpage = /\/-\/(work_items|issues|merge_requests|releases|commit|milestones)\/([^/]+)$/.exec(path);
 
-        if (workItem !== null) {
-            path = path.substring(0, workItem.index);
+        if (subpage !== null) {
+            kind = subpage[1];
+            id = subpage[2];
+            path = path.substring(0, subpage.index);
+
+            if (kind === "releases") {
+                try {
+                    id = decodeURIComponent(id);
+                } catch (error) {
+                    return null;
+                }
+
+                if (id === "new" || id === "." || id === ".." || /[\x00-\x20\x7f\\]/.test(id)) {
+                    return null;
+                }
+            } else if (kind === "commit" ? !/^[a-f0-9]{7,64}$/i.test(id) : !/^[1-9]\d*$/.test(id)) {
+                return null;
+            }
         }
 
-        if (!/^[a-z0-9_][a-z0-9_.-]*(?:\/[a-z0-9_][a-z0-9_.-]*)+$/i.test(path)) {
+        // Group work item URLs start with /groups/; the API expects just the namespace.
+        var group = kind === "work_items" && path.indexOf("groups/") === 0;
+        if (group) {
+            path = path.substring("groups/".length);
+        }
+
+        if ((!group && path.indexOf("/") === -1) || !/^[a-z0-9_][a-z0-9_.-]*(?:\/[a-z0-9_][a-z0-9_.-]*)*$/i.test(path)) {
             return null;
         }
 
@@ -92,7 +146,8 @@ QtObject {
                     // its own configuration for the API protocol and port.
                     "host": match[2].toLowerCase(),
                     "path": path,
-                    "workItemIid": workItem === null ? "" : workItem[1]
+                    "kind": kind,
+                    "id": id
                 };
             }
         }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3 - 2026-11-25
+
+- Fetch titles for GitLab issues, merge requests, releases, commits, project milestones, and group work items.
+
 ## 0.0.2 - 2026-11-25
 
 - Fetch titles for GitLab project work item links (`/-/work_items/<id>`).
