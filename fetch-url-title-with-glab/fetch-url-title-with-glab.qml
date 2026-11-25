@@ -24,39 +24,59 @@ QtObject {
 
     // Returning an empty string lets QOwnNotes try its normal title lookup.
     function fetchUrlTitleHook(url) {
-        var project = projectFromUrl(url);
+        var target = targetFromUrl(url);
 
-        if (project === null || glabPath.trim() === "") {
+        if (target === null || glabPath.trim() === "") {
             return "";
         }
 
         var api = scriptApi || script;
+        var args = ["api", "--hostname", target.host];
+
+        if (target.workItemIid) {
+            var query = "query($path: ID!, $iid: String!) { namespace(fullPath: $path) { workItem(iid: $iid) { title } } }";
+            args.push("graphql", "-f", "query=" + query, "-f", "path=" + target.path, "-f", "iid=" + target.workItemIid);
+        } else {
+            args.push("projects/" + encodeURIComponent(target.path));
+        }
 
         try {
-            var result = api.startSynchronousProcess(glabPath, ["api", "--hostname", project.host, "projects/" + encodeURIComponent(project.path)]);
+            var result = api.startSynchronousProcess(glabPath, args);
             var data = JSON.parse(String(result));
+            var title;
 
-            if (data && typeof data.name === "string" && data.name.trim() !== "") {
-                return data.name;
+            if (target.workItemIid) {
+                var scope = data && data.data && data.data.namespace;
+                title = scope && scope.workItem && scope.workItem.title;
+            } else {
+                title = data && data.name;
+            }
+
+            if (typeof title === "string" && title.trim() !== "") {
+                return title;
             }
         } catch (error) {
             // Don't log glab output, which may contain private project data.
         }
 
-        api.log("Could not fetch GitLab project title with glab.");
+        api.log("Could not fetch GitLab URL title with glab.");
         return "";
     }
 
-    function projectFromUrl(url) {
+    function targetFromUrl(url) {
         var match = /^(https?:\/\/([a-z0-9][a-z0-9.-]*)(?::\d+)?)\/([^?#]*)(?:[?#].*)?$/i.exec(url.trim());
 
         if (match === null) {
             return null;
         }
 
-        // A project is namespaced and may be nested in subgroups. Don't treat
-        // GitLab's /-/ subpages (issues, merge requests, etc.) as project URLs.
+        // Handle work item URLs explicitly; other /-/ subpages are not project URLs.
         var path = match[3].replace(/\/$/, "");
+        var workItem = /\/-\/work_items\/([1-9]\d*)$/.exec(path);
+
+        if (workItem !== null) {
+            path = path.substring(0, workItem.index);
+        }
 
         if (!/^[a-z0-9_][a-z0-9_.-]*(?:\/[a-z0-9_][a-z0-9_.-]*)+$/i.test(path)) {
             return null;
@@ -71,7 +91,8 @@ QtObject {
                     // glab's --hostname only accepts the hostname. It uses
                     // its own configuration for the API protocol and port.
                     "host": match[2].toLowerCase(),
-                    "path": path
+                    "path": path,
+                    "workItemIid": workItem === null ? "" : workItem[1]
                 };
             }
         }

@@ -37,6 +37,22 @@ TestCase {
         compare(calls[0][1], ["api", "--hostname", "gitlab.example.com", "projects/team%2Fproject"]);
     }
 
+    function test_workItem() {
+        processOutput = '{"data":{"namespace":{"workItem":{"title":"Example Work Item"}}}}';
+        compare(titleScript.fetchUrlTitleHook("https://gitlab.example.org/team/subgroup/example-project/-/work_items/2/?tab=activity#note_5"), "Example Work Item");
+        compare(calls.length, 1);
+        compare(calls[0][0], "/custom/bin/glab");
+        compare(calls[0][1].slice(0, 5), ["api", "--hostname", "gitlab.example.org", "graphql", "-f"]);
+        verify(calls[0][1][5].indexOf("workItem(iid: $iid) { title }") !== -1);
+        compare(calls[0][1].slice(6), ["-f", "path=team/subgroup/example-project", "-f", "iid=2"]);
+    }
+
+    function test_workItemNotFound() {
+        processOutput = '{"data":{"namespace":{"workItem":null}}}';
+        compare(titleScript.fetchUrlTitleHook("https://gitlab.example.org/team/project/-/work_items/2"), "");
+        compare(calls.length, 1);
+    }
+
     function test_ignoredUrls_data() {
         return [
             {
@@ -66,6 +82,14 @@ TestCase {
             {
                 "tag": "issue",
                 "url": "https://gitlab.example.org/team/project/-/issues/1"
+            },
+            {
+                "tag": "work item on unconfigured host",
+                "url": "https://example.com/team/project/-/work_items/2"
+            },
+            {
+                "tag": "work item with invalid ID",
+                "url": "https://gitlab.example.org/team/project/-/work_items/invalid"
             }
         ];
     }
